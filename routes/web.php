@@ -862,6 +862,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('department', DepartmentController::class)->middleware(['auth', 'XSS']);
     Route::resource('designation', DesignationController::class)->middleware(['auth', 'XSS']);
     Route::resource('document', DocumentController::class)->middleware(['auth', 'XSS']);
+    Route::resource('kontrak', DocumentController::class)->middleware(['auth', 'XSS']);
     Route::resource('branch', BranchController::class)->middleware(['auth', 'XSS']);
 
 
@@ -1753,4 +1754,5 @@ Route::group(['middleware' => ['verified']], function () {
 });
 
 Route::any('/cookie-consent', [SystemController::class,'CookieConsent'])->name('cookie-consent');
+
 
