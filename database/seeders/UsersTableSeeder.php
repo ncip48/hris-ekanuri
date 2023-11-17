@@ -3060,6 +3060,8 @@ class UsersTableSeeder extends Seeder
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
+
+            //kontrak
             [
                 'name' => 'show kontrak',
                 'guard_name' => 'web',
@@ -3090,6 +3092,7 @@ class UsersTableSeeder extends Seeder
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
+            //personal report
             [
                 'name' => 'show personal report',
                 'guard_name' => 'web',
@@ -3116,6 +3119,38 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'delete personal report',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+
+            //sub departemen
+            [
+                'name' => 'show sub department',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'manage sub department',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'create sub department',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'edit sub department',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'delete sub department',
                 'guard_name' => 'web',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -3722,6 +3757,11 @@ class UsersTableSeeder extends Seeder
             ['name' => 'create personal report'],
             ['name' => 'edit personal report'],
             ['name' => 'delete personal report'],
+            ['name' => 'show sub department'],
+            ['name' => 'manage sub department'],
+            ['name' => 'create sub department'],
+            ['name' => 'edit sub department'],
+            ['name' => 'delete sub department'],
 
         ];
 
