@@ -871,6 +871,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::post('employee/getdepartment', [EmployeeController::class, 'getDepartment'])->name('employee.getdepartment')->middleware(['auth', 'XSS']);
 
     Route::resource('department', DepartmentController::class)->middleware(['auth', 'XSS']);
+    Route::resource('sub-department', SubDepartmentController::class)->middleware(['auth', 'XSS']);
     Route::resource('designation', DesignationController::class)->middleware(['auth', 'XSS']);
     Route::resource('document', DocumentController::class)->middleware(['auth', 'XSS']);
     Route::resource('kontrak', DocumentController::class)->middleware(['auth', 'XSS']);

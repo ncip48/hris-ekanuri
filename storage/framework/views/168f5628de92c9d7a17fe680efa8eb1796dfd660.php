@@ -240,7 +240,7 @@
                     <!--------------------- Start HRM ----------------------------------->
 
                     <?php if(\Auth::user()->show_hrm() == 1): ?>
-                        <?php if( Gate::check('manage employee') || Gate::check('manage setsalary')): ?>
+                        <?php if( Gate::check('manage employee') || Gate::check('manage setsalary') ): ?>
                             <li class="dash-item dash-hasmenu <?php echo e((Request::segment(1) == 'holiday-calender'
                                 || Request::segment(1) == 'leavetype' || Request::segment(1) == 'leave' ||
                                 Request::segment(1) == 'attendanceemployee' || Request::segment(1) == 'document-upload' || Request::segment(1) == 'document' || Request::segment(1) == 'performanceType'  ||
@@ -268,6 +268,7 @@
                                     </span>
                                 </a>
                                 <ul class="dash-submenu">
+                                    
                                     <li class="dash-item  <?php echo e((Request::segment(1) == 'employee' ? 'active dash-trigger' : '')); ?>   ">
                                         <?php if(\Auth::user()->type =='Employee'): ?>
                                             <?php
@@ -275,10 +276,27 @@
                                             ?>
                                             <a class="dash-link" href="<?php echo e(route('employee.show',\Illuminate\Support\Facades\Crypt::encrypt($employee->id))); ?>"><?php echo e(__('Employee')); ?></a>
                                         <?php else: ?>
-                                            <a href="<?php echo e(route('employee.index')); ?>" class="dash-link">
-                                                <?php echo e(__('Employee Setup')); ?>
-
-                                            </a>
+                                            
+                                            <?php if(Gate::check('manage personal report')): ?>
+                                                
+                                                    <a class="dash-link" href="#"><?php echo e(__('Employee Setup')); ?><span
+                                                            class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                                                    <ul class="dash-submenu">
+                                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage personal report')): ?>
+                                                            <li
+                                                                class="dash-item <?php echo e(request()->is('personal report*') ? 'active' : ''); ?>">
+                                                                <a class="dash-link"
+                                                                    href="<?php echo e(route('personal_report')); ?>"><?php echo e(__('Personal Report')); ?></a>
+                                                            </li>
+                                                            <li
+                                                                class="dash-item <?php echo e(request()->is('request edit identitas*') ? 'active' : ''); ?>">
+                                                                <a class="dash-link"
+                                                                    href=""><?php echo e(__('Edit Identitas')); ?></a>
+                                                            </li>
+                                                        <?php endif; ?>
+                                                    </ul>
+                                                
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                     </li>
 
