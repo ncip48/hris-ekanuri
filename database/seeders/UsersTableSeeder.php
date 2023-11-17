@@ -3090,6 +3090,37 @@ class UsersTableSeeder extends Seeder
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
+            [
+                'name' => 'show personal report',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'manage personal report',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'create personal report',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'edit personal report',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'delete personal report',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+
         ];
 
         Permission::insert($arrPermissions);
@@ -3686,6 +3717,11 @@ class UsersTableSeeder extends Seeder
             ['name' => 'create kontrak'],
             ['name' => 'edit kontrak'],
             ['name' => 'delete kontrak'],
+            ['name' => 'show personal report'],
+            ['name' => 'manage personal report'],
+            ['name' => 'create personal report'],
+            ['name' => 'edit personal report'],
+            ['name' => 'delete personal report'],
 
         ];
 
