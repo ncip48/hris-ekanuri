@@ -418,7 +418,7 @@
                                     </li>
                                     <?php endif; ?>
 
-                                    <?php if( Gate::check('manage award') || Gate::check('manage transfer') || Gate::check('manage resignation') || Gate::check('manage travel') || Gate::check('manage promotion') || Gate::check('manage complaint') || Gate::check('manage warning') || Gate::check('manage termination') || Gate::check('manage announcement') || Gate::check('manage holiday') ): ?>
+                                    <?php if( Gate::check('manage award') || Gate::check('manage transfer') || Gate::check('manage resignation') || Gate::check('manage travel') || Gate::check('manage promotion') || Gate::check('manage complaint') || Gate::check('manage warning') || Gate::check('manage termination') || Gate::check('manage announcement') || Gate::check('manage holiday') || Gate::check('manage kontrak')): ?>
                                         <li class="dash-item dash-hasmenu <?php echo e((Request::segment(1) == 'holiday-calender' || Request::segment(1) == 'holiday' || Request::segment(1) == 'policies' || Request::segment(1) == 'award' || Request::segment(1) == 'transfer' || Request::segment(1) == 'resignation' || Request::segment(1) == 'travel' || Request::segment(1) == 'promotion' || Request::segment(1) == 'complaint' || Request::segment(1) == 'warning' || Request::segment(1) == 'termination' || Request::segment(1) == 'announcement' || Request::segment(1) == 'competencies' ) ? 'active dash-trigger' : ''); ?>">
                                         <a class="dash-link" href="#"><?php echo e(__('HR Admin Setup')); ?><span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                                         <ul class="dash-submenu">
@@ -495,6 +495,28 @@
                                         <li class="dash-item <?php echo e((request()->is('document-upload*') ? 'active' : '')); ?>">
                                             <a class="dash-link" href="<?php echo e(route('document-upload.index')); ?>"><?php echo e(__('Document Setup')); ?></a>
                                         </li>
+                                    <?php endif; ?>
+                                    <?php if(Gate::check('manage kontrak')): ?>
+                                    <li class="dash-item dash-hasmenu <?php echo e(Request::segment(1) == 'kontrak' ? 'active dash-trigger' : ''); ?>"
+                                        href="#navbar-training" data-toggle="collapse" role="button"
+                                        aria-expanded="<?php echo e(Request::segment(1) == 'kontrak' ? 'true' : 'false'); ?>">
+                                        <a class="dash-link" href="#"><?php echo e(__('Document Setup')); ?><span
+                                                class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                                        <ul class="dash-submenu">
+                                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage kontrak')): ?>
+                                                <li
+                                                    class="dash-item <?php echo e(request()->is('kontrak*') ? 'active' : ''); ?>">
+                                                    <a class="dash-link"
+                                                        href="<?php echo e(route('kontrak.index')); ?>"><?php echo e(__('Extend Contract')); ?></a>
+                                                </li>
+                                                <li
+                                                    class="dash-item <?php echo e(request()->is('kontrak*') ? 'active' : ''); ?>">
+                                                    <a class="dash-link"
+                                                        href="<?php echo e(route('kontrak.index')); ?>"><?php echo e(__('Contract')); ?></a>
+                                                </li>
+                                            <?php endif; ?>
+                                        </ul>
+                                    </li>
                                     <?php endif; ?>
                                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage company policy')): ?>
                                         <li class="dash-item <?php echo e((request()->is('company-policy*') ? 'active' : '')); ?>">
