@@ -240,7 +240,7 @@
                     <!--------------------- Start HRM ----------------------------------->
 
                     @if(\Auth::user()->show_hrm() == 1)
-                        @if( Gate::check('manage employee') || Gate::check('manage setsalary'))
+                        @if( Gate::check('manage employee') || Gate::check('manage setsalary') )
                             <li class="dash-item dash-hasmenu {{ (Request::segment(1) == 'holiday-calender'
                                 || Request::segment(1) == 'leavetype' || Request::segment(1) == 'leave' ||
                                 Request::segment(1) == 'attendanceemployee' || Request::segment(1) == 'document-upload' || Request::segment(1) == 'document' || Request::segment(1) == 'performanceType'  ||
@@ -267,6 +267,7 @@
                                     </span>
                                 </a>
                                 <ul class="dash-submenu">
+                                    {{-- @if (Gate::check('manage personal report')) --}}
                                     <li class="dash-item  {{ (Request::segment(1) == 'employee' ? 'active dash-trigger' : '')}}   ">
                                         @if(\Auth::user()->type =='Employee')
                                             @php
@@ -274,9 +275,31 @@
                                             @endphp
                                             <a class="dash-link" href="{{route('employee.show',\Illuminate\Support\Facades\Crypt::encrypt($employee->id))}}">{{__('Employee')}}</a>
                                         @else
-                                            <a href="{{route('employee.index')}}" class="dash-link">
+                                            {{-- <a href="{{route('employee.index')}}" class="dash-link">
                                                 {{ __('Employee Setup') }}
-                                            </a>
+                                            </a> --}}
+                                            @if (Gate::check('manage personal report'))
+                                                {{-- <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'personal report' ? 'active dash-trigger' : '' }}"
+                                                    href="#navbar-training" data-toggle="collapse" role="button"
+                                                    aria-expanded="{{ Request::segment(1) == 'personal report' ? 'true' : 'false' }}"> --}}
+                                                    <a class="dash-link" href="#">{{ __('Employee Setup') }}<span
+                                                            class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                                                    <ul class="dash-submenu">
+                                                        @can('manage personal report')
+                                                            <li
+                                                                class="dash-item {{ request()->is('personal report*') ? 'active' : '' }}">
+                                                                <a class="dash-link"
+                                                                    href="{{route('personal_report')}}">{{ __('Personal Report') }}</a>
+                                                            </li>
+                                                            <li
+                                                                class="dash-item {{ request()->is('request edit identitas*') ? 'active' : '' }}">
+                                                                <a class="dash-link"
+                                                                    href="">{{ __('Edit Identitas') }}</a>
+                                                            </li>
+                                                        @endcan
+                                                    </ul>
+                                                {{-- </li> --}}
+                                            @endif
                                         @endif
                                     </li>
 

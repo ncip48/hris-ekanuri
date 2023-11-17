@@ -163,7 +163,7 @@ use App\Http\Controllers\WarehouseTransferController;
 //     return view('dashboard');
 // })->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 
 //Route::get('/', ['as' => 'home','uses' =>'HomeController@index'])->middleware(['XSS']);
@@ -257,17 +257,17 @@ Route::post('/paymentwall', [PaymentWallPaymentController::class, 'invoicepaymen
 Route::post('/invoice-pay-with-paymentwall/{invoice}', [PaymentWallPaymentController::class, 'invoicePayWithPaymentwall'])->name('invoice.pay.with.paymentwall')->middleware(['XSS']);
 Route::get('/invoices/{flag}/{invoice}', [PaymentWallPaymentController::class, 'invoiceerror'])->name('error.invoice.show');
 
-Route::post('/customer-pay-with-toyyibpay', [ToyyibpayController::class,'invoicepaywithtoyyibpay'])->name('customer.pay.with.toyyibpay');
-Route::get('/customer/toyyibpay/{invoice}/{amount}', [ToyyibpayController::class,'getInvoicePaymentStatus'])->name('customer.toyyibpay');
+Route::post('/customer-pay-with-toyyibpay', [ToyyibpayController::class, 'invoicepaywithtoyyibpay'])->name('customer.pay.with.toyyibpay');
+Route::get('/customer/toyyibpay/{invoice}/{amount}', [ToyyibpayController::class, 'getInvoicePaymentStatus'])->name('customer.toyyibpay');
 
-Route::post('invoice-with-payfast', [PayFastController::class,'invoicePayWithPayFast'])->name('invoice.with.payfast');
-Route::get('invoice-payfast-status/{success}', [PayFastController::class,'invoicepayfaststatus'])->name('invoice.payfast.status');
+Route::post('invoice-with-payfast', [PayFastController::class, 'invoicePayWithPayFast'])->name('invoice.with.payfast');
+Route::get('invoice-payfast-status/{success}', [PayFastController::class, 'invoicepayfaststatus'])->name('invoice.payfast.status');
 
-Route::post('/customer-pay-with-iyzipay', [IyziPayController::class,'invoicepaywithiyzipay'])->name('customer.pay.with.iyzipay');
+Route::post('/customer-pay-with-iyzipay', [IyziPayController::class, 'invoicepaywithiyzipay'])->name('customer.pay.with.iyzipay');
 Route::post('iyzipay/callback/{invoice}/{amount}', [IyzipayController::class, 'getInvoiceiyzipayCallback'])->name('iyzipay.invoicepayment.callback');
 
-Route::post('/customer-pay-with-sspay', [SspayController::class,'invoicepaywithsspaypay'])->name('customer.pay.with.sspay');
-Route::get('/customer/sspay/{invoice}/{amount}', [SspayController::class,'getInvoicePaymentStatus'])->name('customer.sspay');
+Route::post('/customer-pay-with-sspay', [SspayController::class, 'invoicepaywithsspaypay'])->name('customer.pay.with.sspay');
+Route::get('/customer/sspay/{invoice}/{amount}', [SspayController::class, 'getInvoicePaymentStatus'])->name('customer.sspay');
 
 Route::post('/invoice-pay-with-paytab', [PaytabController::class, 'invoicePayWithpaytab'])->name('customer.pay.with.paytab');
 Route::any('/invoice-paytab-success/{invoice}', [PaytabController::class, 'getInvoicePaymentStatus'])->name('invoice.paytab.success');
@@ -296,9 +296,9 @@ Route::get('job/apply/{code}/{lang}', [JobController::class, 'jobApply'])->name(
 Route::post('job/apply/data/{code}', [JobController::class, 'jobApplyData'])->name('job.apply.data')->middleware(['XSS']);
 
 //project copy module
-Route::get('/projects/copylink/{id}',[ProjectController::class,'projectCopyLink'])->name('projects.copylink');
-Route::any('/projects/link/{id}/{lang?}',[ProjectController::class,'projectlink'])->name('projects.link')->middleware(['XSS']);
-Route::get('timesheet-table-view', [TimesheetController::class, 'filterTimesheetTableView'])->name('filter.timesheet.table.view')->middleware([ 'XSS']);
+Route::get('/projects/copylink/{id}', [ProjectController::class, 'projectCopyLink'])->name('projects.copylink');
+Route::any('/projects/link/{id}/{lang?}', [ProjectController::class, 'projectlink'])->name('projects.link')->middleware(['XSS']);
+Route::get('timesheet-table-view', [TimesheetController::class, 'filterTimesheetTableView'])->name('filter.timesheet.table.view')->middleware(['XSS']);
 
 
 
@@ -311,11 +311,11 @@ Route::get('invoice/pdf/{id}', [InvoiceController::class, 'invoice'])->name('inv
 Route::group(['middleware' => ['verified']], function () {
 
 
-    Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth','XSS', 'revalidate']);
-    Route::get('/project-dashboard', [DashboardController::class, 'project_dashboard_index'])->name('project.dashboard')->middleware(['auth','XSS', 'revalidate']);
-    Route::get('/hrm-dashboard', [DashboardController::class, 'hrm_dashboard_index'])->name('hrm.dashboard')->middleware(['auth','XSS', 'revalidate']);
-    Route::get('/crm-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('crm.dashboard')->middleware(['auth','XSS', 'revalidate']);
-    Route::get('/pos-dashboard', [DashboardController::class, 'pos_dashboard_index'])->name('pos.dashboard')->middleware(['auth','XSS', 'revalidate']);
+    Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+    Route::get('/project-dashboard', [DashboardController::class, 'project_dashboard_index'])->name('project.dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+    Route::get('/hrm-dashboard', [DashboardController::class, 'hrm_dashboard_index'])->name('hrm.dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+    Route::get('/crm-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('crm.dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+    Route::get('/pos-dashboard', [DashboardController::class, 'pos_dashboard_index'])->name('pos.dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 
 
     Route::get('profile', [UserController::class, 'profile'])->name('profile')->middleware(['auth', 'XSS', 'revalidate']);
@@ -343,20 +343,20 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('change-language/{lang}', [LanguageController::class, 'changeLanquage'])->name('change.language');
+        ],
+        function () {
+            Route::get('change-language/{lang}', [LanguageController::class, 'changeLanquage'])->name('change.language');
 
-        Route::get('manage-language/{lang}', [LanguageController::class, 'manageLanguage'])->name('manage.language');
+            Route::get('manage-language/{lang}', [LanguageController::class, 'manageLanguage'])->name('manage.language');
 
-        Route::post('store-language-data/{lang}', [LanguageController::class, 'storeLanguageData'])->name('store.language.data');
+            Route::post('store-language-data/{lang}', [LanguageController::class, 'storeLanguageData'])->name('store.language.data');
 
-        Route::get('create-language', [LanguageController::class, 'createLanguage'])->name('create.language');
+            Route::get('create-language', [LanguageController::class, 'createLanguage'])->name('create.language');
 
-        Route::any('store-language', [LanguageController::class, 'storeLanguage'])->name('store.language');
+            Route::any('store-language', [LanguageController::class, 'storeLanguage'])->name('store.language');
 
-        Route::delete('/lang/{lang}', [LanguageController::class, 'destroyLang'])->name('lang.destroy');
-
-    }
+            Route::delete('/lang/{lang}', [LanguageController::class, 'destroyLang'])->name('lang.destroy');
+        }
     );
 
     Route::group(
@@ -366,45 +366,45 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::resource('systems', SystemController::class);
-        Route::post('email-settings', [SystemController::class, 'saveEmailSettings'])->name('email.settings');
-        Route::post('company-email-settings', [SystemController::class, 'saveCompanyEmailSettings'])->name('company.email.settings');
+        ],
+        function () {
+            Route::resource('systems', SystemController::class);
+            Route::post('email-settings', [SystemController::class, 'saveEmailSettings'])->name('email.settings');
+            Route::post('company-email-settings', [SystemController::class, 'saveCompanyEmailSettings'])->name('company.email.settings');
 
-        Route::post('company-settings', [SystemController::class, 'saveCompanySettings'])->name('company.settings');
-        Route::post('system-settings', [SystemController::class, 'saveSystemSettings'])->name('system.settings');
-        Route::post('zoom-settings', [SystemController::class, 'saveZoomSettings'])->name('zoom.settings');
-        Route::post('tracker-settings', [SystemController::class, 'saveTrackerSettings'])->name('tracker.settings');
-        Route::post('slack-settings', [SystemController::class, 'saveSlackSettings'])->name('slack.settings');
-        Route::post('telegram-settings', [SystemController::class, 'saveTelegramSettings'])->name('telegram.settings');
-        Route::post('twilio-settings', [SystemController::class, 'saveTwilioSettings'])->name('twilio.setting');
-        Route::get('print-setting', [SystemController::class, 'printIndex'])->name('print.setting');
-        Route::get('settings', [SystemController::class, 'companyIndex'])->name('settings');
-        Route::post('business-setting', [SystemController::class, 'saveBusinessSettings'])->name('business.setting');
-        Route::post('company-payment-setting', [SystemController::class, 'saveCompanyPaymentSettings'])->name('company.payment.settings');
+            Route::post('company-settings', [SystemController::class, 'saveCompanySettings'])->name('company.settings');
+            Route::post('system-settings', [SystemController::class, 'saveSystemSettings'])->name('system.settings');
+            Route::post('zoom-settings', [SystemController::class, 'saveZoomSettings'])->name('zoom.settings');
+            Route::post('tracker-settings', [SystemController::class, 'saveTrackerSettings'])->name('tracker.settings');
+            Route::post('slack-settings', [SystemController::class, 'saveSlackSettings'])->name('slack.settings');
+            Route::post('telegram-settings', [SystemController::class, 'saveTelegramSettings'])->name('telegram.settings');
+            Route::post('twilio-settings', [SystemController::class, 'saveTwilioSettings'])->name('twilio.setting');
+            Route::get('print-setting', [SystemController::class, 'printIndex'])->name('print.setting');
+            Route::get('settings', [SystemController::class, 'companyIndex'])->name('settings');
+            Route::post('business-setting', [SystemController::class, 'saveBusinessSettings'])->name('business.setting');
+            Route::post('company-payment-setting', [SystemController::class, 'saveCompanyPaymentSettings'])->name('company.payment.settings');
 
-        Route::get('test-mail', [SystemController::class, 'testMail'])->name('test.mail');
-        Route::post('test-mail', [SystemController::class, 'testMail'])->name('test.mail');
-        Route::post('test-mail/send', [SystemController::class, 'testSendMail'])->name('test.send.mail');
+            Route::get('test-mail', [SystemController::class, 'testMail'])->name('test.mail');
+            Route::post('test-mail', [SystemController::class, 'testMail'])->name('test.mail');
+            Route::post('test-mail/send', [SystemController::class, 'testSendMail'])->name('test.send.mail');
 
-        Route::post('stripe-settings', [SystemController::class, 'savePaymentSettings'])->name('payment.settings');
-        Route::post('pusher-setting', [SystemController::class, 'savePusherSettings'])->name('pusher.setting');
-        Route::post('recaptcha-settings', [SystemController::class, 'recaptchaSettingStore'])->name('recaptcha.settings.store')->middleware(['auth', 'XSS']);
+            Route::post('stripe-settings', [SystemController::class, 'savePaymentSettings'])->name('payment.settings');
+            Route::post('pusher-setting', [SystemController::class, 'savePusherSettings'])->name('pusher.setting');
+            Route::post('recaptcha-settings', [SystemController::class, 'recaptchaSettingStore'])->name('recaptcha.settings.store')->middleware(['auth', 'XSS']);
 
 
-        Route::post('seo-settings', [SystemController::class, 'seoSettings'])->name('seo.settings.store')->middleware(['auth', 'XSS']);
-        Route::any('webhook-settings', [SystemController::class, 'webhook'])->name('webhook.settings')->middleware(['auth', 'XSS']);
-        Route::get('webhook-settings/create', [SystemController::class, 'webhookCreate'])->name('webhook.create')->middleware(['auth','XSS']);
-        Route::post('webhook-settings/store', [SystemController::class, 'webhookStore'])->name('webhook.store');
-        Route::get('webhook-settings/{wid}/edit', [SystemController::class, 'webhookEdit'])->name('webhook.edit')->middleware(['auth','XSS']);
-        Route::post('webhook-settings/{wid}/edit', [SystemController::class, 'webhookUpdate'])->name('webhook.update')->middleware(['auth','XSS']);
-        Route::delete('webhook-settings/{wid}', [SystemController::class, 'webhookDestroy'])->name('webhook.destroy')->middleware(['auth','XSS']);
+            Route::post('seo-settings', [SystemController::class, 'seoSettings'])->name('seo.settings.store')->middleware(['auth', 'XSS']);
+            Route::any('webhook-settings', [SystemController::class, 'webhook'])->name('webhook.settings')->middleware(['auth', 'XSS']);
+            Route::get('webhook-settings/create', [SystemController::class, 'webhookCreate'])->name('webhook.create')->middleware(['auth', 'XSS']);
+            Route::post('webhook-settings/store', [SystemController::class, 'webhookStore'])->name('webhook.store');
+            Route::get('webhook-settings/{wid}/edit', [SystemController::class, 'webhookEdit'])->name('webhook.edit')->middleware(['auth', 'XSS']);
+            Route::post('webhook-settings/{wid}/edit', [SystemController::class, 'webhookUpdate'])->name('webhook.update')->middleware(['auth', 'XSS']);
+            Route::delete('webhook-settings/{wid}', [SystemController::class, 'webhookDestroy'])->name('webhook.destroy')->middleware(['auth', 'XSS']);
 
-        Route::post('cookie-setting', [SystemController::class, 'saveCookieSettings'])->name('cookie.setting');
+            Route::post('cookie-setting', [SystemController::class, 'saveCookieSettings'])->name('cookie.setting');
 
-        Route::post('cache-settings', [SystemController::class, 'cacheSettingStore'])->name('cache.settings.store')->middleware(['auth', 'XSS']);
-
-    }
+            Route::post('cache-settings', [SystemController::class, 'cacheSettingStore'])->name('cache.settings.store')->middleware(['auth', 'XSS']);
+        }
     );
 
     Route::get('productservice/index', [ProductServiceController::class, 'index'])->name('productservice.index');
@@ -425,10 +425,11 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('customer/{id}/show', [CustomerController::class, 'show'])->name('customer.show');
-        Route::resource('customer', CustomerController::class);
-    }
+        ],
+        function () {
+            Route::get('customer/{id}/show', [CustomerController::class, 'show'])->name('customer.show');
+            Route::resource('customer', CustomerController::class);
+        }
     );
 
     //Vendor
@@ -439,10 +440,11 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('vender/{id}/show', [VenderController::class, 'show'])->name('vender.show');
-        Route::resource('vender', VenderController::class);
-    }
+        ],
+        function () {
+            Route::get('vender/{id}/show', [VenderController::class, 'show'])->name('vender.show');
+            Route::resource('vender', VenderController::class);
+        }
     );
 
     Route::group(
@@ -452,9 +454,10 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::resource('bank-account', BankAccountController::class);
-    }
+        ],
+        function () {
+            Route::resource('bank-account', BankAccountController::class);
+        }
     );
 
     Route::group(
@@ -464,10 +467,11 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('bank-transfer/index', [BankTransferController::class, 'index'])->name('bank-transfer.index');
-        Route::resource('bank-transfer', BankTransferController::class);
-    }
+        ],
+        function () {
+            Route::get('bank-transfer/index', [BankTransferController::class, 'index'])->name('bank-transfer.index');
+            Route::resource('bank-transfer', BankTransferController::class);
+        }
     );
 
     Route::resource('taxes', TaxController::class)->middleware(['auth', 'XSS', 'revalidate']);
@@ -489,23 +493,24 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('invoice/{id}/duplicate', [InvoiceController::class, 'duplicate'])->name('invoice.duplicate');
-        Route::get('invoice/{id}/shipping/print', [InvoiceController::class, 'shippingDisplay'])->name('invoice.shipping.print');
-        Route::get('invoice/{id}/payment/reminder', [InvoiceController::class, 'paymentReminder'])->name('invoice.payment.reminder');
-        Route::get('invoice/index', [InvoiceController::class, 'index'])->name('invoice.index');
-        Route::post('invoice/product/destroy', [InvoiceController::class, 'productDestroy'])->name('invoice.product.destroy');
-        Route::post('invoice/product', [InvoiceController::class, 'product'])->name('invoice.product');
-        Route::post('invoice/customer', [InvoiceController::class, 'customer'])->name('invoice.customer');
-        Route::get('invoice/{id}/sent', [InvoiceController::class, 'sent'])->name('invoice.sent');
-        Route::get('invoice/{id}/resent', [InvoiceController::class, 'resent'])->name('invoice.resent');
-        Route::get('invoice/{id}/payment', [InvoiceController::class, 'payment'])->name('invoice.payment');
-        Route::post('invoice/{id}/payment', [InvoiceController::class, 'createPayment'])->name('invoice.payment');
-        Route::post('invoice/{id}/payment/{pid}/destroy', [InvoiceController::class, 'paymentDestroy'])->name('invoice.payment.destroy');
-        Route::get('invoice/items', [InvoiceController::class, 'items'])->name('invoice.items');
-        Route::resource('invoice', InvoiceController::class);
-        Route::get('invoice/create/{cid}', [InvoiceController::class, 'create'])->name('invoice.create');
-    }
+        ],
+        function () {
+            Route::get('invoice/{id}/duplicate', [InvoiceController::class, 'duplicate'])->name('invoice.duplicate');
+            Route::get('invoice/{id}/shipping/print', [InvoiceController::class, 'shippingDisplay'])->name('invoice.shipping.print');
+            Route::get('invoice/{id}/payment/reminder', [InvoiceController::class, 'paymentReminder'])->name('invoice.payment.reminder');
+            Route::get('invoice/index', [InvoiceController::class, 'index'])->name('invoice.index');
+            Route::post('invoice/product/destroy', [InvoiceController::class, 'productDestroy'])->name('invoice.product.destroy');
+            Route::post('invoice/product', [InvoiceController::class, 'product'])->name('invoice.product');
+            Route::post('invoice/customer', [InvoiceController::class, 'customer'])->name('invoice.customer');
+            Route::get('invoice/{id}/sent', [InvoiceController::class, 'sent'])->name('invoice.sent');
+            Route::get('invoice/{id}/resent', [InvoiceController::class, 'resent'])->name('invoice.resent');
+            Route::get('invoice/{id}/payment', [InvoiceController::class, 'payment'])->name('invoice.payment');
+            Route::post('invoice/{id}/payment', [InvoiceController::class, 'createPayment'])->name('invoice.payment');
+            Route::post('invoice/{id}/payment/{pid}/destroy', [InvoiceController::class, 'paymentDestroy'])->name('invoice.payment.destroy');
+            Route::get('invoice/items', [InvoiceController::class, 'items'])->name('invoice.items');
+            Route::resource('invoice', InvoiceController::class);
+            Route::get('invoice/create/{cid}', [InvoiceController::class, 'create'])->name('invoice.create');
+        }
     );
 
     Route::get('/invoices/preview/{template}/{color}', [InvoiceController::class, 'previewInvoice'])->name('invoice.preview');
@@ -518,17 +523,18 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('credit-note', [CreditNoteController::class, 'index'])->name('credit.note');
-        Route::get('custom-credit-note', [CreditNoteController::class, 'customCreate'])->name('invoice.custom.credit.note');
-        Route::post('custom-credit-note', [CreditNoteController::class, 'customStore'])->name('invoice.custom.credit.note');
-        Route::get('credit-note/invoice', [CreditNoteController::class, 'getinvoice'])->name('invoice.get');
-        Route::get('invoice/{id}/credit-note', [CreditNoteController::class, 'create'])->name('invoice.credit.note');
-        Route::post('invoice/{id}/credit-note', [CreditNoteController::class, 'store'])->name('invoice.credit.note');
-        Route::get('invoice/{id}/credit-note/edit/{cn_id}', [CreditNoteController::class, 'edit'])->name('invoice.edit.credit.note');
-        Route::post('invoice/{id}/credit-note/edit/{cn_id}', [CreditNoteController::class, 'update'])->name('invoice.edit.credit.note');
-        Route::delete('invoice/{id}/credit-note/delete/{cn_id}', [CreditNoteController::class, 'destroy'])->name('invoice.delete.credit.note');
-    }
+        ],
+        function () {
+            Route::get('credit-note', [CreditNoteController::class, 'index'])->name('credit.note');
+            Route::get('custom-credit-note', [CreditNoteController::class, 'customCreate'])->name('invoice.custom.credit.note');
+            Route::post('custom-credit-note', [CreditNoteController::class, 'customStore'])->name('invoice.custom.credit.note');
+            Route::get('credit-note/invoice', [CreditNoteController::class, 'getinvoice'])->name('invoice.get');
+            Route::get('invoice/{id}/credit-note', [CreditNoteController::class, 'create'])->name('invoice.credit.note');
+            Route::post('invoice/{id}/credit-note', [CreditNoteController::class, 'store'])->name('invoice.credit.note');
+            Route::get('invoice/{id}/credit-note/edit/{cn_id}', [CreditNoteController::class, 'edit'])->name('invoice.edit.credit.note');
+            Route::post('invoice/{id}/credit-note/edit/{cn_id}', [CreditNoteController::class, 'update'])->name('invoice.edit.credit.note');
+            Route::delete('invoice/{id}/credit-note/delete/{cn_id}', [CreditNoteController::class, 'destroy'])->name('invoice.delete.credit.note');
+        }
     );
 
     Route::group(
@@ -538,17 +544,18 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('debit-note', [DebitNoteController::class, 'index'])->name('debit.note');
-        Route::get('custom-debit-note', [DebitNoteController::class, 'customCreate'])->name('bill.custom.debit.note');
-        Route::post('custom-debit-note', [DebitNoteController::class, 'customStore'])->name('bill.custom.debit.note');
-        Route::get('debit-note/bill', [DebitNoteController::class, 'getbill'])->name('bill.get');
-        Route::get('bill/{id}/debit-note', [DebitNoteController::class, 'create'])->name('bill.debit.note');
-        Route::post('bill/{id}/debit-note', [DebitNoteController::class, 'store'])->name('bill.debit.note');
-        Route::get('bill/{id}/debit-note/edit/{cn_id}', [DebitNoteController::class, 'edit'])->name('bill.edit.debit.note');
-        Route::post('bill/{id}/debit-note/edit/{cn_id}', [DebitNoteController::class, 'update'])->name('bill.edit.debit.note');
-        Route::delete('bill/{id}/debit-note/delete/{cn_id}', [DebitNoteController::class, 'destroy'])->name('bill.delete.debit.note');
-    }
+        ],
+        function () {
+            Route::get('debit-note', [DebitNoteController::class, 'index'])->name('debit.note');
+            Route::get('custom-debit-note', [DebitNoteController::class, 'customCreate'])->name('bill.custom.debit.note');
+            Route::post('custom-debit-note', [DebitNoteController::class, 'customStore'])->name('bill.custom.debit.note');
+            Route::get('debit-note/bill', [DebitNoteController::class, 'getbill'])->name('bill.get');
+            Route::get('bill/{id}/debit-note', [DebitNoteController::class, 'create'])->name('bill.debit.note');
+            Route::post('bill/{id}/debit-note', [DebitNoteController::class, 'store'])->name('bill.debit.note');
+            Route::get('bill/{id}/debit-note/edit/{cn_id}', [DebitNoteController::class, 'edit'])->name('bill.edit.debit.note');
+            Route::post('bill/{id}/debit-note/edit/{cn_id}', [DebitNoteController::class, 'update'])->name('bill.edit.debit.note');
+            Route::delete('bill/{id}/debit-note/delete/{cn_id}', [DebitNoteController::class, 'destroy'])->name('bill.delete.debit.note');
+        }
     );
 
     Route::get('/bill/preview/{template}/{color}', [BillController::class, 'previewBill'])->name('bill.preview')->middleware(['auth', 'XSS',]);
@@ -569,22 +576,23 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('bill/{id}/duplicate', [BillController::class, 'duplicate'])->name('bill.duplicate');
-        Route::get('bill/{id}/shipping/print', [BillController::class, 'shippingDisplay'])->name('bill.shipping.print');
-        Route::get('bill/index', [BillController::class, 'index'])->name('bill.index');
-        Route::post('bill/product/destroy', [BillController::class, 'productDestroy'])->name('bill.product.destroy');
-        Route::post('bill/product', [BillController::class, 'product'])->name('bill.product');
-        Route::post('bill/vender', [BillController::class, 'vender'])->name('bill.vender');
-        Route::get('bill/{id}/sent', [BillController::class, 'sent'])->name('bill.sent');
-        Route::get('bill/{id}/resent', [BillController::class, 'resent'])->name('bill.resent');
-        Route::get('bill/{id}/payment', [BillController::class, 'payment'])->name('bill.payment');
-        Route::post('bill/{id}/payment', [BillController::class, 'createPayment'])->name('bill.payment');
-        Route::post('bill/{id}/payment/{pid}/destroy', [BillController::class, 'paymentDestroy'])->name('bill.payment.destroy');
-        Route::get('bill/items', [BillController::class, 'items'])->name('bill.items');
-        Route::resource('bill', BillController::class);
-        Route::get('bill/create/{cid}', [BillController::class, 'create'])->name('bill.create');
-    }
+        ],
+        function () {
+            Route::get('bill/{id}/duplicate', [BillController::class, 'duplicate'])->name('bill.duplicate');
+            Route::get('bill/{id}/shipping/print', [BillController::class, 'shippingDisplay'])->name('bill.shipping.print');
+            Route::get('bill/index', [BillController::class, 'index'])->name('bill.index');
+            Route::post('bill/product/destroy', [BillController::class, 'productDestroy'])->name('bill.product.destroy');
+            Route::post('bill/product', [BillController::class, 'product'])->name('bill.product');
+            Route::post('bill/vender', [BillController::class, 'vender'])->name('bill.vender');
+            Route::get('bill/{id}/sent', [BillController::class, 'sent'])->name('bill.sent');
+            Route::get('bill/{id}/resent', [BillController::class, 'resent'])->name('bill.resent');
+            Route::get('bill/{id}/payment', [BillController::class, 'payment'])->name('bill.payment');
+            Route::post('bill/{id}/payment', [BillController::class, 'createPayment'])->name('bill.payment');
+            Route::post('bill/{id}/payment/{pid}/destroy', [BillController::class, 'paymentDestroy'])->name('bill.payment.destroy');
+            Route::get('bill/items', [BillController::class, 'items'])->name('bill.items');
+            Route::resource('bill', BillController::class);
+            Route::get('bill/create/{cid}', [BillController::class, 'create'])->name('bill.create');
+        }
     );
 
     Route::get('payment/index', [PaymentController::class, 'index'])->name('payment.index')->middleware(['auth', 'XSS', 'revalidate']);
@@ -598,9 +606,10 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('report/transaction', [TransactionController::class, 'index'])->name('transaction.index');
-    }
+        ],
+        function () {
+            Route::get('report/transaction', [TransactionController::class, 'index'])->name('transaction.index');
+        }
     );
 
     Route::group(
@@ -610,38 +619,39 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('report/income-summary', [ReportController::class, 'incomeSummary'])->name('report.income.summary');
-        Route::get('report/expense-summary', [ReportController::class, 'expenseSummary'])->name('report.expense.summary');
-        Route::get('report/income-vs-expense-summary', [ReportController::class, 'incomeVsExpenseSummary'])->name('report.income.vs.expense.summary');
-        Route::get('report/tax-summary', [ReportController::class, 'taxSummary'])->name('report.tax.summary');
-//        Route::get('report/profit-loss-summary', [ReportController::class, 'profitLossSummary'])->name('report.profit.loss.summary');
-        Route::get('report/invoice-summary', [ReportController::class, 'invoiceSummary'])->name('report.invoice.summary');
-        Route::get('report/bill-summary', [ReportController::class, 'billSummary'])->name('report.bill.summary');
-        Route::get('report/product-stock-report', [ReportController::class, 'productStock'])->name('report.product.stock.report');
-        Route::get('report/invoice-report', [ReportController::class, 'invoiceReport'])->name('report.invoice');
-        Route::get('report/account-statement-report', [ReportController::class, 'accountStatement'])->name('report.account.statement');
-        Route::get('report/balance-sheet/{view?}', [ReportController::class, 'balanceSheet'])->name('report.balance.sheet');
-        Route::get('report/profit-loss/{view?}', [ReportController::class, 'profitLoss'])->name('report.profit.loss');
+        ],
+        function () {
+            Route::get('report/income-summary', [ReportController::class, 'incomeSummary'])->name('report.income.summary');
+            Route::get('report/expense-summary', [ReportController::class, 'expenseSummary'])->name('report.expense.summary');
+            Route::get('report/income-vs-expense-summary', [ReportController::class, 'incomeVsExpenseSummary'])->name('report.income.vs.expense.summary');
+            Route::get('report/tax-summary', [ReportController::class, 'taxSummary'])->name('report.tax.summary');
+            //        Route::get('report/profit-loss-summary', [ReportController::class, 'profitLossSummary'])->name('report.profit.loss.summary');
+            Route::get('report/invoice-summary', [ReportController::class, 'invoiceSummary'])->name('report.invoice.summary');
+            Route::get('report/bill-summary', [ReportController::class, 'billSummary'])->name('report.bill.summary');
+            Route::get('report/product-stock-report', [ReportController::class, 'productStock'])->name('report.product.stock.report');
+            Route::get('report/invoice-report', [ReportController::class, 'invoiceReport'])->name('report.invoice');
+            Route::get('report/account-statement-report', [ReportController::class, 'accountStatement'])->name('report.account.statement');
+            Route::get('report/balance-sheet/{view?}', [ReportController::class, 'balanceSheet'])->name('report.balance.sheet');
+            Route::get('report/profit-loss/{view?}', [ReportController::class, 'profitLoss'])->name('report.profit.loss');
 
-        Route::get('report/ledger/{account?}', [ReportController::class, 'ledgerSummary'])->name('report.ledger');
-        Route::get('report/trial-balance', [ReportController::class, 'trialBalanceSummary'])->name('trial.balance');
+            Route::get('report/ledger/{account?}', [ReportController::class, 'ledgerSummary'])->name('report.ledger');
+            Route::get('report/trial-balance', [ReportController::class, 'trialBalanceSummary'])->name('trial.balance');
 
-        Route::get('reports-monthly-cashflow', [ReportController::class, 'monthlyCashflow'])->name('report.monthly.cashflow')->middleware(['auth', 'XSS']);
-        Route::get('reports-quarterly-cashflow', [ReportController::class, 'quarterlyCashflow'])->name('report.quarterly.cashflow')->middleware(['auth', 'XSS']);
-        Route::post('export/trial-balance', [ReportController::class, 'trialBalanceExport'])->name('trial.balance.export');
-        Route::post('export/balance-sheet', [ReportController::class, 'balanceSheetExport'])->name('balance.sheet.export');
-        Route::post('print/balance-sheet/{view?}', [ReportController::class, 'balanceSheetPrint'])->name('balance.sheet.print');
-        Route::post('print/trial-balance', [ReportController::class, 'trialBalancePrint'])->name('trial.balance.print');
-        Route::post('export/profit-loss', [ReportController::class, 'profitLossExport'])->name('profit.loss.export');
-        Route::post('print/profit-loss/{view?}', [ReportController::class, 'profitLossPrint'])->name('profit.loss.print');
-        Route::get('report/sales', [ReportController::class, 'salesReport'])->name('report.sales');
-        Route::post('export/sales', [ReportController::class, 'salesReportExport'])->name('sales.export');
-        Route::post('print/sales-report', [ReportController::class, 'salesReportPrint'])->name('sales.report.print');
-        Route::get('report/receivables', [ReportController::class, 'ReceivablesReport'])->name('report.receivables');
-        Route::post('export/receivables', [ReportController::class, 'ReceivablesExport'])->name('receivables.export');
-        Route::post('print/receivables', [ReportController::class, 'ReceivablesPrint'])->name('receivables.print');
-    }
+            Route::get('reports-monthly-cashflow', [ReportController::class, 'monthlyCashflow'])->name('report.monthly.cashflow')->middleware(['auth', 'XSS']);
+            Route::get('reports-quarterly-cashflow', [ReportController::class, 'quarterlyCashflow'])->name('report.quarterly.cashflow')->middleware(['auth', 'XSS']);
+            Route::post('export/trial-balance', [ReportController::class, 'trialBalanceExport'])->name('trial.balance.export');
+            Route::post('export/balance-sheet', [ReportController::class, 'balanceSheetExport'])->name('balance.sheet.export');
+            Route::post('print/balance-sheet/{view?}', [ReportController::class, 'balanceSheetPrint'])->name('balance.sheet.print');
+            Route::post('print/trial-balance', [ReportController::class, 'trialBalancePrint'])->name('trial.balance.print');
+            Route::post('export/profit-loss', [ReportController::class, 'profitLossExport'])->name('profit.loss.export');
+            Route::post('print/profit-loss/{view?}', [ReportController::class, 'profitLossPrint'])->name('profit.loss.print');
+            Route::get('report/sales', [ReportController::class, 'salesReport'])->name('report.sales');
+            Route::post('export/sales', [ReportController::class, 'salesReportExport'])->name('sales.export');
+            Route::post('print/sales-report', [ReportController::class, 'salesReportPrint'])->name('sales.report.print');
+            Route::get('report/receivables', [ReportController::class, 'ReceivablesReport'])->name('report.receivables');
+            Route::post('export/receivables', [ReportController::class, 'ReceivablesExport'])->name('receivables.export');
+            Route::post('print/receivables', [ReportController::class, 'ReceivablesPrint'])->name('receivables.print');
+        }
     );
 
     Route::group(
@@ -651,20 +661,20 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('proposal/{id}/status/change', [ProposalController::class, 'statusChange'])->name('proposal.status.change');
-        Route::get('proposal/{id}/convert', [ProposalController::class, 'convert'])->name('proposal.convert');
-        Route::get('proposal/{id}/duplicate', [ProposalController::class, 'duplicate'])->name('proposal.duplicate');
-        Route::post('proposal/product/destroy', [ProposalController::class, 'productDestroy'])->name('proposal.product.destroy');
-        Route::post('proposal/customer', [ProposalController::class, 'customer'])->name('proposal.customer');
-        Route::post('proposal/product', [ProposalController::class, 'product'])->name('proposal.product');
-        Route::get('proposal/items', [ProposalController::class, 'items'])->name('proposal.items');
-        Route::get('proposal/{id}/sent', [ProposalController::class, 'sent'])->name('proposal.sent');
-        Route::get('proposal/{id}/resent', [ProposalController::class, 'resent'])->name('proposal.resent');
-        Route::resource('proposal', ProposalController::class);
-        Route::get('proposal/create/{cid}', [ProposalController::class, 'create'])->name('proposal.create');
-
-    }
+        ],
+        function () {
+            Route::get('proposal/{id}/status/change', [ProposalController::class, 'statusChange'])->name('proposal.status.change');
+            Route::get('proposal/{id}/convert', [ProposalController::class, 'convert'])->name('proposal.convert');
+            Route::get('proposal/{id}/duplicate', [ProposalController::class, 'duplicate'])->name('proposal.duplicate');
+            Route::post('proposal/product/destroy', [ProposalController::class, 'productDestroy'])->name('proposal.product.destroy');
+            Route::post('proposal/customer', [ProposalController::class, 'customer'])->name('proposal.customer');
+            Route::post('proposal/product', [ProposalController::class, 'product'])->name('proposal.product');
+            Route::get('proposal/items', [ProposalController::class, 'items'])->name('proposal.items');
+            Route::get('proposal/{id}/sent', [ProposalController::class, 'sent'])->name('proposal.sent');
+            Route::get('proposal/{id}/resent', [ProposalController::class, 'resent'])->name('proposal.resent');
+            Route::resource('proposal', ProposalController::class);
+            Route::get('proposal/create/{cid}', [ProposalController::class, 'create'])->name('proposal.create');
+        }
     );
 
     Route::get('/proposal/preview/{template}/{color}', [ProposalController::class, 'previewProposal'])->name('proposal.preview');
@@ -689,9 +699,10 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::resource('chart-of-account', ChartOfAccountController::class);
-    }
+        ],
+        function () {
+            Route::resource('chart-of-account', ChartOfAccountController::class);
+        }
     );
 
     Route::group(
@@ -701,14 +712,14 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
+        ],
+        function () {
 
-        Route::post('journal-entry/account/destroy', [JournalEntryController::class, 'accountDestroy'])->name('journal.account.destroy');
+            Route::post('journal-entry/account/destroy', [JournalEntryController::class, 'accountDestroy'])->name('journal.account.destroy');
 
-        Route::delete('journal-entry/journal/destroy/{item_id}', [JournalEntryController::class, 'journalDestroy'])->name('journal.destroy');
-        Route::resource('journal-entry', JournalEntryController::class);
-
-    }
+            Route::delete('journal-entry/journal/destroy/{item_id}', [JournalEntryController::class, 'journalDestroy'])->name('journal.destroy');
+            Route::resource('journal-entry', JournalEntryController::class);
+        }
     );
 
     // Client Module
@@ -976,7 +987,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('job', JobController::class)->middleware(['auth', 'XSS']);
 
 
-    Route::get('candidates-job-applications', [JobApplicationController::class, 'candidate'])->name('job.application.candidate')->middleware(['auth','XSS']);
+    Route::get('candidates-job-applications', [JobApplicationController::class, 'candidate'])->name('job.application.candidate')->middleware(['auth', 'XSS']);
 
     Route::resource('job-application', JobApplicationController::class)->middleware(['auth', 'XSS']);
     Route::post('job-application/order', [JobApplicationController::class, 'order'])->name('job.application.order')->middleware(['XSS']);
@@ -1173,15 +1184,16 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::resource('contractType', ContractTypeController::class);
-    }
+        ],
+        function () {
+            Route::resource('contractType', ContractTypeController::class);
+        }
     );
 
 
     // Project Timesheet
     Route::get('append-timesheet-task-html', [TimesheetController::class, 'appendTimesheetTaskHTML'])->name('append.timesheet.task.html')->middleware(['auth', 'XSS']);
-//    Route::get('timesheet-table-view', [TimesheetController::class, 'filterTimesheetTableView'])->name('filter.timesheet.table.view')->middleware(['auth', 'XSS']);
+    //    Route::get('timesheet-table-view', [TimesheetController::class, 'filterTimesheetTableView'])->name('filter.timesheet.table.view')->middleware(['auth', 'XSS']);
     Route::get('timesheet-view', [TimesheetController::class, 'filterTimesheetView'])->name('filter.timesheet.view')->middleware(['auth', 'XSS']);
     Route::get('timesheet-list', [TimesheetController::class, 'timesheetList'])->name('timesheet.list')->middleware(['auth', 'XSS']);
     Route::get('timesheet-list-get', [TimesheetController::class, 'timesheetListGet'])->name('timesheet.list.get')->middleware(['auth', 'XSS']);
@@ -1199,27 +1211,28 @@ Route::group(['middleware' => ['verified']], function () {
                 'auth',
                 'XSS',
             ],
-        ], function () {
-        Route::resource('projectstages', ProjectstagesController::class);
-        Route::post('/projectstages/order', [ProjectstagesController::class, 'order'])->name('projectstages.order')->middleware(['auth', 'XSS']);
-        Route::post('projects/bug/kanban/order', [ProjectController::class, 'bugKanbanOrder'])->name('bug.kanban.order');
-        Route::get('projects/{id}/bug/kanban', [ProjectController::class, 'bugKanban'])->name('task.bug.kanban');
-        Route::get('projects/{id}/bug', [ProjectController::class, 'bug'])->name('task.bug');
-        Route::get('projects/{id}/bug/create', [ProjectController::class, 'bugCreate'])->name('task.bug.create');
-        Route::post('projects/{id}/bug/store', [ProjectController::class, 'bugStore'])->name('task.bug.store');
-        Route::get('projects/{id}/bug/{bid}/edit', [ProjectController::class, 'bugEdit'])->name('task.bug.edit');
-        Route::post('projects/{id}/bug/{bid}/update', [ProjectController::class, 'bugUpdate'])->name('task.bug.update');
-        Route::delete('projects/{id}/bug/{bid}/destroy', [ProjectController::class, 'bugDestroy'])->name('task.bug.destroy');
-        Route::get('projects/{id}/bug/{bid}/show', [ProjectController::class, 'bugShow'])->name('task.bug.show');
-        Route::post('projects/{id}/bug/{bid}/comment', [ProjectController::class, 'bugCommentStore'])->name('bug.comment.store');
-        Route::post('projects/bug/{bid}/file', [ProjectController::class, 'bugCommentStoreFile'])->name('bug.comment.file.store');
-        Route::delete('projects/bug/comment/{id}', [ProjectController::class, 'bugCommentDestroy'])->name('bug.comment.destroy');
-        Route::delete('projects/bug/file/{id}', [ProjectController::class, 'bugCommentDestroyFile'])->name('bug.comment.file.destroy');
+        ],
+        function () {
+            Route::resource('projectstages', ProjectstagesController::class);
+            Route::post('/projectstages/order', [ProjectstagesController::class, 'order'])->name('projectstages.order')->middleware(['auth', 'XSS']);
+            Route::post('projects/bug/kanban/order', [ProjectController::class, 'bugKanbanOrder'])->name('bug.kanban.order');
+            Route::get('projects/{id}/bug/kanban', [ProjectController::class, 'bugKanban'])->name('task.bug.kanban');
+            Route::get('projects/{id}/bug', [ProjectController::class, 'bug'])->name('task.bug');
+            Route::get('projects/{id}/bug/create', [ProjectController::class, 'bugCreate'])->name('task.bug.create');
+            Route::post('projects/{id}/bug/store', [ProjectController::class, 'bugStore'])->name('task.bug.store');
+            Route::get('projects/{id}/bug/{bid}/edit', [ProjectController::class, 'bugEdit'])->name('task.bug.edit');
+            Route::post('projects/{id}/bug/{bid}/update', [ProjectController::class, 'bugUpdate'])->name('task.bug.update');
+            Route::delete('projects/{id}/bug/{bid}/destroy', [ProjectController::class, 'bugDestroy'])->name('task.bug.destroy');
+            Route::get('projects/{id}/bug/{bid}/show', [ProjectController::class, 'bugShow'])->name('task.bug.show');
+            Route::post('projects/{id}/bug/{bid}/comment', [ProjectController::class, 'bugCommentStore'])->name('bug.comment.store');
+            Route::post('projects/bug/{bid}/file', [ProjectController::class, 'bugCommentStoreFile'])->name('bug.comment.file.store');
+            Route::delete('projects/bug/comment/{id}', [ProjectController::class, 'bugCommentDestroy'])->name('bug.comment.destroy');
+            Route::delete('projects/bug/file/{id}', [ProjectController::class, 'bugCommentDestroyFile'])->name('bug.comment.file.destroy');
 
-        Route::resource('bugstatus', BugStatusController::class);
-        Route::post('/bugstatus/order', [BugStatusController::class, 'order'])->name('bugstatus.order');
-        Route::get('bugs-report/{view?}', [ProjectTaskController::class, 'allBugList'])->name('bugs.view')->middleware(['auth', 'XSS']);
-    }
+            Route::resource('bugstatus', BugStatusController::class);
+            Route::post('/bugstatus/order', [BugStatusController::class, 'order'])->name('bugstatus.order');
+            Route::get('bugs-report/{view?}', [ProjectTaskController::class, 'allBugList'])->name('bugs.view')->middleware(['auth', 'XSS']);
+        }
     );
 
     // User_Todo Module
@@ -1245,11 +1258,13 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('/orders', [StripePaymentController::class, 'index'])->name('order.index');
-        Route::get('/stripe/{code}', [StripePaymentController::class, 'stripe'])->name('stripe');
-        Route::post('/stripe', [StripePaymentController::class, 'stripePost'])->name('stripe.post');
-    });
+        ],
+        function () {
+            Route::get('/orders', [StripePaymentController::class, 'index'])->name('order.index');
+            Route::get('/stripe/{code}', [StripePaymentController::class, 'stripe'])->name('stripe');
+            Route::post('/stripe', [StripePaymentController::class, 'stripePost'])->name('stripe.post');
+        }
+    );
 
     Route::get('/apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply.coupon')->middleware(['auth', 'XSS', 'revalidate']);
 
@@ -1293,11 +1308,12 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('contract/{id}/description', [ContractController::class, 'description'])->name('contract.description');
-        Route::get('contract/grid', [ContractController::class, 'grid'])->name('contract.grid');
-        Route::resource('contract', ContractController::class);
-    }
+        ],
+        function () {
+            Route::get('contract/{id}/description', [ContractController::class, 'description'])->name('contract.description');
+            Route::get('contract/grid', [ContractController::class, 'grid'])->name('contract.grid');
+            Route::resource('contract', ContractController::class);
+        }
     );
     Route::post('/contract/{id}/file', [ContractController::class, 'fileUpload'])->name('contract.file.upload')->middleware(['auth', 'XSS']);
     Route::get('contract/pdf/{id}', [ContractController::class, 'pdffromcontract'])->name('contract.download.pdf')->middleware(['auth']);
@@ -1330,23 +1346,23 @@ Route::group(['middleware' => ['verified']], function () {
 
     // Custom Landing Page
 
-//    Route::get('/landingpage', [LandingPageSectionController::class, 'index'])->name('custom_landing_page.index')->middleware(['auth', 'XSS']);
-//    Route::get('/LandingPage/show/{id}', [LandingPageSectionController::class, 'show']);
-//
-//    Route::post('/LandingPage/setConetent', [LandingPageSectionController::class, 'setConetent'])->middleware(['auth', 'XSS']);
-//
-//
-//    Route::get(
-//        '/get_landing_page_section/{name}', function ($name) {
-//        $plans = \DB::table('plans')->get();
-//
-//        return view('custom_landing_page.' . $name, compact('plans'));
-//    }
-//    );
-//
-//    Route::post('/LandingPage/removeSection/{id}', [LandingPageSectionController::class, 'removeSection'])->middleware(['auth', 'XSS']);
-//    Route::post('/LandingPage/setOrder', [LandingPageSectionController::class, 'setOrder'])->middleware(['auth', 'XSS']);
-//    Route::post('/LandingPage/copySection', [LandingPageSectionController::class, 'copySection'])->middleware(['auth', 'XSS']);
+    //    Route::get('/landingpage', [LandingPageSectionController::class, 'index'])->name('custom_landing_page.index')->middleware(['auth', 'XSS']);
+    //    Route::get('/LandingPage/show/{id}', [LandingPageSectionController::class, 'show']);
+    //
+    //    Route::post('/LandingPage/setConetent', [LandingPageSectionController::class, 'setConetent'])->middleware(['auth', 'XSS']);
+    //
+    //
+    //    Route::get(
+    //        '/get_landing_page_section/{name}', function ($name) {
+    //        $plans = \DB::table('plans')->get();
+    //
+    //        return view('custom_landing_page.' . $name, compact('plans'));
+    //    }
+    //    );
+    //
+    //    Route::post('/LandingPage/removeSection/{id}', [LandingPageSectionController::class, 'removeSection'])->middleware(['auth', 'XSS']);
+    //    Route::post('/LandingPage/setOrder', [LandingPageSectionController::class, 'setOrder'])->middleware(['auth', 'XSS']);
+    //    Route::post('/LandingPage/copySection', [LandingPageSectionController::class, 'copySection'])->middleware(['auth', 'XSS']);
 
     // Plan Payment Gateways
     Route::post('plan-pay-with-bank', [BankTransferPaymentController::class, 'planPayWithBank'])->name('plan.pay.with.bank')->middleware(['auth', 'XSS', 'revalidate']);
@@ -1378,8 +1394,8 @@ Route::group(['middleware' => ['verified']], function () {
     Route::post('/plan-pay-with-coingate', [CoingatePaymentController::class, 'planPayWithCoingate'])->name('plan.pay.with.coingate')->middleware(['auth', 'XSS']);
     Route::get('/plan/coingate/{plan}', [CoingatePaymentController::class, 'getPaymentStatus'])->name('plan.coingate');
 
-    Route::post('/toyyibpay', [ToyyibpayController::class,'planPayWithToyyibpay'])->name('plan.toyyibpaypayment');
-    Route::get('/plan-pay-with-toyyibpay/{id}/{status}/{coupon}', [ToyyibpayController::class,'getPaymentStatus'])->name('plan.status');
+    Route::post('/toyyibpay', [ToyyibpayController::class, 'planPayWithToyyibpay'])->name('plan.toyyibpaypayment');
+    Route::get('/plan-pay-with-toyyibpay/{id}/{status}/{coupon}', [ToyyibpayController::class, 'getPaymentStatus'])->name('plan.status');
 
     Route::post('payfast-plan', [PayFastController::class, 'planPayWithPayfast'])->name('payfast.payment');
     Route::get('payfast-plan/{success}', [PayFastController::class, 'getPaymentStatus'])->name('payfast.payment.success');
@@ -1387,7 +1403,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::post('iyzipay/prepare', [IyziPayController::class, 'initiatePayment'])->name('iyzipay.payment.init');
     Route::post('iyzipay/callback/plan/{id}/{amount}/{coupan_code?}', [IyzipayController::class, 'iyzipayCallback'])->name('iyzipay.payment.callback');
 
-    Route::post('/sspay', [SspayController::class,'SspayPaymentPrepare'])->name('plan.sspaypayment');
+    Route::post('/sspay', [SspayController::class, 'SspayPaymentPrepare'])->name('plan.sspaypayment');
     Route::get('sspay-payment-plan/{plan_id}/{amount}/{couponCode}', [SspayController::class, 'SspayPlanGetPayment'])->middleware(['auth'])->name('plan.sspay.callback');
 
     Route::post('plan-pay-with-paytab', [PaytabController::class, 'planPayWithpaytab'])->middleware(['auth'])->name('plan.pay.with.paytab');
@@ -1423,15 +1439,15 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('order', [StripePaymentController::class, 'index'])->name('order.index');
-        Route::get('/stripe/{code}', [StripePaymentController::class, 'stripe'])->name('stripe');
-        Route::post('/stripe', [StripePaymentController::class, 'stripePost'])->name('stripe.post');
-
-    }
+        ],
+        function () {
+            Route::get('order', [StripePaymentController::class, 'index'])->name('order.index');
+            Route::get('/stripe/{code}', [StripePaymentController::class, 'stripe'])->name('stripe');
+            Route::post('/stripe', [StripePaymentController::class, 'stripePost'])->name('stripe.post');
+        }
     );
-//    Route::post('plan-pay-with-paypal', [PaypalController::class, 'planPayWithPaypal'])->name('plan.pay.with.paypal')->middleware(['auth', 'XSS', 'revalidate']);
-//    Route::get('{id}/plan-get-payment-status', [PaypalController::class, 'planGetPaymentStatus'])->name('plan.get.payment.status')->middleware(['auth', 'XSS', 'revalidate']);
+    //    Route::post('plan-pay-with-paypal', [PaypalController::class, 'planPayWithPaypal'])->name('plan.pay.with.paypal')->middleware(['auth', 'XSS', 'revalidate']);
+    //    Route::get('{id}/plan-get-payment-status', [PaypalController::class, 'planGetPaymentStatus'])->name('plan.get.payment.status')->middleware(['auth', 'XSS', 'revalidate']);
 
 
 
@@ -1446,13 +1462,13 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('support/{id}/reply', [SupportController::class, 'reply'])->name('support.reply');
-        Route::post('support/{id}/reply', [SupportController::class, 'replyAnswer'])->name('support.reply.answer');
-        Route::get('support/grid', [SupportController::class, 'grid'])->name('support.grid');
-        Route::resource('support', SupportController::class);
-
-    }
+        ],
+        function () {
+            Route::get('support/{id}/reply', [SupportController::class, 'reply'])->name('support.reply');
+            Route::post('support/{id}/reply', [SupportController::class, 'replyAnswer'])->name('support.reply.answer');
+            Route::get('support/grid', [SupportController::class, 'grid'])->name('support.grid');
+            Route::resource('support', SupportController::class);
+        }
     );
 
     Route::resource('competencies', CompetenciesController::class)->middleware(['auth', 'XSS']);
@@ -1465,9 +1481,10 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::resource('performanceType', PerformanceTypeController::class);
-    }
+        ],
+        function () {
+            Route::resource('performanceType', PerformanceTypeController::class);
+        }
     );
 
 
@@ -1506,13 +1523,13 @@ Route::group(['middleware' => ['verified']], function () {
 
 
 
-    Route::get('export/transaction', [TransactionController::class,'export'])->name('transaction.export');
-    Route::get('export/accountstatement', [ReportController::class,'export'])->name('accountstatement.export');
-    Route::get('export/productstock', [ReportController::class,'stock_export'])->name('productstock.export');
-    Route::get('export/payroll', [ReportController::class,'PayrollReportExport'])->name('payroll.export');
-    Route::get('export/leave', [ReportController::class,'LeaveReportExport'])->name('leave.export');
+    Route::get('export/transaction', [TransactionController::class, 'export'])->name('transaction.export');
+    Route::get('export/accountstatement', [ReportController::class, 'export'])->name('accountstatement.export');
+    Route::get('export/productstock', [ReportController::class, 'stock_export'])->name('productstock.export');
+    Route::get('export/payroll', [ReportController::class, 'PayrollReportExport'])->name('payroll.export');
+    Route::get('export/leave', [ReportController::class, 'LeaveReportExport'])->name('leave.export');
 
-    Route::post('export/payslip', [PaySlipController::class,'export'])->name('payslip.export');
+    Route::post('export/payslip', [PaySlipController::class, 'export'])->name('payslip.export');
 
 
     // Time-Tracker
@@ -1547,23 +1564,23 @@ Route::group(['middleware' => ['verified']], function () {
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('purchase/items', [PurchaseController::class, 'items'])->name('purchase.items');
-        Route::resource('purchase', PurchaseController::class);
+        ],
+        function () {
+            Route::get('purchase/items', [PurchaseController::class, 'items'])->name('purchase.items');
+            Route::resource('purchase', PurchaseController::class);
 
 
-//    Route::get('/bill/{id}/', 'PurchaseController@purchaseLink')->name('purchase.link.copy');
-        Route::get('purchase/{id}/payment', [PurchaseController::class, 'payment'])->name('purchase.payment');
-        Route::post('purchase/{id}/payment', [PurchaseController::class, 'createPayment'])->name('purchase.payment');
-        Route::post('purchase/{id}/payment/{pid}/destroy', [PurchaseController::class, 'paymentDestroy'])->name('purchase.payment.destroy');
-        Route::post('purchase/product/destroy', [PurchaseController::class, 'productDestroy'])->name('purchase.product.destroy');
-        Route::post('purchase/vender', [PurchaseController::class, 'vender'])->name('purchase.vender');
-        Route::post('purchase/product', [PurchaseController::class, 'product'])->name('purchase.product');
-        Route::get('purchase/create/{cid}', [PurchaseController::class, 'create'])->name('purchase.create');
-        Route::get('purchase/{id}/sent', [PurchaseController::class, 'sent'])->name('purchase.sent');
-        Route::get('purchase/{id}/resent', [PurchaseController::class, 'resent'])->name('purchase.resent');
-
-    }
+            //    Route::get('/bill/{id}/', 'PurchaseController@purchaseLink')->name('purchase.link.copy');
+            Route::get('purchase/{id}/payment', [PurchaseController::class, 'payment'])->name('purchase.payment');
+            Route::post('purchase/{id}/payment', [PurchaseController::class, 'createPayment'])->name('purchase.payment');
+            Route::post('purchase/{id}/payment/{pid}/destroy', [PurchaseController::class, 'paymentDestroy'])->name('purchase.payment.destroy');
+            Route::post('purchase/product/destroy', [PurchaseController::class, 'productDestroy'])->name('purchase.product.destroy');
+            Route::post('purchase/vender', [PurchaseController::class, 'vender'])->name('purchase.vender');
+            Route::post('purchase/product', [PurchaseController::class, 'product'])->name('purchase.product');
+            Route::get('purchase/create/{cid}', [PurchaseController::class, 'create'])->name('purchase.create');
+            Route::get('purchase/{id}/sent', [PurchaseController::class, 'sent'])->name('purchase.sent');
+            Route::get('purchase/{id}/resent', [PurchaseController::class, 'resent'])->name('purchase.resent');
+        }
 
     );
     Route::get('pos-print-setting', [SystemController::class, 'posPrintIndex'])->name('pos.print.setting')->middleware(['auth', 'XSS']);
@@ -1578,7 +1595,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::get('pos/data/store', [PosController::class, 'store'])->name('pos.data.store')->middleware(['auth', 'XSS', 'revalidate']);
 
     //for pos print
-    Route::get('printview/pos', [PosController::class, 'printView'])->name('pos.printview')->middleware(['auth', 'XSS','revalidate']);
+    Route::get('printview/pos', [PosController::class, 'printView'])->name('pos.printview')->middleware(['auth', 'XSS', 'revalidate']);
 
 
     Route::resource('pos', PosController::class)->middleware(['auth', 'XSS', 'revalidate']);
@@ -1669,7 +1686,7 @@ Route::group(['middleware' => ['verified']], function () {
     //Google Calendar
     Route::any('event/get_event_data', [EventController::class, 'get_event_data'])->name('event.get_event_data')->middleware(['auth', 'XSS']);
 
-    Route::post('setting/google-calender',[SystemController::class,'saveGoogleCalenderSettings'])->name('google.calender.settings');
+    Route::post('setting/google-calender', [SystemController::class, 'saveGoogleCalenderSettings'])->name('google.calender.settings');
     Route::any('holiday/get_holiday_data', [HolidayController::class, 'get_holiday_data'])->name('holiday.get_holiday_data')->middleware(['auth', 'XSS']);
     Route::any('interview-schedule/get_interview_data', [InterviewScheduleController::class, 'get_interview_data'])->name('holiday.get_interview_data')->middleware(['auth', 'XSS']);
     Route::post('calendar/get_task_data', [ProjectTaskController::class, 'get_task_data'])->name('task.calendar.get_task_data')->middleware(['auth', 'XSS']);
@@ -1686,73 +1703,74 @@ Route::group(['middleware' => ['verified']], function () {
 
 
     //shared project & copy link
-    Route::any('/projects/copy/link/{id}',[ProjectController::class,'copylinksetting'])->name('projects.copy.link');
-    Route::any('/projects{id}/settingcreate',[ProjectController::class, 'copylink_setting_create'])->name('projects.copylink.setting.create');
+    Route::any('/projects/copy/link/{id}', [ProjectController::class, 'copylinksetting'])->name('projects.copy.link');
+    Route::any('/projects{id}/settingcreate', [ProjectController::class, 'copylink_setting_create'])->name('projects.copylink.setting.create');
     Route::get('/shareproject/{lang?}', [ProjectController::class, 'shareproject'])->name('shareproject');
 
 
     //User Log
     Route::get('/userlogs', [UserController::class, 'userLog'])->name('user.userlog')->middleware(['auth', 'XSS']);
-    Route::get('userlogs/{id}',[UserController::class,'userLogView'])->name('user.userlogview')->middleware(['auth','XSS']);
+    Route::get('userlogs/{id}', [UserController::class, 'userLogView'])->name('user.userlogview')->middleware(['auth', 'XSS']);
     Route::delete('userlogs/{id}', [UserController::class, 'userLogDestroy'])->name('user.userlogdestroy')->middleware(['auth', 'XSS']);
 
 
     //notification Template
-    Route::get('notification_templates/{id?}/{lang?}', [NotificationTemplatesController::class, 'index'])->name('notification_templates.index')->middleware(['auth','XSS',]);
-    Route::resource('notification-templates', NotificationTemplatesController::class)->middleware(['auth','XSS',]);
+    Route::get('notification_templates/{id?}/{lang?}', [NotificationTemplatesController::class, 'index'])->name('notification_templates.index')->middleware(['auth', 'XSS',]);
+    Route::resource('notification-templates', NotificationTemplatesController::class)->middleware(['auth', 'XSS',]);
 
-   //Proposal/Invoice/Bill/Purchase/POS - footer notes
-    Route::post('system-settings/note', [SystemController::class, 'footerNoteStore'])->name('system.settings.footernote')->middleware(['auth','XSS']);
+    //Proposal/Invoice/Bill/Purchase/POS - footer notes
+    Route::post('system-settings/note', [SystemController::class, 'footerNoteStore'])->name('system.settings.footernote')->middleware(['auth', 'XSS']);
 
     //AI module
     Route::post('chatgpt-settings', [SystemController::class, 'chatgptSetting'])->name('chatgpt.settings');
-    Route::get('generate/{template_name}',[AiTemplateController::class,'create'])->name('generate');
-    Route::post('generate/keywords/{id}',[AiTemplateController::class,'getKeywords'])->name('generate.keywords');
-    Route::post('generate/response',[AiTemplateController::class,'AiGenerate'])->name('generate.response');
+    Route::get('generate/{template_name}', [AiTemplateController::class, 'create'])->name('generate');
+    Route::post('generate/keywords/{id}', [AiTemplateController::class, 'getKeywords'])->name('generate.keywords');
+    Route::post('generate/response', [AiTemplateController::class, 'AiGenerate'])->name('generate.response');
 
     //AI module for grammar check
-    Route::get('grammar/{template}',[AiTemplateController::class,'grammar'])->name('grammar')->middleware(['auth','XSS']);
-    Route::post('grammar/response',[AiTemplateController::class,'grammarProcess'])->name('grammar.response')->middleware(['auth','XSS']);
+    Route::get('grammar/{template}', [AiTemplateController::class, 'grammar'])->name('grammar')->middleware(['auth', 'XSS']);
+    Route::post('grammar/response', [AiTemplateController::class, 'grammarProcess'])->name('grammar.response')->middleware(['auth', 'XSS']);
 
     //IP-Restrication settings
-    Route::get('create/ip', [SystemController::class, 'createIp'])->name('create.ip')->middleware(['auth','XSS']);
-    Route::post('create/ip', [SystemController::class, 'storeIp'])->name('store.ip')->middleware(['auth','XSS']);
-    Route::get('edit/ip/{id}', [SystemController::class, 'editIp'])->name('edit.ip')->middleware(['auth','XSS']);
-    Route::post('edit/ip/{id}', [SystemController::class, 'updateIp'])->name('update.ip')->middleware(['auth','XSS']);
-    Route::delete('destroy/ip/{id}', [SystemController::class, 'destroyIp'])->name('destroy.ip')->middleware(['auth','XSS']);
+    Route::get('create/ip', [SystemController::class, 'createIp'])->name('create.ip')->middleware(['auth', 'XSS']);
+    Route::post('create/ip', [SystemController::class, 'storeIp'])->name('store.ip')->middleware(['auth', 'XSS']);
+    Route::get('edit/ip/{id}', [SystemController::class, 'editIp'])->name('edit.ip')->middleware(['auth', 'XSS']);
+    Route::post('edit/ip/{id}', [SystemController::class, 'updateIp'])->name('update.ip')->middleware(['auth', 'XSS']);
+    Route::delete('destroy/ip/{id}', [SystemController::class, 'destroyIp'])->name('destroy.ip')->middleware(['auth', 'XSS']);
 
     //lang enable / disable
-    Route::post('disable-language',[LanguageController::class,'disableLang'])->name('disablelanguage')->middleware(['auth','XSS']);
+    Route::post('disable-language', [LanguageController::class, 'disableLang'])->name('disablelanguage')->middleware(['auth', 'XSS']);
 
     //Expense Module
-     Route::get('expense/pdf/{id}', [ExpenseController::class, 'expense'])->name('expense.pdf')->middleware(['XSS', 'revalidate']);
-     Route::group(
+    Route::get('expense/pdf/{id}', [ExpenseController::class, 'expense'])->name('expense.pdf')->middleware(['XSS', 'revalidate']);
+    Route::group(
         [
             'middleware' => [
                 'auth',
                 'XSS',
                 'revalidate',
             ],
-        ], function () {
-        Route::get('expense/index', [ExpenseController::class, 'index'])->name('expense.index');
-        Route::any('expense/customer', [ExpenseController::class, 'customer'])->name('expense.customer');
-        Route::post('expense/vender', [ExpenseController::class, 'vender'])->name('expense.vender');
-        Route::post('expense/employee', [ExpenseController::class, 'employee'])->name('expense.employee');
+        ],
+        function () {
+            Route::get('expense/index', [ExpenseController::class, 'index'])->name('expense.index');
+            Route::any('expense/customer', [ExpenseController::class, 'customer'])->name('expense.customer');
+            Route::post('expense/vender', [ExpenseController::class, 'vender'])->name('expense.vender');
+            Route::post('expense/employee', [ExpenseController::class, 'employee'])->name('expense.employee');
 
-        Route::post('expense/product/destroy', [ExpenseController::class, 'productDestroy'])->name('expense.product.destroy');
+            Route::post('expense/product/destroy', [ExpenseController::class, 'productDestroy'])->name('expense.product.destroy');
 
-        Route::post('expense/product', [ExpenseController::class, 'product'])->name('expense.product');
-        Route::get('expense/{id}/payment', [ExpenseController::class, 'payment'])->name('expense.payment');
-        Route::get('expense/items', [ExpenseController::class, 'items'])->name('expense.items');
+            Route::post('expense/product', [ExpenseController::class, 'product'])->name('expense.product');
+            Route::get('expense/{id}/payment', [ExpenseController::class, 'payment'])->name('expense.payment');
+            Route::get('expense/items', [ExpenseController::class, 'items'])->name('expense.items');
 
-        Route::resource('expense', ExpenseController::class);
-        Route::get('expense/create/{cid}', [ExpenseController::class, 'create'])->name('expense.create');
-
-    }
+            Route::resource('expense', ExpenseController::class);
+            Route::get('expense/create/{cid}', [ExpenseController::class, 'create'])->name('expense.create');
+        }
     );
-
+    // Route Baru
+    Route::get('personal_report', [EmployeeController::class, 'personalReport'])->name('personal_report')->middleware(['auth', 'XSS']);
+    Route::get('add_personal_report', [EmployeeController::class, 'addPersonalReport'])->name('add_personal_report');
+    Route::post('store_personal_report', [EmployeeController::class, 'storePersonalReport'])->name('store_personal_report')->middleware(['auth', 'XSS']);
 });
 
-Route::any('/cookie-consent', [SystemController::class,'CookieConsent'])->name('cookie-consent');
-
-
+Route::any('/cookie-consent', [SystemController::class, 'CookieConsent'])->name('cookie-consent');

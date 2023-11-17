@@ -4,6 +4,9 @@
 
         <a href="{{ route('department.index') }}" class="list-group-item list-group-item-action border-0 {{ (request()->is('department*') ? 'active' : '')}}">{{__('Department')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
+        {{-- sub department --}}
+        <a href="{{ route('department.index') }}" class="list-group-item list-group-item-action border-0 {{ (request()->is('subdepartment*') ? 'active' : '')}}">{{__('Sub Department')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+
         <a href="{{ route('designation.index') }}" class="list-group-item list-group-item-action border-0 {{ (request()->is('designation*') ? 'active' : '')}}">{{__('Designation')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
         <a href="{{ route('leavetype.index') }}" class="list-group-item list-group-item-action border-0 {{ (Request::route()->getName() == 'leavetype.index' ? 'active' : '')}}">{{__('Leave Type')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>

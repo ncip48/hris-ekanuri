@@ -4,6 +4,9 @@
 
         <a href="<?php echo e(route('department.index')); ?>" class="list-group-item list-group-item-action border-0 <?php echo e((request()->is('department*') ? 'active' : '')); ?>"><?php echo e(__('Department')); ?><div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
+        
+        <a href="<?php echo e(route('department.index')); ?>" class="list-group-item list-group-item-action border-0 <?php echo e((request()->is('subdepartment*') ? 'active' : '')); ?>"><?php echo e(__('Sub Department')); ?><div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+
         <a href="<?php echo e(route('designation.index')); ?>" class="list-group-item list-group-item-action border-0 <?php echo e((request()->is('designation*') ? 'active' : '')); ?>"><?php echo e(__('Designation')); ?><div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
         <a href="<?php echo e(route('leavetype.index')); ?>" class="list-group-item list-group-item-action border-0 <?php echo e((Request::route()->getName() == 'leavetype.index' ? 'active' : '')); ?>"><?php echo e(__('Leave Type')); ?><div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
