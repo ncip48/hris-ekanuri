@@ -9,6 +9,8 @@ class GroupClass extends Model
 {
     use HasFactory;
 
+    protected $table = 'classes';
+
     protected $fillable = [
         'name',
         'level_id',
