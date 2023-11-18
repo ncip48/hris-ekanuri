@@ -66,12 +66,12 @@ class SubDepartmentController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
 
-            $department             = new SubDepartment();
-            $department->department_id  = $request->department_id;
-            $department->branch_id  = $request->branch_id;
-            $department->name       = $request->name;
-            $department->created_by = \Auth::user()->creatorId();
-            $department->save();
+            $subDepartment             = new SubDepartment();
+            $subDepartment->department_id  = $request->department_id;
+            $subDepartment->branch_id  = $request->branch_id;
+            $subDepartment->name       = $request->name;
+            $subDepartment->created_by = \Auth::user()->creatorId();
+            $subDepartment->save();
 
             return redirect()->route('sub-department.index')->with('success', __('Sub Department successfully created.'));
         } else {
