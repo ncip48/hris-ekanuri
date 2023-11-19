@@ -286,7 +286,7 @@
                                                             <li
                                                                 class="dash-item <?php echo e(request()->is('personal report*') ? 'active' : ''); ?>">
                                                                 <a class="dash-link"
-                                                                    href="<?php echo e(route('personal_report')); ?>"><?php echo e(__('Personal Report')); ?></a>
+                                                                    href="<?php echo e(route('personal-report.index')); ?>"><?php echo e(__('Personal Report')); ?></a>
                                                             </li>
                                                             <li
                                                                 class="dash-item <?php echo e(request()->is('request edit identitas*') ? 'active' : ''); ?>">

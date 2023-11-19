@@ -289,7 +289,7 @@
                                                             <li
                                                                 class="dash-item {{ request()->is('personal report*') ? 'active' : '' }}">
                                                                 <a class="dash-link"
-                                                                    href="{{route('personal_report')}}">{{ __('Personal Report') }}</a>
+                                                                    href="{{route('personal-report.index')}}">{{ __('Personal Report') }}</a>
                                                             </li>
                                                             <li
                                                                 class="dash-item {{ request()->is('request edit identitas*') ? 'active' : '' }}">

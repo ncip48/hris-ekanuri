@@ -1,4 +1,4 @@
-{{ Form::open(['url' => 'sub-department', 'method' => 'post']) }}
+{{ Form::open(['url' => 'subdepartment', 'method' => 'post']) }}
 <div class="modal-body">
     <div class="row ">
         <div class="col-12">

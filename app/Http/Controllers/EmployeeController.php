@@ -15,6 +15,7 @@ use App\Models\ExperienceCertificate;
 use App\Models\JoiningLetter;
 use App\Models\NOC;
 use App\Models\Plan;
+use App\Models\SubDepartment;
 use App\Models\Termination;
 use App\Models\User;
 use App\Models\Utility;
@@ -820,43 +821,5 @@ class EmployeeController extends Controller
 
         return redirect()->back()->with($data['status'], $data['msg']);
     }
-
- // personal Report
- public function personalReport()
- {
-     if(\Auth::user()->can('manage employee'))
-     {
-         if(Auth::user()->type == 'Employee')
-         {
-             $employees = Employee::where('user_id', '=', Auth::user()->id)->get();
-         }
-         else
-         {
-             $employees = Employee::where('created_by', \Auth::user()->creatorId())->get();
-         }
-
-         return view('employee.personal_report.index', compact('employees'));
-     }
-     else
-     {
-         return redirect()->back()->with('error', __('Permission denied.'));
-     }
- }
-
- public function addPersonalReport(){
-    $employees = Employee::where('created_by', \Auth::user()->creatorId())->get();
-    $brances = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-    $brances->prepend('Select Branch','');
-    $departments = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-    $departments->prepend('Select Department','');
-    $designations = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-    $designations->prepend('Select Designation','');
-    return view('employee.personal_report.create',compact('employees','brances','departments','designations'));
-
-    // return view('employee.personal_report.create');
- }
-
-//  public function storePersonalReport(Request $request){}
-
 
 }

@@ -140,6 +140,7 @@ use App\Http\Controllers\PaytrController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\SubDepartmentController;
 use App\Http\Controllers\WarehouseTransferController;
 
 
@@ -876,6 +877,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('document', DocumentController::class)->middleware(['auth', 'XSS']);
     Route::resource('kontrak', DocumentController::class)->middleware(['auth', 'XSS']);
     Route::resource('branch', BranchController::class)->middleware(['auth', 'XSS']);
+    Route::resource('personal-report', PersonalReportController::class)->middleware(['auth', 'XSS']);
 
 
     // Hrm EmployeeController
@@ -1769,9 +1771,9 @@ Route::group(['middleware' => ['verified']], function () {
         }
     );
     // Route Baru
-    Route::get('personal_report', [EmployeeController::class, 'personalReport'])->name('personal_report')->middleware(['auth', 'XSS']);
-    Route::get('add_personal_report', [EmployeeController::class, 'addPersonalReport'])->name('add_personal_report');
-    Route::post('store_personal_report', [EmployeeController::class, 'storePersonalReport'])->name('store_personal_report')->middleware(['auth', 'XSS']);
+    // Route::get('personal_report', [EmployeeController::class, 'personalReport'])->name('personal_report')->middleware(['auth', 'XSS']);
+    // Route::get('add_personal_report', [EmployeeController::class, 'addPersonalReport'])->name('add_personal_report');
+    // Route::post('store_personal_report', [EmployeeController::class, 'storePersonalReport'])->name('store_personal_report')->middleware(['auth', 'XSS']);
 });
 
 Route::any('/cookie-consent', [SystemController::class, 'CookieConsent'])->name('cookie-consent');

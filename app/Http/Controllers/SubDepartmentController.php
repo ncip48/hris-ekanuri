@@ -36,7 +36,7 @@ class SubDepartmentController extends Controller
             $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
-            return view('sub-department.create', compact('branch'));
+            return view('sub_department.create', compact('branch', 'department'));
         } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }
