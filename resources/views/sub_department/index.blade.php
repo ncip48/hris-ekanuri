@@ -41,11 +41,11 @@
                                 </tr>
                             </thead>
                             <tbody class="font-style">
-                                @foreach ($sub_departments as $sub_department)
+                                @foreach ($subDepartments as $subDepartment)
                                     <tr>
-                                        <td>{{ !empty($sub_department->branch) ? $sub_department->branch->name : '' }}</td>
-                                        <td>{{ $sub_department->department->name }}</td>
-                                        <td>{{ $sub_department->name }}</td>
+                                        <td>{{ !empty($subDepartment->branch) ? $subDepartment->branch->name : '' }}</td>
+                                        <td>{{ $subDepartment->department->name }}</td>
+                                        <td>{{ $subDepartment->name }}</td>
 
                                         <td class="Action">
                                             <span>
@@ -53,7 +53,7 @@
                                                     <div class="action-btn bg-primary ms-2">
 
                                                         <a href="#"
-                                                            data-url="{{ URL::to('sub-department/' . $sub_department->id . '/edit') }}"
+                                                            data-url="{{ URL::to('sub-department/' . $subDepartment->id . '/edit') }}"
                                                             data-ajax-popup="true" data-title="{{ __('Edit Sub Department') }}"
                                                             class="mx-3 btn btn-sm d-inline-flex align-items-center"
                                                             data-bs-toggle="tooltip" title="{{ __('Edit') }}"
@@ -65,8 +65,8 @@
                                                     <div class="action-btn bg-danger ms-2">
                                                         {!! Form::open([
                                                             'method' => 'DELETE',
-                                                            'route' => ['sub-department.destroy', $sub_department->id],
-                                                            'id' => 'delete-form-' . $sub_department->id,
+                                                            'route' => ['sub-department.destroy', $subDepartment->id],
+                                                            'id' => 'delete-form-' . $subDepartment->id,
                                                         ]) !!}
 
 
@@ -75,7 +75,7 @@
                                                             data-bs-toggle="tooltip" title="{{ __('Delete') }}"
                                                             data-original-title="{{ __('Delete') }}"
                                                             data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
-                                                            data-confirm-yes="document.getElementById('delete-form-{{ $sub_department->id }}').submit();"><i
+                                                            data-confirm-yes="document.getElementById('delete-form-{{ $subDepartment->id }}').submit();"><i
                                                                 class="ti ti-trash text-white"></i></a>
                                                         {!! Form::close() !!}
                                                     </div>

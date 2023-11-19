@@ -141,6 +141,8 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\SubDepartmentController;
+use App\Http\Controllers\ClassController;
+use App\Http\Controllers\LevelController;
 use App\Http\Controllers\WarehouseTransferController;
 
 
@@ -878,6 +880,8 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('kontrak', DocumentController::class)->middleware(['auth', 'XSS']);
     Route::resource('branch', BranchController::class)->middleware(['auth', 'XSS']);
     Route::resource('personal-report', PersonalReportController::class)->middleware(['auth', 'XSS']);
+    Route::resource('level', LevelController::class)->middleware(['auth', 'XSS']);
+    Route::resource('class', ClassController::class)->middleware(['auth', 'XSS']);
 
 
     // Hrm EmployeeController
