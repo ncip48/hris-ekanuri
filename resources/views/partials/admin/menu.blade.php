@@ -801,6 +801,40 @@
                                     </li>
                                 @endcan
 
+                                @if (Gate::check('manage employee schedule') ||
+                                        Gate::check('manage change schedule') ||
+                                        Gate::check('manage overtime request'))
+                                    <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'work-schedule' || Request::segment(1) == 'change-schedule' || Request::segment(1) == 'overtime-request' ? 'active dash-trigger' : '' }}"
+                                        href="#navbar-training" data-toggle="collapse" role="button"
+                                        aria-expanded="{{ Request::segment(1) == 'employee-schedule' || Request::segment(1) == 'change-schedule' || Request::segment(1) == 'overtime-request' ? 'true' : 'false' }}">
+                                        <a class="dash-link" href="#">{{ __('Work Schedule') }}<span
+                                                class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                                        <ul class="dash-submenu">
+                                            @can('manage employee schedule')
+                                                <li
+                                                    class="dash-item {{ request()->is('employee-schedule*') ? 'active' : '' }}">
+                                                    <a class="dash-link"
+                                                        href="{{ route('employee-schedule.index') }}">{{ __('Employee Schedule') }}</a>
+                                                </li>
+                                            @endcan
+                                            @can('manage change schedule')
+                                                <li
+                                                    class="dash-item {{ request()->is('change-schedule*') ? 'active' : '' }}">
+                                                    <a class="dash-link"
+                                                        href="{{ route('change-schedule.index') }}">{{ __('Change Schedule') }}</a>
+                                                </li>
+                                            @endcan
+                                            @can('manage overtime request')
+                                                <li
+                                                    class="dash-item {{ request()->is('overtime-request*') ? 'active' : '' }}">
+                                                    <a class="dash-link"
+                                                        href="{{ route('overtime-request.index') }}">{{ __('Overtime Request') }}</a>
+                                                </li>
+                                            @endcan
+                                        </ul>
+                                    </li>
+                                @endif
+
                                 @can('manage reimbursement')
                                     <li class="dash-item {{ request()->is('reimbursement*') ? 'active' : '' }}">
                                         <a class="dash-link"
