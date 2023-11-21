@@ -140,9 +140,12 @@ use App\Http\Controllers\PaytrController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\BehaviorController;
 use App\Http\Controllers\SubDepartmentController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\RatingBehaviorController;
+use App\Http\Controllers\ReimbursementController;
 use App\Http\Controllers\WarehouseTransferController;
 
 
@@ -939,6 +942,9 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('goaltype', GoalTypeController::class)->middleware(['auth', 'XSS']);
     Route::resource('goaltracking', GoalTrackingController::class)->middleware(['auth', 'XSS']);
     Route::resource('account-assets', AssetController::class)->middleware(['auth', 'XSS']);
+    Route::resource('behavior', BehaviorController::class)->middleware(['auth', 'XSS']);
+    Route::resource('rating-behavior', RatingBehaviorController::class)->middleware(['auth', 'XSS']);
+    Route::resource('reimbursement', ReimbursementController::class)->middleware(['auth', 'XSS']);
 
 
     Route::post('event/getdepartment', [EventController::class, 'getdepartment'])->name('event.getdepartment')->middleware(['auth', 'XSS']);
