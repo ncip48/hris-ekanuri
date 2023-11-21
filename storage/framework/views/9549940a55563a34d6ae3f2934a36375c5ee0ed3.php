@@ -281,12 +281,19 @@
                                                 
                                                     <a class="dash-link" href="#"><?php echo e(__('Employee Setup')); ?><span
                                                             class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
-                                                    <ul class="dash-submenu">
+                                                    <ul class="dash-submenu <?php echo e(Request::segment(1) == 'personal-report' ? 'show':'collapse'); ?>" >
                                                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage personal report')): ?>
                                                             <li
-                                                                class="dash-item <?php echo e(request()->is('personal report*') ? 'active' : ''); ?>">
+                                                                class="dash-item <?php echo e(request()->is('personal-report*') ? 'active' : ''); ?>">
                                                                 <a class="dash-link"
                                                                     href="<?php echo e(route('personal-report.index')); ?>"><?php echo e(__('Personal Report')); ?></a>
+                                                            </li>
+                                                            <li
+                                                            class="dash-item <?php echo e(request()->is('employee*') ? 'active' : ''); ?>">
+                                                            <a href="<?php echo e(route('employee.index')); ?>" class="dash-link">
+                                                                <?php echo e(__('Employee Setup')); ?>
+
+                                                            </a>
                                                             </li>
                                                             <li
                                                                 class="dash-item <?php echo e(request()->is('request edit identitas*') ? 'active' : ''); ?>">

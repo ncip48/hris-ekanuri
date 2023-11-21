@@ -279,17 +279,23 @@
                                                 {{ __('Employee Setup') }}
                                             </a> --}}
                                             @if (Gate::check('manage personal report'))
-                                                {{-- <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'personal report' ? 'active dash-trigger' : '' }}"
+                                                {{-- <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'personal-report' ? 'active dash-trigger' : '' }}"
                                                     href="#navbar-training" data-toggle="collapse" role="button"
-                                                    aria-expanded="{{ Request::segment(1) == 'personal report' ? 'true' : 'false' }}"> --}}
+                                                    aria-expanded="{{ Request::segment(1) == 'personal-report' ? 'true' : 'false' }}"> --}}
                                                     <a class="dash-link" href="#">{{ __('Employee Setup') }}<span
                                                             class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
-                                                    <ul class="dash-submenu">
+                                                    <ul class="dash-submenu {{ Request::segment(1) == 'personal-report' ? 'show':'collapse'}}" >
                                                         @can('manage personal report')
                                                             <li
-                                                                class="dash-item {{ request()->is('personal report*') ? 'active' : '' }}">
+                                                                class="dash-item {{ request()->is('personal-report*') ? 'active' : '' }}">
                                                                 <a class="dash-link"
                                                                     href="{{route('personal-report.index')}}">{{ __('Personal Report') }}</a>
+                                                            </li>
+                                                            <li
+                                                            class="dash-item {{ request()->is('employee*') ? 'active' : '' }}">
+                                                            <a href="{{route('employee.index')}}" class="dash-link">
+                                                                {{ __('Employee Setup') }}
+                                                            </a>
                                                             </li>
                                                             <li
                                                                 class="dash-item {{ request()->is('request edit identitas*') ? 'active' : '' }}">

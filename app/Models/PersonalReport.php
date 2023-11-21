@@ -16,6 +16,34 @@ class PersonalReport extends Model
         'sub_department_id',
         'designation_id',
         'report',
+        'date_of_report',
         'created_by',
     ];
+
+    public function employee()
+    {
+        return $this->hasOne('App\Models\Employee', 'id', 'employee_id');
+    }
+
+    public function branch()
+    {
+        return $this->hasOne('App\Models\Branch', 'id', 'branch_id');
+    }
+
+    public function department()
+    {
+        return $this->hasOne('App\Models\Department', 'id', 'department_id');
+    }
+
+    public function sub_department()
+    {
+        return $this->hasOne('App\Models\SubDepartment', 'id', 'sub_department_id');
+    }
+
+    public function designation()
+    {
+        return $this->hasOne('App\Models\Designation', 'id', 'designation_id');
+    }
+
+    
 }

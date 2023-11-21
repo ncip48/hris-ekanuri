@@ -6,25 +6,12 @@ use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Employee;
+use App\Models\PersonalReport;
 use App\Models\SubDepartment;
 use Illuminate\Http\Request;
 
 class PersonalReportController extends Controller
 {
-
-    // personal Report
-//  public function personalReport()
-//  {
-     
-//  }
-
- public function addPersonalReport(){
-
-    
- }
-
-//  public function storePersonalReport(Request $request){}
-
     /**
      * Display a listing of the resource.
      *
@@ -32,16 +19,23 @@ class PersonalReportController extends Controller
      */
     public function index()
     {
-        if(\Auth::user()->can('manage employee'))
-     {
-             $employees = Employee::where('created_by', \Auth::user()->creatorId())->get();
+        if (\Auth::user()->can('manage employee')) {
+            $reports = PersonalReport::where('created_by', '=', \Auth::user()->creatorId())->get();
 
-         return view('employee.personal_report.index', compact('employees'));
-     }
-     else
-     {
-         return redirect()->back()->with('error', __('Permission denied.'));
-     }
+            $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $branch->prepend('Select Branch', '');
+            $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $department->prepend('Select Department', '');
+            $designation = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $designation->prepend('Select Designation', '');
+            $sub_department = SubDepartment::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+$employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');;
+
+
+            return view('personalReport.index', compact('reports','employees','branch', 'department', 'designation', 'sub_department'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -53,16 +47,15 @@ class PersonalReportController extends Controller
     {
         //
         $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');;
-    $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-    $branch->prepend('Select Branch','');
-    $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-    $department->prepend('Select Department','');
-    $designation = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-    $designation->prepend('Select Designation','');
-    $sub_department = SubDepartment::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        $branch->prepend('Select Branch', '');
+        $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        $department->prepend('Select Department', '');
+        $designation = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        $designation->prepend('Select Designation', '');
+        $sub_department = SubDepartment::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
-    return view('employee.personal_report.create',compact('employees','branch','department','designation','sub_department'));
-
+        return view('personalReport.create', compact('employees', 'branch', 'department', 'designation', 'sub_department'));
     }
 
     /**
@@ -73,7 +66,39 @@ class PersonalReportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (\Auth::user()->can('create personal report')) {
+            $validator = \Validator::make(
+                $request->all(),
+                [
+                    'employee_id' => 'required',
+                    'branch_id' => 'required',
+                    'department_id' => 'required',
+                    'designation_id' => 'required',
+                    'sub_department_id' => 'required',
+                    'report' => 'required',
+                    'date_of_report' => 'required',
+                ]
+            );
+            if ($validator->fails()) {
+                $messages = $validator->getMessageBag();
+                return redirect()->back()->with('error', $messages->first());
+            }
+            $personalReport = new PersonalReport();
+            $personalReport->employee_id = $request->employee_id;
+            $personalReport->branch_id = $request->branch_id;
+            $personalReport->department_id = $request->department_id;
+            $personalReport->designation_id = $request->designation_id;
+            $personalReport->sub_department_id = $request->sub_department_id;
+            $personalReport->report = $request->report;
+            $personalReport->date_of_report = $request->date_of_report;
+            $personalReport->created_by = \Auth::user()->creatorId();
+            $personalReport->save();
+            // dd($personalReport);
+
+            return redirect()->route('personal-report.index')->with('success', __('Personal Report successfully created.'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -93,9 +118,26 @@ class PersonalReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(PersonalReport $personalReport)
     {
-        //
+        // dd($personalReport);
+        if (\Auth::user()->can('edit personal report')) {
+            // dd($report);
+            if ($personalReport->created_by == \Auth::user()->creatorId()) {
+            // $personalReport = PersonalReport::find($personalReport->id);
+                $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+                $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+                $designation = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+                $sub_department = SubDepartment::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+                $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');;
+
+                return view('personalReport.edit', compact('personalReport', 'employees', 'branch', 'department', 'designation', 'sub_department'));
+            } else {
+                return response()->json(['error' => __('Permission denied.')], 401);
+            }
+        } else {
+            return response()->json(['error' => __('Permission denied.')], 401);
+        }       
     }
 
     /**
@@ -107,7 +149,36 @@ class PersonalReportController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if(\Auth::user()->can('edit personal report')){
+            $validator = \Validator::make(
+                $request->all(),
+                [
+                    'employee_id' => 'required',
+                    'branch_id' => 'required',
+                    'department_id' => 'required',
+                    'designation_id' => 'required',
+                    'sub_department_id' => 'required',
+                    'report' => 'required',
+                    'date_of_report' => 'required',
+                ]
+            );
+            if ($validator->fails()) {
+                $messages = $validator->getMessageBag();
+                return redirect()->back()->with('error', $messages->first());
+            }
+            $personalReport = PersonalReport::find($id);
+            $personalReport->employee_id = $request->employee_id;
+            $personalReport->branch_id = $request->branch_id;
+            $personalReport->department_id = $request->department_id;
+            $personalReport->designation_id = $request->designation_id;
+            $personalReport->sub_department_id = $request->sub_department_id;
+            $personalReport->report = $request->report;
+            $personalReport->date_of_report = $request->date_of_report;
+            $personalReport->created_by = \Auth::user()->creatorId();
+            $personalReport->save();
+
+            return redirect()->route('personal-report.index')->with('success', __('Personal Report successfully updated.'));
+        }
     }
 
     /**
@@ -118,6 +189,16 @@ class PersonalReportController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (\Auth::user()->can('delete personal report')) {
+            $personalReport = PersonalReport::find($id);
+            if ($personalReport) {
+                $personalReport->delete();
+                return redirect()->route('personal-report.index')->with('success', __('Personal Report successfully deleted.'));
+            } else {
+                return redirect()->route('personal-report.index')->with('error', __('Something is wrong.'));
+            }
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 }
