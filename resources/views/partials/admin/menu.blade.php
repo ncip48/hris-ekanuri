@@ -188,6 +188,73 @@
                                 </li>
                             @endif
 
+
+                    <!--------------------- Start HRM ----------------------------------->
+
+                    @if(\Auth::user()->show_hrm() == 1)
+                        @if( Gate::check('manage employee') || Gate::check('manage setsalary') )
+                            <li class="dash-item dash-hasmenu {{ (Request::segment(1) == 'holiday-calender'
+                                || Request::segment(1) == 'leavetype' || Request::segment(1) == 'leave' ||
+                                Request::segment(1) == 'attendanceemployee' || Request::segment(1) == 'document-upload' || Request::segment(1) == 'document' || Request::segment(1) == 'performanceType'  ||
+                                Request::segment(1) == 'branch' || Request::segment(1) == 'department' || Request::segment(1) == 'designation' || Request::segment(1) == 'employee'
+                                || Request::segment(1) == 'leave_requests' || Request::segment(1) == 'holidays' || Request::segment(1) == 'policies' || Request::segment(1) == 'leave_calender'
+                                || Request::segment(1) == 'award' || Request::segment(1) == 'transfer' || Request::segment(1) == 'resignation' || Request::segment(1) == 'training' || Request::segment(1) == 'travel' ||
+                                Request::segment(1) == 'promotion' || Request::segment(1) == 'complaint' || Request::segment(1) == 'warning'
+                                || Request::segment(1) == 'termination' || Request::segment(1) == 'announcement' || Request::segment(1) == 'job' || Request::segment(1) == 'job-application' ||
+                                Request::segment(1) == 'candidates-job-applications' || Request::segment(1) == 'job-onboard' || Request::segment(1) == 'custom-question'
+                                || Request::segment(1) == 'interview-schedule' || Request::segment(1) == 'career' || Request::segment(1) == 'holiday' || Request::segment(1) == 'setsalary' ||
+                                Request::segment(1) == 'payslip' || Request::segment(1) == 'paysliptype' || Request::segment(1) == 'company-policy' || Request::segment(1) == 'job-stage'
+                                || Request::segment(1) == 'job-category' || Request::segment(1) == 'terminationtype' || Request::segment(1) == 'awardtype' || Request::segment(1) == 'trainingtype' ||
+                                Request::segment(1) == 'goaltype' || Request::segment(1) == 'paysliptype' || Request::segment(1) == 'allowanceoption' || Request::segment(1) == 'competencies' || Request::segment(1) == 'loanoption'
+                                || Request::segment(1) == 'deductionoption')?'active dash-trigger':''}}">
+                                <a href="#!" class="dash-link ">
+                                    <span class="dash-micon">
+                                        <i class="ti ti-user"></i>
+                                    </span>
+                                    <span class="dash-mtext">
+                                        {{__('HRM System')}}
+                                    </span>
+                                    <span class="dash-arrow">
+                                        <i data-feather="chevron-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="dash-submenu">
+                                    {{-- @if (Gate::check('manage personal report')) --}}
+                                    <li class="dash-item  {{ (Request::segment(1) == 'employee' ? 'active dash-trigger' : '')}}   ">
+                                        @if(\Auth::user()->type =='Employee')
+                                            @php
+                                                $employee=App\Models\Employee::where('user_id',\Auth::user()->id)->first();
+                                            @endphp
+                                            <a class="dash-link" href="{{route('employee.show',\Illuminate\Support\Facades\Crypt::encrypt($employee->id))}}">{{__('Employee')}}</a>
+                                        @else
+                                            {{-- <a href="{{route('employee.index')}}" class="dash-link">
+                                                {{ __('Employee Setup') }}
+                                            </a> --}}
+                                            @if (Gate::check('manage personal report'))
+                                                {{-- <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'personal-report' ? 'active dash-trigger' : '' }}"
+                                                    href="#navbar-training" data-toggle="collapse" role="button"
+                                                    aria-expanded="{{ Request::segment(1) == 'personal-report' ? 'true' : 'false' }}"> --}}
+                                                    <a class="dash-link" href="#">{{ __('Employee Setup') }}<span
+                                                            class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                                                    <ul class="dash-submenu {{ Request::segment(1) == 'personal-report' ? 'show':'collapse'}}" >
+                                                        @can('manage personal report')
+                                                            <li
+                                                                class="dash-item {{ request()->is('personal-report*') ? 'active' : '' }}">
+                                                                <a class="dash-link"
+                                                                    href="{{route('personal-report.index')}}">{{ __('Personal Report') }}</a>
+                                                            </li>
+                                                            <li
+                                                            class="dash-item {{ request()->is('employee*') ? 'active' : '' }}">
+                                                            <a href="{{route('employee.index')}}" class="dash-link">
+                                                                {{ __('Employee Setup') }}
+                                                            </a>
+                                                            </li>
+                                                            <li
+                                                                class="dash-item {{ request()->is('request edit identitas*') ? 'active' : '' }}">
+                                                                <a class="dash-link"
+                                                                    href="">{{ __('Edit Identitas') }}</a>
+                                                            </li>
+                                                        @endcan
                             @if (\Auth::user()->show_hrm() == 1)
                                 @can('show hrm dashboard')
                                     <li

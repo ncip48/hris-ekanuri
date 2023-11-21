@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('sub_department_id');
             $table->integer('designation_id');
             $table->text('report');
+            $table->date('date_of_report');
             $table->integer('created_by');
             $table->timestamps();
         });
