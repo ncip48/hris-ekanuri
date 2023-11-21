@@ -144,6 +144,7 @@ use App\Http\Controllers\BehaviorController;
 use App\Http\Controllers\SubDepartmentController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\RatingBehaviorController;
 use App\Http\Controllers\WarehouseTransferController;
 
 
@@ -941,6 +942,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('goaltracking', GoalTrackingController::class)->middleware(['auth', 'XSS']);
     Route::resource('account-assets', AssetController::class)->middleware(['auth', 'XSS']);
     Route::resource('behavior', BehaviorController::class)->middleware(['auth', 'XSS']);
+    Route::resource('rating-behavior', RatingBehaviorController::class)->middleware(['auth', 'XSS']);
 
 
     Route::post('event/getdepartment', [EventController::class, 'getdepartment'])->name('event.getdepartment')->middleware(['auth', 'XSS']);

@@ -501,14 +501,15 @@
                                 @if (Gate::check('manage indicator') ||
                                         Gate::check('manage appraisal') ||
                                         Gate::check('manage goal tracking') ||
-                                        Gate::check('manage behavior'))
-                                    <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'indicator' || Request::segment(1) == 'appraisal' || Request::segment(1) == 'goaltracking' || Request::segment(1) == 'behavior' ? 'active dash-trigger' : '' }}"
+                                        Gate::check('manage behavior') ||
+                                        Gate::check('manage rating behavior'))
+                                    <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'indicator' || Request::segment(1) == 'appraisal' || Request::segment(1) == 'goaltracking' || Request::segment(1) == 'behavior' || Request::segment(1) == 'rating-behavior' ? 'active dash-trigger' : '' }}"
                                         href="#navbar-performance" data-toggle="collapse" role="button"
-                                        aria-expanded="{{ Request::segment(1) == 'indicator' || Request::segment(1) == 'appraisal' || Request::segment(1) == 'goaltracking' || Request::segment(1) == 'behavior' ? 'true' : 'false' }}">
+                                        aria-expanded="{{ Request::segment(1) == 'indicator' || Request::segment(1) == 'appraisal' || Request::segment(1) == 'goaltracking' || Request::segment(1) == 'behavior' || Request::segment(1) == 'rating-behavior' ? 'true' : 'false' }}">
                                         <a class="dash-link" href="#">{{ __('Performance Setup') }}<span
                                                 class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                                         <ul
-                                            class="dash-submenu {{ Request::segment(1) == 'indicator' || Request::segment(1) == 'appraisal' || Request::segment(1) == 'goaltracking' || Request::segment(1) == 'behavior' ? 'show' : 'collapse' }}">
+                                            class="dash-submenu {{ Request::segment(1) == 'indicator' || Request::segment(1) == 'appraisal' || Request::segment(1) == 'goaltracking' || Request::segment(1) == 'behavior' || Request::segment(1) == 'rating-behavior' ? 'show' : 'collapse' }}">
                                             @can('manage indicator')
                                                 <li class="dash-item {{ request()->is('indicator*') ? 'active' : '' }}">
                                                     <a class="dash-link"
@@ -532,6 +533,13 @@
                                                 <li class="dash-item  {{ request()->is('behavior*') ? 'active' : '' }}">
                                                     <a class="dash-link"
                                                         href="{{ route('behavior.index') }}">{{ __('Behavior') }}</a>
+                                                </li>
+                                            @endcan
+                                            @can('manage rating behavior')
+                                                <li
+                                                    class="dash-item  {{ request()->is('rating-behavior*') ? 'active' : '' }}">
+                                                    <a class="dash-link"
+                                                        href="{{ route('rating-behavior.index') }}">{{ __('Rating Behavior') }}</a>
                                                 </li>
                                             @endcan
                                         </ul>
