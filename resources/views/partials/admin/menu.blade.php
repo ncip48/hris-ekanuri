@@ -801,6 +801,13 @@
                                     </li>
                                 @endcan
 
+                                @can('manage reimbursement')
+                                    <li class="dash-item {{ request()->is('reimbursement*') ? 'active' : '' }}">
+                                        <a class="dash-link"
+                                            href="{{ route('reimbursement.index') }}">{{ __('Reimburst') }}</a>
+                                    </li>
+                                @endcan
+
 
                         </ul>
                     </li>
