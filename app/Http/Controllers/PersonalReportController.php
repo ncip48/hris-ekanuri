@@ -29,7 +29,7 @@ class PersonalReportController extends Controller
             $designation = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $designation->prepend('Select Designation', '');
             $sub_department = SubDepartment::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-$employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');;
+$employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
 
             return view('personalReport.index', compact('reports','employees','branch', 'department', 'designation', 'sub_department'));

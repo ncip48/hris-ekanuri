@@ -13,12 +13,12 @@
         <a href="#" data-size="lg" data-url="{{ route('personal-report.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Individual Report')}}" class="btn btn-sm btn-primary">
             <i class="ti ti-plus"></i>
         </a>
-        <a href="#" data-size="md"  data-bs-toggle="tooltip" title="{{__('Import')}}" data-url="{{ route('employee.file.import') }}" data-ajax-popup="true" data-title="{{__('Import employee CSV file')}}" class="btn btn-sm btn-primary">
+        {{-- <a href="#" data-size="md"  data-bs-toggle="tooltip" title="{{__('Import')}}" data-url="{{ route('employee.file.import') }}" data-ajax-popup="true" data-title="{{__('Import employee CSV file')}}" class="btn btn-sm btn-primary">
             <i class="ti ti-file-import"></i>
         </a>
         <a href="{{route('employee.export')}}" data-bs-toggle="tooltip" title="{{__('Export')}}" class="btn btn-sm btn-primary">
             <i class="ti ti-file-export"></i>
-        </a>
+        </a> --}}
     </div>
 @endsection
 
