@@ -321,13 +321,17 @@
                                             <ul class="dash-submenu">
                                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage personal report')): ?>
                                                     <li
-                                                        class="dash-item <?php echo e(request()->is('personal report*') ? 'active' : ''); ?>">
+                                                        class="dash-item <?php echo e(request()->is('personal-report*') ? 'active' : ''); ?>">
                                                         <a class="dash-link"
                                                             href="<?php echo e(route('personal-report.index')); ?>"><?php echo e(__('Personal Report')); ?></a>
                                                     </li>
                                                     <li
                                                         class="dash-item <?php echo e(request()->is('request edit identitas*') ? 'active' : ''); ?>">
                                                         <a class="dash-link" href=""><?php echo e(__('Edit Identitas')); ?></a>
+                                                    </li>
+                                                    <li
+                                                        class="dash-item <?php echo e(request()->is('employee setup*') ? 'active' : ''); ?>">
+                                                        <a class="dash-link" href="<?php echo e(route('employee.index')); ?>"><?php echo e(__('Employee Setup')); ?></a>
                                                     </li>
                                                 <?php endif; ?>
                                             </ul>
@@ -648,18 +652,20 @@
                                             href="<?php echo e(route('document-upload.index')); ?>"><?php echo e(__('Document Setup')); ?></a>
                                     </li>
                                 <?php endif; ?>
-                                <?php if(Gate::check('manage kontrak')): ?>
+                                <?php if(Gate::check('manage kontrak') || Gate::check('manage extend contract')): ?>
                                     <li class="dash-item dash-hasmenu <?php echo e(Request::segment(1) == 'kontrak' ? 'active dash-trigger' : ''); ?>"
                                         href="#navbar-training" data-toggle="collapse" role="button"
                                         aria-expanded="<?php echo e(Request::segment(1) == 'kontrak' ? 'true' : 'false'); ?>">
                                         <a class="dash-link" href="#"><?php echo e(__('Employees Contract')); ?><span
                                                 class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                                         <ul class="dash-submenu">
-                                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage kontrak')): ?>
-                                                <li class="dash-item <?php echo e(request()->is('kontrak*') ? 'active' : ''); ?>">
+                                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage extended contract')): ?>
+                                                <li class="dash-item <?php echo e(request()->is('extend-contract*') ? 'active' : ''); ?>">
                                                     <a class="dash-link"
-                                                        href="<?php echo e(route('kontrak.index')); ?>"><?php echo e(__('Extend Contract')); ?></a>
-                                                </li>
+                                                        href="<?php echo e(route('extend-contract.index')); ?>"><?php echo e(__('Extend Contract')); ?></a>
+                                                </li>                                                
+                                            <?php endif; ?>
+                                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage kontrak')): ?>
                                                 <li class="dash-item <?php echo e(request()->is('kontrak*') ? 'active' : ''); ?>">
                                                     <a class="dash-link"
                                                         href="<?php echo e(route('employee-contract.index')); ?>"><?php echo e(__('Contract')); ?></a>

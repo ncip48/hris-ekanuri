@@ -1,16 +1,7 @@
-{{ Form::open(array('route' => array('personal-report.store'),'method'=>'post', 'enctype' => "multipart/form-data")) }}
+{{ Form::open(array('route' => array('employee-contract.store'),'method'=>'post', 'enctype' => "multipart/form-data")) }}
 <div class="modal-body">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="form-group">
-                {{Form::label('date_of_report',__('Date Of Report'),['class'=>'form-label'])}}
-                {{ Form::date('date_of_report', null, ['class' => 'form-control datepicker', 'placeholder' => __('Enter Your Date Of Report')]) }}
-                @error('date_of_report')
-                <small class="invalid-date_of_report" role="alert">
-                    <strong class="text-danger">{{ $message }}</strong>
-                </small>
-                @enderror
-            </div>
             <div class="form-group">
                 {{Form::label('employee_id',__('Employee'),['class'=>'form-label'])}}
                 {{-- {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Your Name')))}} --}}
@@ -73,15 +64,33 @@
             </div>
 
             <div class="form-group">
-                {{Form::label('report',__('Report'),['class'=>'form-label'])}}
-                {{Form::textarea('report',null,array('class'=>'form-control','placeholder'=>__('Enter Your Report')))}}
-                @error('report')
-                <small class="invalid-report" role="alert">
+                {{Form::label('start_date',__('Start Date'),['class'=>'form-label'])}}
+                {{ Form::date('start_date', null, ['class' => 'form-control datepicker', 'placeholder' => __('Enter Start Date')]) }}
+                @error('start_date')
+                <small class="invalid-date_of_report" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
                 </small>
                 @enderror
-
             </div>
+            <div class="form-group">
+                {{Form::label('end_date',__('End Date'),['class'=>'form-label'])}}
+                {{ Form::date('end_date', null, ['class' => 'form-control datepicker', 'placeholder' => __('Enter End Date')]) }}
+                @error('end_date')
+                <small class="invalid-date_of_report" role="alert">
+                    <strong class="text-danger">{{ $message }}</strong>
+                </small>
+                @enderror
+            </div>
+                <div class="form-group">
+                    {{ Form::label('contract_file', __('Contract File'), ['class' => 'form-label']) }}
+                    {{-- {{ Form::file('file', null, ['class' => 'form-control', 'placeholder' => __('Attach File')]) }} --}}
+                    <input type="file" name="contract_file" class="form-control">
+                    @error('contract_file')
+                        <span class="invalid-name" role="alert">
+                            <strong class="text-danger">{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
 
         </div>
     </div>

@@ -144,6 +144,7 @@ use App\Http\Controllers\BehaviorController;
 use App\Http\Controllers\SubDepartmentController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\EmployeeContractController;
+use App\Http\Controllers\ExtendedContractController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\RatingBehaviorController;
 use App\Http\Controllers\ReimbursementController;
@@ -887,6 +888,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('level', LevelController::class)->middleware(['auth', 'XSS']);
     Route::resource('class', ClassController::class)->middleware(['auth', 'XSS']);
     Route::resource('employee-contract', EmployeeContractController::class)->middleware(['auth', 'XSS']);
+    Route::resource('extend-contract', ExtendedContractController::class)->middleware(['auth', 'XSS']);
 
 
     // Hrm EmployeeController

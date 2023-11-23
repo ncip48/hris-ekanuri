@@ -324,13 +324,17 @@
                                             <ul class="dash-submenu">
                                                 @can('manage personal report')
                                                     <li
-                                                        class="dash-item {{ request()->is('personal report*') ? 'active' : '' }}">
+                                                        class="dash-item {{ request()->is('personal-report*') ? 'active' : '' }}">
                                                         <a class="dash-link"
                                                             href="{{ route('personal-report.index') }}">{{ __('Personal Report') }}</a>
                                                     </li>
                                                     <li
                                                         class="dash-item {{ request()->is('request edit identitas*') ? 'active' : '' }}">
                                                         <a class="dash-link" href="">{{ __('Edit Identitas') }}</a>
+                                                    </li>
+                                                    <li
+                                                        class="dash-item {{ request()->is('employee setup*') ? 'active' : '' }}">
+                                                        <a class="dash-link" href="{{route('employee.index')}}">{{ __('Employee Setup') }}</a>
                                                     </li>
                                                 @endcan
                                             </ul>
@@ -651,18 +655,21 @@
                                             href="{{ route('document-upload.index') }}">{{ __('Document Setup') }}</a>
                                     </li>
                                 @endcan
-                                @if (Gate::check('manage kontrak'))
-                                    <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'kontrak' ? 'active dash-trigger' : '' }}"
+                                @if (Gate::check('manage kontrak') || Gate::check('manage extend contract'))
+                                    <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'kontrak' ? 'active dash-trigger' : ''
+                                        }}"
                                         href="#navbar-training" data-toggle="collapse" role="button"
                                         aria-expanded="{{ Request::segment(1) == 'kontrak' ? 'true' : 'false' }}">
                                         <a class="dash-link" href="#">{{ __('Employees Contract') }}<span
                                                 class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                                         <ul class="dash-submenu">
-                                            @can('manage kontrak')
-                                                <li class="dash-item {{ request()->is('kontrak*') ? 'active' : '' }}">
+                                            @can('manage extended contract')
+                                                <li class="dash-item {{ request()->is('extend-contract*') ? 'active' : '' }}">
                                                     <a class="dash-link"
-                                                        href="{{ route('kontrak.index') }}">{{ __('Extend Contract') }}</a>
-                                                </li>
+                                                        href="{{ route('extend-contract.index') }}">{{ __('Extend Contract') }}</a>
+                                                </li>                                                
+                                            @endcan
+                                            @can('manage kontrak')
                                                 <li class="dash-item {{ request()->is('kontrak*') ? 'active' : '' }}">
                                                     <a class="dash-link"
                                                         href="{{ route('employee-contract.index') }}">{{ __('Contract') }}</a>

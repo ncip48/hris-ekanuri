@@ -51,37 +51,46 @@
                                $endDate = date('Y-m-d', strtotime($contract->end_date));
                            @endphp
                                 <tr>
-                                    <td><a href="{{route('employee.show',\Illuminate\Support\Facades\Crypt::encrypt($report->employee->employee_id))}}" class="btn btn-outline-primary">{{ \Auth::user()->employeeIdFormat($report->employee->employee_id) }}</a></td>
+                                    <td><a href="{{route('employee.show',\Illuminate\Support\Facades\Crypt::encrypt($contract->employee->employee_id))}}" class="btn btn-outline-primary">{{ \Auth::user()->employeeIdFormat($contract->employee->employee_id) }}</a></td>
                                     <td>{{ $contract->employee->name }}</td>
                                     {{-- <td>{{ $contract->employee->email }}</td> --}}
                                     <td>{{ $contract->branch->name }}</td>
                                     <td>{{ $contract->department->name }}</td>
-                                    <td>{{ $contract->subDepartment->name }}</td>
+                                    <td>{{ $contract->sub_department->name }}</td>
                                     <td>{{ $contract->designation->name }}</td>
                                     <td>{{ $startDdate }}</td>
                                     <td>{{ $endDate }}</td>
-                                    <td>{{ $contract->contract_file }}</td>
+                                    {{-- <td>{{ $contract->contract_file }}</td> --}}
+                                    <td>
+                                        @if (!empty($contract->contract_file ))
+                                        <a href="{{ asset('public/uploads/employeeContract/' . $contract->contract_file ) }}"
+                                            target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                            {{ __('See') }}
+                                        </a>
+                                    @endif
+                                    </td>
                                     <td class="Action">
-                                        @can('edit personal report')
+                                        @can('edit kontrak')
                                         <div class="action-btn bg-primary ms-2">
 
                                             <a href="#"
                                             data-size="lg"
-                                                data-url="{{ URL::to('personal-report/' . $report->id . '/edit') }}"
-                                                data-ajax-popup="true" data-title="{{ __('Edit Personal Report') }}"
+                                                data-url="{{ URL::to('employee-contract/' . $contract->id . '/edit') }}"
+                                                data-ajax-popup="true" data-title="{{ __('Edit Employee Contract') }}"
                                                 class="mx-3 btn btn-sm d-inline-flex align-items-center"
-                                                data-bs-toggle="tooltip" title="{{ __('Edit Personal Report') }}"
-                                                data-original-title="{{ __('Edit Personal Report') }}">
+                                                data-bs-toggle="tooltip" title="{{ __('Edit Employee Contract') }}"
+                                                data-original-title="{{ __('Edit Employee Contract') }}">
                                                 <i class="ti ti-pencil text-white"></i></a>
                                         </div>
                                         @endcan
 
-                                        @can('delete personal report')
+                                        @can('delete kontrak')
                                         <div class="action-btn bg-danger ms-2">
                                             {!! Form::open([
                                                 'method' => 'DELETE',
-                                                'route' => ['personal-report.destroy', $report->id],
-                                                'id' => 'delete-form-' . $report->id,
+                                                'route' => ['employee-contract.destroy', $contract->id],
+                                                'id' => 'delete-form-' . $contract->id,
                                             ]) !!}
 
 
@@ -90,7 +99,7 @@
                                                 data-bs-toggle="tooltip" title="{{ __('Delete') }}"
                                                 data-original-title="{{ __('Delete') }}"
                                                 data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
-                                                data-confirm-yes="document.getElementById('delete-form-{{ $report->id }}').submit();"><i
+                                                data-confirm-yes="document.getElementById('delete-form-{{ $contract->id }}').submit();"><i
                                                     class="ti ti-trash text-white"></i></a>
                                             {!! Form::close() !!}
                                         </div>
