@@ -91,7 +91,7 @@
     <div class="container">
         <a class="navbar-brand bg-transparent" href="">
 
-                <img src="{{ $logo .'/logo-light.png' }}" alt="logo" width="40%"/>
+                <img src="{{ $logo .'/logo-dark.png' }}" alt="logo" width="40%"/>
 
         </a>
         <button

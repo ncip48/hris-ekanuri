@@ -50,7 +50,7 @@
                                     <span class="dash-mtext">{{__('Dashboard')}}</span>
                                     <span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                                     <ul class="dash-submenu">
-                                        @if(\Auth::user()->show_account() == 1 && Gate::check('show account dashboard'))
+                                        {{-- @if(\Auth::user()->show_account() == 1 && Gate::check('show account dashboard'))
                                                 <li class="dash-item dash-hasmenu {{ ( Request::segment(1) == null   || Request::segment(1) == 'account-dashboard'|| Request::segment(1) == 'report' || Request::segment(1) == 'reports-monthly-cashflow' || Request::segment(1) == 'reports-quarterly-cashflow') ? ' active dash-trigger' : ''}}">
                                                     <a class="dash-link" href="#">{{__('Accounting ')}}<span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                                                     <ul class="dash-submenu">
@@ -129,7 +129,7 @@
                                                         @endif
                                                     </ul>
                                                 </li>
-                                            @endif
+                                            @endif --}}
 
                                         @if(\Auth::user()->show_hrm() == 1)
                                                 @can('show hrm dashboard')
@@ -164,7 +164,7 @@
                                                 @endcan
                                             @endif
 
-                                            @if(\Auth::user()->show_crm() == 1)
+                                            {{-- @if(\Auth::user()->show_crm() == 1)
                                                 @can('show crm dashboard')
                                                     <li class="dash-item dash-hasmenu {{ ( Request::segment(1) == 'crm-dashboard' || Request::segment(1) == 'reports-lead' || Request::segment(1) == 'reports-deal') ? ' active dash-trigger' : ''}}">
                                                         <a class="dash-link" href="#">{{__('CRM')}}<span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
@@ -188,17 +188,17 @@
                                                          </ul>
                                                     </li>
                                                 @endcan
-                                            @endif
+                                            @endif --}}
 
-                                            @if(\Auth::user()->show_project() == 1)
+                                            {{-- @if(\Auth::user()->show_project() == 1)
                                                 @can('show project dashboard')
                                                     <li class="dash-item {{ (Request::route()->getName() == 'project.dashboard') ? ' active' : '' }}">
                                                         <a class="dash-link" href="{{route('project.dashboard')}}">{{__('Project ')}}</a>
                                                     </li>
                                                 @endcan
-                                            @endif
+                                            @endif --}}
 
-                                            @if(\Auth::user()->show_pos() == 1)
+                                            {{-- @if(\Auth::user()->show_pos() == 1)
                                                 @can('show pos dashboard')
                                                     <li class="dash-item dash-hasmenu {{ ( Request::segment(1) == 'pos-dashboard'  || Request::segment(1) == 'reports-warehouse' || Request::segment(1) == 'reports-daily-purchase' || Request::segment(1) == 'reports-monthly-purchase' || Request::segment(1) == 'reports-daily-pos' || Request::segment(1) == 'reports-monthly-pos' ||Request::segment(1) == 'reports-pos-vs-purchase') ? ' active dash-trigger' : ''}}">
                                                         <a class="dash-link" href="#">{{__('POS')}}<span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
@@ -228,7 +228,7 @@
                                                         </ul>
                                                     </li>
                                                 @endcan
-                                            @endif
+                                            @endif --}}
 
                                     </ul>
                         </li>
@@ -713,8 +713,9 @@
 
                                 @if (Gate::check('manage employee schedule') ||
                                         Gate::check('manage change schedule') ||
-                                        Gate::check('manage overtime request'))
-                                    <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'work-schedule' || Request::segment(1) == 'change-schedule' || Request::segment(1) == 'overtime-request' ? 'active dash-trigger' : '' }}"
+                                        Gate::check('manage overtime request') ||
+                                        Gate::check('manage shifting'))
+                                    <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'work-schedule' || Request::segment(1) == 'change-schedule' || Request::segment(1) == 'overtime-request' ? 'active dash-trigger' : ''}}"
                                         href="#navbar-training" data-toggle="collapse" role="button"
                                         aria-expanded="{{ Request::segment(1) == 'employee-schedule' || Request::segment(1) == 'change-schedule' || Request::segment(1) == 'overtime-request' ? 'true' : 'false' }}">
                                         <a class="dash-link" href="#">{{ __('Work Schedule') }}<span
@@ -762,7 +763,7 @@
 
             <!--------------------- Start Account ----------------------------------->
 
-            @if (\Auth::user()->show_account() == 1)
+            {{-- @if (\Auth::user()->show_account() == 1)
                 @if (Gate::check('manage customer') ||
                         Gate::check('manage vender') ||
                         Gate::check('manage customer') ||
@@ -1014,13 +1015,13 @@
                         </ul>
                     </li>
                 @endif
-            @endif
+            @endif --}}
 
             <!--------------------- End Account ----------------------------------->
 
             <!--------------------- Start CRM ----------------------------------->
 
-            @if (\Auth::user()->show_crm() == 1)
+            {{-- @if (\Auth::user()->show_crm() == 1)
                 @if (Gate::check('manage lead') ||
                         Gate::check('manage deal') ||
                         Gate::check('manage form builder') ||
@@ -1074,13 +1075,13 @@
             </ul>
             </li>
         @endif
-        @endif
+        @endif --}}
 
         <!--------------------- End CRM ----------------------------------->
 
         <!--------------------- Start Project ----------------------------------->
 
-        @if (\Auth::user()->show_project() == 1)
+        {{-- @if (\Auth::user()->show_project() == 1)
             @if (Gate::check('manage project'))
                 <li
                     class="dash-item dash-hasmenu
@@ -1170,7 +1171,7 @@
                     </ul>
                 </li>
             @endif
-        @endif
+        @endif --}}
 
         <!--------------------- End Project ----------------------------------->
 
@@ -1226,7 +1227,7 @@
 
         <!--------------------- Start Products System ----------------------------------->
 
-        @if (Gate::check('manage product & service') || Gate::check('manage product & service'))
+        {{-- @if (Gate::check('manage product & service') || Gate::check('manage product & service'))
             <li class="dash-item dash-hasmenu">
                 <a href="#!" class="dash-link ">
                     <span class="dash-micon"><i class="ti ti-shopping-cart"></i></span><span
@@ -1250,13 +1251,13 @@
                     @endif
                 </ul>
             </li>
-        @endif
+        @endif --}}
 
         <!--------------------- End Products System ----------------------------------->
 
 
         <!--------------------- Start POs System ----------------------------------->
-        @if (\Auth::user()->show_pos() == 1)
+        {{-- @if (\Auth::user()->show_pos() == 1)
             @if (Gate::check('manage warehouse') ||
                     Gate::check('manage purchase') ||
                     Gate::check('manage pos') ||
@@ -1320,7 +1321,7 @@
                     </ul>
                 </li>
             @endif
-        @endif
+        @endif --}}
         <!--------------------- End POs System ----------------------------------->
 
         @if (\Auth::user()->type != 'super admin')
@@ -1575,7 +1576,7 @@
         @endif
 
 
-        <div class="navbar-footer border-top ">
+        {{-- <div class="navbar-footer border-top ">
             <div class="d-flex align-items-center py-3 px-3 border-bottom">
                 <div class="me-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="29" height="30" viewBox="0 0 29 30"
@@ -1603,7 +1604,7 @@
                     <span>{{ __('Check out our repository') }} </span>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 </nav>

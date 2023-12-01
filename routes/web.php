@@ -889,6 +889,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('class', ClassController::class)->middleware(['auth', 'XSS']);
     Route::resource('employee-contract', EmployeeContractController::class)->middleware(['auth', 'XSS']);
     Route::resource('extend-contract', ExtendedContractController::class)->middleware(['auth', 'XSS']);
+    Route::resource('shifting', ShiftController::class)->middleware(['auth', 'XSS']);
 
 
     // Hrm EmployeeController
