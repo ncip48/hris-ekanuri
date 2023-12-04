@@ -92,20 +92,19 @@ class ShiftController extends Controller
      */
     public function edit(Shift $shifting)
     {
-    // dd($shifting);
+        // dd($shifting);
 
-        if (!\Auth::user()->can('edit shifting')){
+        if (\Auth::user()->can('edit shifting')) {
             if ($shifting->created_by == \Auth::user()->creatorId()) {
-                return view('shif.edit', compact('shifting'));
+                return view('shift.edit', compact('shifting'));
             } else {
                 return response()->json(['error' => __('Permission denied.')], 401);
             }
-        } 
-        else {
+        } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -116,7 +115,7 @@ class ShiftController extends Controller
     public function update(Request $request, Shift $shifting)
     {
         if (\Auth::user()->can('edit shifting')) {
-            
+
             if ($shifting->created_by == \Auth::user()->creatorId()) {
                 $validator = \Validator::make(
                     $request->all(),
@@ -144,7 +143,7 @@ class ShiftController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
-    
+
         //
     }
 
