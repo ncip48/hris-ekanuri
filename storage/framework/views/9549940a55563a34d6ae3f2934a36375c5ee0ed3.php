@@ -578,6 +578,12 @@
                                         <a class="dash-link" href="#"><?php echo e(__('Work Schedule')); ?><span
                                                 class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                                         <ul class="dash-submenu">
+                                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage shifting')): ?>
+                                                <li class="dash-item <?php echo e(request()->is('shifting*') ? 'active' : ''); ?>">
+                                                    <a class="dash-link"
+                                                        href="<?php echo e(route('shifting.index')); ?>"><?php echo e(__('Shifting')); ?></a>
+                                                </li>                                                
+                                            <?php endif; ?>
                                             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage employee schedule')): ?>
                                                 <li
                                                     class="dash-item <?php echo e(request()->is('employee-schedule*') ? 'active' : ''); ?>">

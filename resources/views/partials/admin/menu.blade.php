@@ -721,6 +721,12 @@
                                         <a class="dash-link" href="#">{{ __('Work Schedule') }}<span
                                                 class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                                         <ul class="dash-submenu">
+                                            @can('manage shifting')
+                                                <li class="dash-item {{ request()->is('shifting*') ? 'active' : '' }}">
+                                                    <a class="dash-link"
+                                                        href="{{ route('shifting.index') }}">{{ __('Shifting') }}</a>
+                                                </li>                                                
+                                            @endcan
                                             @can('manage employee schedule')
                                                 <li
                                                     class="dash-item {{ request()->is('employee-schedule*') ? 'active' : '' }}">
