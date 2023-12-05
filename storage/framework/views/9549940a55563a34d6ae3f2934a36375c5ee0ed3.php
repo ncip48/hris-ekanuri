@@ -588,7 +588,7 @@
                                                 <li
                                                     class="dash-item <?php echo e(request()->is('employee-schedule*') ? 'active' : ''); ?>">
                                                     <a class="dash-link"
-                                                        href="<?php echo e(route('employee-schedule.index')); ?>"><?php echo e(__('Employee Schedule')); ?></a>
+                                                    href="<?php echo e(route('employee-schedule.index')); ?>"><?php echo e(__('Employee Schedule')); ?></a>
                                                 </li>
                                             <?php endif; ?>
                                             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage change schedule')): ?>

@@ -731,7 +731,7 @@
                                                 <li
                                                     class="dash-item {{ request()->is('employee-schedule*') ? 'active' : '' }}">
                                                     <a class="dash-link"
-                                                        href="{{ route('employee-schedule.index') }}">{{ __('Employee Schedule') }}</a>
+                                                    href="{{ route('employee-schedule.index') }}">{{ __('Employee Schedule') }}</a>
                                                 </li>
                                             @endcan
                                             @can('manage change schedule')
