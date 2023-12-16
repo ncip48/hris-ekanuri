@@ -144,6 +144,7 @@ use App\Http\Controllers\BehaviorController;
 use App\Http\Controllers\SubDepartmentController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\EmployeeContractController;
+use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\ExtendedContractController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\RatingBehaviorController;
@@ -950,7 +951,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('behavior', BehaviorController::class)->middleware(['auth', 'XSS']);
     Route::resource('rating-behavior', RatingBehaviorController::class)->middleware(['auth', 'XSS']);
     Route::resource('reimbursement', ReimbursementController::class)->middleware(['auth', 'XSS']);
-    Route::resource('employee-schedule', ReimbursementController::class)->middleware(['auth', 'XSS']);
+    Route::resource('employee-schedule', EmployeeScheduleController::class)->middleware(['auth', 'XSS']);
     Route::resource('change-schedule', ReimbursementController::class)->middleware(['auth', 'XSS']);
     Route::resource('overtime-request', ReimbursementController::class)->middleware(['auth', 'XSS']);
 
