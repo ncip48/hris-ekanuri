@@ -45,17 +45,24 @@ $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->p
      */
     public function create()
     {
-        //
-        $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');;
-        $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-        $branch->prepend('Select Branch', '');
-        $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-        $department->prepend('Select Department', '');
-        $designation = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-        $designation->prepend('Select Designation', '');
-        $sub_department = SubDepartment::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        if (\Auth::user()->can('create personal report')) {
+            $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');;
+            $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $designation = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $sub_department = SubDepartment::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
-        return view('personalReport.create', compact('employees', 'branch', 'department', 'designation', 'sub_department'));
+            return view('personalReport.create', compact('employees', 'branch', 'department', 'designation', 'sub_department'));
+        } else {
+            return response()->json(['error' => __('Permission denied.')], 401);
+        }
+        // $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');;
+        // $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        // $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        // $designation = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        // $sub_department = SubDepartment::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+
+        // return view('personalReport.create', compact('employees', 'branch', 'department', 'designation', 'sub_department'));
     }
 
     /**

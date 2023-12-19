@@ -602,7 +602,7 @@
                                                 <li
                                                     class="dash-item <?php echo e(request()->is('overtime-request*') ? 'active' : ''); ?>">
                                                     <a class="dash-link"
-                                                        href="<?php echo e(route('overtime-request.index')); ?>"><?php echo e(__('Overtime Request')); ?></a>
+                                                        href="<?php echo e(route('overtime-request.index')); ?>"><?php echo e(__('Overtime Request')); ?></a>   
                                                 </li>
                                             <?php endif; ?>
                                         </ul>

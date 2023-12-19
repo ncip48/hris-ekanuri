@@ -745,7 +745,7 @@
                                                 <li
                                                     class="dash-item {{ request()->is('overtime-request*') ? 'active' : '' }}">
                                                     <a class="dash-link"
-                                                        href="{{ route('overtime-request.index') }}">{{ __('Overtime Request') }}</a>
+                                                        href="{{ route('overtime-request.index') }}">{{ __('Overtime Request') }}</a>   
                                                 </li>
                                             @endcan
                                         </ul>
