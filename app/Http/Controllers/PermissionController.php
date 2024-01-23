@@ -69,6 +69,8 @@ class PermissionController extends Controller
     {
 
         $roles = Role::where('created_by', '=', \Auth::user()->creatorId())->get();
+        $permission->load('roles');
+        
 
         return view('permission.edit', compact('roles', 'permission'));
 

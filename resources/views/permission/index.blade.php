@@ -40,9 +40,10 @@
                                                             <td>{{ $permission->name }}</td>
 
                                                             <td class="action">
+                                                                {{-- edit permission --}}
 
                                                                 <a href="#" class="edit-icon" data-url="{{ route('permissions.edit',$permission->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Update permission')}}" class="btn btn-outline btn-xs blue-madison" data-toggle="tooltip" data-original-title="{{__('Edit')}}">
-                                                                    <i class="ti ti-pencil text-white"></i>
+                                                                    <i class="ti ti-pencil"></i>
                                                                 </a>
                                                                 {!! Form::open(['method' => 'DELETE', 'route' => ['permissions.destroy', $permission->id],'id'=>'delete-form-'.$permission->id]) !!}
 
