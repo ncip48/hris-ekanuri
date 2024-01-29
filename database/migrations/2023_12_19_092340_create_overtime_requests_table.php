@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('duration');
+            $table->string('status');
             $table->string('note')->nullable();
             $table->timestamps();
             $table->integer('created_by');

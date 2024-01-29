@@ -33,49 +33,69 @@
                                 <tr>
                                     <th>{{ __('#') }}</th>
                                     <th>{{ __('Date') }}</th>
+                                    <th>{{ __('Employee') }}</th>
                                     <th>{{ __('Note') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th width="200px">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="font-style">
-                                @foreach ($overtimeRequests as $overtime)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        {{-- @auth('web')
-                                            <td>{{ \App\Utility::getDateFormated($overtime->created_at) }}</td>
-                                        @endauth --}}
-                                        <td>{{ \App\Utility::getDateFormated($overtime->created_at) }}</td>
-                                      
+                                @foreach ($groupedOvertimes as $overtime)
+                                
+                                        <td>{{ $overtime->employee->name }}</td>
+
                                         <td>{{ $overtime->note }}</td>
                                         <td>
                                             @if ($overtime->status == 'Pending')
-                                                <div class="status-badge color-2">
+                                                <div class="status_badge badge bg-warning p-2 px-3 rounded">
                                                     {{ $overtime->status }}
                                                 </div>
                                             @elseif ($overtime->status == 'Approved')
-                                                <div class="status-badge color-1">
+                                                <div class="status_badge badge bg-success p-2 px-3 rounded">
                                                     {{ $overtime->status }}
                                                 </div>
-                                            @elseif ($overtime->status == 'Rejected')
-                                                <div class="status-badge color-3">
+                                            {{-- @elseif ($overtime->status == 'Rejected') --}}
+                                            @else
+                                                <div class="status_badge badge bg-danger p-2 px-3 rounded">
                                                     {{ $overtime->status }}
                                                 </div>
                                             @endif
                                         </td>
                                         <td>
-                                            @can('edit overtime request')
-                                                <a href="#" data-size="xl" data-url="{{ route('overtime-request.edit', $overtime->id) }}"
+                                            @can('show overtime request')
+                                                <div class="action-btn bg-warning ms-2">
+                                                    <a href="#" data-size="lg" data-ajax-popup="true"
+                                                        data-title="{{ __('Overtime Request Details') }}"
+                                                        data-url="{{ route('overtime-request.show', $overtime->id) }}"
+                                                        class="mx-3 btn btn-sm  align-items-center">
+                                                        <i class="ti ti-caret-right text-white"></i> </a>
+                                                </div>
+                                            @endcan
+
+                                            {{-- @can('edit overtime request')
+                                                <a href="#" data-size="xl"
+                                                    data-url="{{ route('overtime-request.edit', $overtime->id) }}"
                                                     data-ajax-popup="true" data-title="{{ __('Edit Overtime Request') }}"
                                                     class="btn btn-sm btn-primary">
-                                                    <i class="ti-pencil-alt"></i>
+                                                    <i class="ti ti-pencil-alt text-white"></i>
                                                 </a>
-                                            @endcan
+                                            @endcan --}}
                                             @can('delete overtime request')
-                                                <a href="#" class="btn btn-sm btn-danger delete-confirm"
-                                                    data-url="{{ route('overtime-request.destroy', $overtime->id) }}">
-                                                    <i class="ti-trash"></i>
-                                                </a>
+                                                <div class="action-btn bg-danger ms-2">
+                                                    {!! Form::open([
+                                                        'method' => 'DELETE',
+                                                        'route' => ['overtime-request.destroy', $overtime->id],
+                                                        'id' => 'delete-form-' . $overtime->id,
+                                                    ]) !!}
+                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
+                                                        data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                                                        data-original-title="{{ __('Delete') }}"
+                                                        data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
+                                                        data-confirm-yes="document.getElementById('delete-form-{{ $overtime->id }}').submit();">
+                                                        <i class="ti ti-trash text-white"></i></a>
+
+                                                    {!! Form::close() !!}
+                                                </div>
                                             @endcan
                                         </td>
                                     </tr>

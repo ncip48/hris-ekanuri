@@ -29,10 +29,10 @@ class PersonalReportController extends Controller
             $designation = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $designation->prepend('Select Designation', '');
             $sub_department = SubDepartment::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-$employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
 
-            return view('personalReport.index', compact('reports','employees','branch', 'department', 'designation', 'sub_department'));
+            return view('personalReport.index', compact('reports', 'employees', 'branch', 'department', 'designation', 'sub_department'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -131,7 +131,7 @@ $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->p
         if (\Auth::user()->can('edit personal report')) {
             // dd($report);
             if ($personalReport->created_by == \Auth::user()->creatorId()) {
-            // $personalReport = PersonalReport::find($personalReport->id);
+                // $personalReport = PersonalReport::find($personalReport->id);
                 $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
                 $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
                 $designation = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -144,7 +144,7 @@ $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->p
             }
         } else {
             return response()->json(['error' => __('Permission denied.')], 401);
-        }       
+        }
     }
 
     /**
@@ -156,7 +156,7 @@ $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->p
      */
     public function update(Request $request, $id)
     {
-        if(\Auth::user()->can('edit personal report')){
+        if (\Auth::user()->can('edit personal report')) {
             $validator = \Validator::make(
                 $request->all(),
                 [
