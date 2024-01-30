@@ -42,7 +42,7 @@ class OvertimeRequestController extends Controller
                 // ->map(function ($item) {
                 //     return $item->pluck('note');
                 // })
-                ;
+            ;
 
             foreach ($groupedOvertimes as $key => $groupedOvertime) {
                 // dd($groupedOvertime);
@@ -63,7 +63,7 @@ class OvertimeRequestController extends Controller
 
             $employees = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-// dd($notes);
+            // dd($notes);
             // dd($groupedOvertimes);
             return view('overtimeRequest.index', compact('overtimes', 'employees', 'branch', 'notes', 'groupedOvertimes'));
         } else {
@@ -193,5 +193,19 @@ class OvertimeRequestController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
+    }
+
+
+    public function changeaction(Request $request)
+    {
+        $overtimeRequest = OvertimeRequest::find($request->overtime_id);
+
+        $overtimeRequest->status = $request->status;
+        if ($overtimeRequest->status == 'Approval') {
+            $overtimeRequest->status = 'Approved';
+        }
+
+        $overtimeRequest->save();
+        return redirect()->route('overtime-request.index')->with('success', __('Overtime Request successfully update.'));
     }
 }

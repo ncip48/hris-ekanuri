@@ -38,7 +38,7 @@
                                     <th>{{ __('Department') }}</th>
                                     <th>{{ __('Date') }}</th>
                                     <th>{{ __('Shift') }}</th>
-                                    <th>{{ __('Extra Time') }}</th>
+                                    {{-- <th>{{ __('Extra Time') }}</th> --}}
                                     <th width="200px">{{ __('Action') }}</th>
 
                                 </tr>
@@ -59,7 +59,7 @@
                                         <td>{{ $schedule->department->name }}</td>
                                         <td>{{ $schedule->date }}</td>
                                         <td>{{ $schedule->shift->name }}</td>
-                                        <td>comming soon</td>
+                                        {{-- <td>comming soon</td> --}}
                                         <td class="Action">
                                             @can('edit employee schedule')
                                                 <div class="action-btn bg-primary ms-2">

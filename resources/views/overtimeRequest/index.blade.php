@@ -42,7 +42,7 @@
                             <tbody class="font-style">
                                 @foreach ($groupedOvertimes as $overtime)
                                 
-                                        <td>{{ $overtime->employee->name }}</td>
+                                        {{-- <td>{{ $overtime->employee->name }}</td> --}}
 
                                         <td>{{ $overtime->note }}</td>
                                         <td>
@@ -66,7 +66,7 @@
                                                 <div class="action-btn bg-warning ms-2">
                                                     <a href="#" data-size="lg" data-ajax-popup="true"
                                                         data-title="{{ __('Overtime Request Details') }}"
-                                                        data-url="{{ route('overtime-request.show', $overtime->id) }}"
+                                                        {{-- data-url="{{ route('overtime-request.show', $overtime->id) }}" --}}
                                                         class="mx-3 btn btn-sm  align-items-center">
                                                         <i class="ti ti-caret-right text-white"></i> </a>
                                                 </div>
@@ -84,14 +84,15 @@
                                                 <div class="action-btn bg-danger ms-2">
                                                     {!! Form::open([
                                                         'method' => 'DELETE',
-                                                        'route' => ['overtime-request.destroy', $overtime->id],
-                                                        'id' => 'delete-form-' . $overtime->id,
+                                                        // 'route' => ['overtime-request.destroy', $overtime->id],
+                                                        // 'id' => 'delete-form-' . $overtime->id,
                                                     ]) !!}
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
                                                         data-bs-toggle="tooltip" title="{{ __('Delete') }}"
                                                         data-original-title="{{ __('Delete') }}"
                                                         data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
-                                                        data-confirm-yes="document.getElementById('delete-form-{{ $overtime->id }}').submit();">
+                                                        {{-- data-confirm-yes="document.getElementById('delete-form-{{ $overtime->id }}').submit();" --}}
+                                                        >
                                                         <i class="ti ti-trash text-white"></i></a>
 
                                                     {!! Form::close() !!}
