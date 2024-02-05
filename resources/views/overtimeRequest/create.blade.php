@@ -41,25 +41,41 @@
             <div class="table-responsive">
                 <table class="table datatable">
                     <thead>
-                        <th>{{ __('No') }}</th>
+                        {{-- <th>{{ __('No') }}</th> --}}
                         <th>{{ __('Start Date') }}</th>
                         <th>{{ __('End Date') }}</th>
                         <th>{{ __('Duration') }}</th>
                         <th>{{ __('Note') }}</th>
-                        <th>{{ __('action') }}</th>
+                        {{-- <th>{{ __('action') }}</th> --}}
                     </thead>
                     <tbody id="data-input">
+                        <tr>
+                            <td><input type="date" name="start_date[]" class="form-control" placeholder="Enter Start Date" /></td>
+                            <td><input type="date" name="end_date[]" class="form-control" placeholder="Enter End Date" /></td>
+                            <td><input type="text" name="duration[]" class="form-control" placeholder="Enter Duration" /></td>
+                            <td><input type="text" name="note[]" class="form-control" placeholder="Enter Note" /></td>
+                        </tr>
+                        <tr>
+                            <td><input type="date" name="start_date[]" class="form-control" placeholder="Enter Start Date" /></td>
+                            <td><input type="date" name="end_date[]" class="form-control" placeholder="Enter End Date" /></td>
+                            <td><input type="text" name="duration[]" class="form-control" placeholder="Enter Duration" /></td>
+                            <td><input type="text" name="note[]" class="form-control" placeholder="Enter Note" /></td>
+                        </tr>
+                        <tr>
+                            <td><input type="date" name="start_date[]" class="form-control" placeholder="Enter Start Date" /></td>
+                            <td><input type="date" name="end_date[]" class="form-control" placeholder="Enter End Date" /></td>
+                            <td><input type="text" name="duration[]" class="form-control" placeholder="Enter Duration" /></td>
+                            <td><input type="text" name="note[]" class="form-control" placeholder="Enter Note" /></td>
+                        </tr>
 
                     </tbody>
-                    <tfoot>
+                    {{-- <tfoot>
                         <tr>
                             <td colspan="6">
-                                {{-- <div class="text-center"> --}}
                                 <button type="button" class="btn btn-primary" id="addRow">Add Row</button>
-                                {{-- </div> --}}
                             </td>
                         </tr>
-                    </tfoot>
+                    </tfoot> --}}
                 </table>
             </div>
         </div>
@@ -73,21 +89,44 @@
 {{ Form::close() }}
 
 {{-- Script --}}
+
 <script>
     $(document).ready(function() {
         var i = 0;
+
         $('#addRow').click(function() {
             i++;
             $('#data-input').append('<tr id="row' + i + '"><td>' + i +
                 '</td><td><input type="date" name="start_date[]" class="form-control" placeholder="Enter Start Date" /></td><td><input type="date" name="end_date[]" class="form-control" placeholder="Enter End Date" /></td><td><input type="text" name="duration[]" class="form-control" placeholder="Enter Duration" /></td><td><input type="text" name="note[]" class="form-control" placeholder="Enter Note" /></td><td><button type="button" name="remove" id="' +
                 i +
                 '" class="btn btn-danger btn_remove"><i class="ti ti-trash text-white"></i></button></td></tr>'
-                );
+            );
         });
 
         $(document).on('click', '.btn_remove', function() {
             var button_id = $(this).attr("id");
             $('#row' + button_id + '').remove();
+            resetIndexes(); // Panggil fungsi untuk mereset nilai i
         });
+
+        function resetIndexes() {
+            // Ambil semua baris setelah baris yang dihapus
+            var remainingRows = $('#data-input tr').filter(function() {
+                return $(this).attr("id") > button_id;
+            });
+
+            // Ubah indeks untuk setiap baris yang tersisa
+            remainingRows.each(function() {
+                var currentId = parseInt($(this).attr("id").replace("row", ""));
+                var newId = currentId - 1;
+                $(this).attr("id", "row" + newId);
+                $(this).find('td:first').text(newId);
+                $(this).find('.btn_remove').attr("id", newId);
+            });
+
+            // Setel nilai i menjadi panjang dari baris yang tersisa
+            i = remainingRows.length;
+        }
     });
 </script>
+

@@ -955,7 +955,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('employee-schedule', EmployeeScheduleController::class)->middleware(['auth', 'XSS']);
     Route::resource('change-schedule', ReimbursementController::class)->middleware(['auth', 'XSS']);
     Route::resource('overtime-request', OvertimeRequestController::class)->middleware(['auth', 'XSS']);
-    // Route::post('overtime/changeaction')
+    Route::post('overtime-request/changeaction', [OvertimeRequestController::class, 'changeaction'])->name('overtime-request.changeaction')->middleware(['auth', 'XSS']);
 
 
     Route::post('event/getdepartment', [EventController::class, 'getdepartment'])->name('event.getdepartment')->middleware(['auth', 'XSS']);

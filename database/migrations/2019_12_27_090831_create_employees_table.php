@@ -32,6 +32,35 @@ class CreateEmployeesTable extends Migration
             $table->string('company_doj')->nullable();
             $table->string('documents')->nullable();
 
+            $table->string('emergency_contact_name')->nullable();
+            $table->string('emergency_contact_relation')->nullable();
+            $table->string('emergency_contact_address')->nullable();
+            $table->string('emergency_contact_phone')->nullable();
+
+            $table->date('educational_start')->nullable();
+            $table->date('educational_end')->nullable();
+            $table->string('educational_institution')->nullable();
+            $table->string('educational_title')->nullable();
+            $table->string('educational_mark')->nullable();
+
+            $table->string('language')->nullable();
+            $table->string('language_writing')->nullable();
+            $table->string('language_speaking')->nullable();
+
+            $table->date('recent_job_start')->nullable();
+            $table->date('recent_job_end')->nullable();
+            $table->string('recent_job_position')->nullable();
+            $table->string('recent_job_company')->nullable();
+            $table->string('recent_job_skill')->nullable();
+            $table->string('recent_job_salary')->nullable();
+
+            $table->date('certification_start')->nullable();
+            $table->date('certification_end')->nullable();
+            $table->string('certification_field')->nullable();
+            $table->string('certification_organizer')->nullable();
+            $table->string('certification_valid_period')->nullable();
+            $table->string('certification_cost')->nullable();
+
             $table->string('account_holder_name')->nullable();
             $table->string('account_number')->nullable();
             $table->string('bank_name')->nullable();

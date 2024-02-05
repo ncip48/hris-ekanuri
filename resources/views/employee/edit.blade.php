@@ -299,6 +299,27 @@
 
     @if(\Auth::user()->type != 'employee')
         <div class="row">
+            <div class="col-md-6 ">
+            </div>
+            <div class="col-md-6 ">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 ">
+            </div>
+            <div class="col-md-6 ">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 ">
+            </div>
+            {{-- <div class="col-md-6 ">
+            </div> --}}
+        </div>
+    @endif
+
+    @if(\Auth::user()->type != 'employee')
+        <div class="row">
             <div class="col-12">
                 <input type="submit" value="{{__('Update')}}" class="btn btn-primary float-end">
             </div>

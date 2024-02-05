@@ -32,19 +32,27 @@
                             <thead>
                                 <tr>
                                     <th>{{ __('#') }}</th>
-                                    <th>{{ __('Date') }}</th>
+                                    <th>{{ __('Date Of Filling') }}</th>
                                     <th>{{ __('Employee') }}</th>
-                                    <th>{{ __('Note') }}</th>
+                                    {{-- <th>{{ __('Note') }}</th> --}}
                                     <th>{{ __('Status') }}</th>
                                     <th width="200px">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="font-style">
-                                @foreach ($groupedOvertimes as $overtime)
-                                
-                                        {{-- <td>{{ $overtime->employee->name }}</td> --}}
+                                @foreach ($overtimes as $overtime)
+                                    @php
 
-                                        <td>{{ $overtime->note }}</td>
+                                        $createdDate = date('Y-m-d', strtotime($overtime->created_at));
+                                        // dd($createdDate);
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $loop->index + 1 }}</td>
+
+                                        <td>{{ $createdDate }}</td>
+                                        <td>{{ $overtime->employee->name }}</td>
+
+                                        {{-- <td>{{ $overtime->note }}</td> --}}
                                         <td>
                                             @if ($overtime->status == 'Pending')
                                                 <div class="status_badge badge bg-warning p-2 px-3 rounded">
@@ -54,7 +62,7 @@
                                                 <div class="status_badge badge bg-success p-2 px-3 rounded">
                                                     {{ $overtime->status }}
                                                 </div>
-                                            {{-- @elseif ($overtime->status == 'Rejected') --}}
+                                                {{-- @elseif ($overtime->status == 'Rejected') --}}
                                             @else
                                                 <div class="status_badge badge bg-danger p-2 px-3 rounded">
                                                     {{ $overtime->status }}
@@ -64,9 +72,9 @@
                                         <td>
                                             @can('show overtime request')
                                                 <div class="action-btn bg-warning ms-2">
-                                                    <a href="#" data-size="lg" data-ajax-popup="true"
-                                                        data-title="{{ __('Overtime Request Details') }}"
-                                                        {{-- data-url="{{ route('overtime-request.show', $overtime->id) }}" --}}
+                                                    <a href="#" data-size="xl" data-ajax-popup="true"
+                                                        data-title="{{ __('Overtime Request Details') }}" 
+                                                        data-url="{{ route('overtime-request.show', $overtime->id) }}"
                                                         class="mx-3 btn btn-sm  align-items-center">
                                                         <i class="ti ti-caret-right text-white"></i> </a>
                                                 </div>
@@ -84,15 +92,14 @@
                                                 <div class="action-btn bg-danger ms-2">
                                                     {!! Form::open([
                                                         'method' => 'DELETE',
-                                                        // 'route' => ['overtime-request.destroy', $overtime->id],
-                                                        // 'id' => 'delete-form-' . $overtime->id,
+                                                        'route' => ['overtime-request.destroy', $overtime->id],
+                                                        'id' => 'delete-form-' . $overtime->id,
                                                     ]) !!}
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
                                                         data-bs-toggle="tooltip" title="{{ __('Delete') }}"
                                                         data-original-title="{{ __('Delete') }}"
                                                         data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
-                                                        {{-- data-confirm-yes="document.getElementById('delete-form-{{ $overtime->id }}').submit();" --}}
-                                                        >
+                                                        data-confirm-yes="document.getElementById('delete-form-{{ $overtime->id }}').submit();">
                                                         <i class="ti ti-trash text-white"></i></a>
 
                                                     {!! Form::close() !!}
