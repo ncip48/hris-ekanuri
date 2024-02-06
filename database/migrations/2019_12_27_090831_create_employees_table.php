@@ -43,7 +43,7 @@ class CreateEmployeesTable extends Migration
             $table->string('educational_title')->nullable();
             $table->string('educational_mark')->nullable();
 
-            $table->string('language')->nullable();
+            // $table->string('language')->nullable();
             $table->string('language_writing')->nullable();
             $table->string('language_speaking')->nullable();
 

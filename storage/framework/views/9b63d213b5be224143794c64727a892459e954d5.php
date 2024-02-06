@@ -333,6 +333,213 @@ unset($__errorArgs, $__bag); ?> border-0" <?php if($document->is_required == 1 &
 
     <?php if(\Auth::user()->type != 'employee'): ?>
         <div class="row">
+            <div class="col-md-6 ">
+                <div class="card emp_details">
+                    <div class="card-header"><h6 class="mb-0"><?php echo e(__('Education Detail')); ?></h6></div>
+                    <div class="card-body employee-detail-edit-body">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('education_start', __('Education Start'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::date('education_start', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('education_end', __('Education End'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::date('education_end', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('education_institution', __('Institution'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('education_institution', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('education_title', __('Degree'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('education_title',null, ['class' => 'form-control']); ?>
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('education_mark', __('GPA'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('education_mark',null, ['class' => 'form-control']); ?>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 ">
+                <div class="card emp_details">
+                    <div class="card-header"><h6 class="mb-0"><?php echo e(__('Language')); ?></h6></div>
+                    <div class="card-body employee-detail-edit-body">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('language_writing', __('Written Language'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('language_writing', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('language_speaking', __('Spoken Language'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::number('language_speaking', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 ">
+                <div class="card emp_details">
+                    <div class="card-header"><h6 class="mb-0"><?php echo e(__('Recent Job Detail')); ?></h6></div>
+                    <div class="card-body employee-detail-edit-body">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('recent_job_start', __('Job Start'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('recent_job_start', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('recent_job_end', __('Job End'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::number('recent_job_end', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('recent_job_position', __('Position'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('recent_job_position', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('recent_job_company', __('Company Name'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('recent_job_company',null, ['class' => 'form-control']); ?>
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('recent_job_skill', __('Skills'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('recent_job_skill',null, ['class' => 'form-control']); ?>
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('recent_job_salary', __('Salary'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('recent_job_salary',null, ['class' => 'form-control']); ?>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 ">
+                <div class="card emp_details">
+                    <div class="card-header"><h6 class="mb-0"><?php echo e(__('Certification')); ?></h6></div>
+                    <div class="card-body employee-detail-edit-body">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('certification_start', __('Certification Start'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::date('certification_start', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('certification_end', __('Certification End'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::date('certification_end', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('certification_field', __('Certification Field'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('certification_field', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('certification_organizer', __('Organizer'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('certification_organize',null, ['class' => 'form-control']); ?>
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('certification_valid_period', __('Valid Period'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('certification_valid_period',null, ['class' => 'form-control']); ?>
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('certification_cost', __('Cost'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('certification_cost',null, ['class' => 'form-control']); ?>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 ">
+                <div class="card emp_details">
+                    <div class="card-header"><h6 class="mb-0"><?php echo e(__('Emergency Contact Detail')); ?></h6></div>
+                    <div class="card-body employee-detail-edit-body">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('emergency_contact_name', __('Contact Name'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('emergency_contact_name', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('emergency_contact_name', __('Relation'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::number('emergency_contact_name', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('emergency_contact_address', __('Address'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('emergency_contact_address', null, ['class' => 'form-control']); ?>
+
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <?php echo Form::label('emergency_contact_phone', __('Phone'),['class'=>'form-label']); ?>
+
+                                <?php echo Form::text('emergency_contact_phone',null, ['class' => 'form-control']); ?>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    <?php endif; ?>
+
+    <?php if(\Auth::user()->type != 'employee'): ?>
+        <div class="row">
             <div class="col-12">
                 <input type="submit" value="<?php echo e(__('Update')); ?>" class="btn btn-primary float-end">
             </div>

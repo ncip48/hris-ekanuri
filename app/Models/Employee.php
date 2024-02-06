@@ -38,7 +38,7 @@ class Employee extends Model
         'educational_institution',
         'educational_title',
         'educational_mark',
-        'language',
+        // 'language',
         'language_writing',
         'language_speaking',
         'recent_job_start',
