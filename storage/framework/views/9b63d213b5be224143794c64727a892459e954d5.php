@@ -408,14 +408,14 @@ unset($__errorArgs, $__bag); ?> border-0" <?php if($document->is_required == 1 &
                             <div class="form-group col-md-6">
                                 <?php echo Form::label('recent_job_start', __('Job Start'),['class'=>'form-label']); ?>
 
-                                <?php echo Form::text('recent_job_start', null, ['class' => 'form-control']); ?>
+                                <?php echo Form::date('recent_job_start', null, ['class' => 'form-control']); ?>
 
 
                             </div>
                             <div class="form-group col-md-6">
                                 <?php echo Form::label('recent_job_end', __('Job End'),['class'=>'form-label']); ?>
 
-                                <?php echo Form::number('recent_job_end', null, ['class' => 'form-control']); ?>
+                                <?php echo Form::date('recent_job_end', null, ['class' => 'form-control']); ?>
 
 
                             </div>
@@ -513,7 +513,7 @@ unset($__errorArgs, $__bag); ?> border-0" <?php if($document->is_required == 1 &
                             <div class="form-group col-md-6">
                                 <?php echo Form::label('emergency_contact_name', __('Relation'),['class'=>'form-label']); ?>
 
-                                <?php echo Form::number('emergency_contact_name', null, ['class' => 'form-control']); ?>
+                                <?php echo Form::text('emergency_contact_name', null, ['class' => 'form-control']); ?>
 
 
                             </div>

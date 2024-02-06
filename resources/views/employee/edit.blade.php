@@ -414,7 +414,7 @@
                             </div>
                             <div class="form-group col-md-6">
                                 {!! Form::label('certification_valid_period', __('Valid Period'),['class'=>'form-label']) !!}
-                                {!! Form::text('certification_valid_period',null, ['class' => 'form-control']) !!}
+                                {!! Form::date('certification_valid_period',null, ['class' => 'form-control']) !!}
                             </div>
                             <div class="form-group col-md-6">
                                 {!! Form::label('certification_cost', __('Cost'),['class'=>'form-label']) !!}
