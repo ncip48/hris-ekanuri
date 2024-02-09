@@ -18,8 +18,8 @@
         <hr>
         <div class="col-12">
             <p class="fw-bold">Detail Overtime</p>
-            {{-- <div class="card">
-                <div class="card-body table-border-style"> --}}
+            <div class="card">
+                <div class="card-body table-border-style">
                     <div class="table-responsive">
                         <table class="table datatable">
                             <thead>
@@ -30,10 +30,10 @@
                                 <th>{{ __('Note') }}</th>
                             </thead>
                             <tbody>
-                                {{-- @foreach ($overtimes as $overtime) --}}
-                                @php
+                                @foreach ($overtimes as $overtime)
+                                {{-- @php
                                      $number = 1;
-                                @endphp
+                                @endphp --}}
                             
                                     <tr>
                                         {{-- <td>{{ $number++ }}</td> --}}
@@ -43,12 +43,12 @@
                                         <td>{{ $overtimes->note }}</td>
                                     </tr>                             
                                     
-                                {{-- @endforeach --}}
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
-                {{-- </div>
-            </div> --}}
+                </div>
+            </div>
         </div>
 
     </div>

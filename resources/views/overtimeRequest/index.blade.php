@@ -72,7 +72,7 @@
                                         <td>
                                             @can('show overtime request')
                                                 <div class="action-btn bg-warning ms-2">
-                                                    <a href="#" data-size="xl" data-ajax-popup="true"
+                                                    <a href="#" data-size="xl" data-ajax-popup="true" title="Action Details"
                                                         data-title="{{ __('Overtime Request Details') }}" 
                                                         data-url="{{ route('overtime-request.show', $overtime->id) }}"
                                                         class="mx-3 btn btn-sm  align-items-center">

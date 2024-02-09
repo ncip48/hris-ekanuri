@@ -10,6 +10,7 @@ use App\Models\OvertimeRequest;
 use App\Models\PersonalReport;
 use App\Models\Shift;
 use App\Models\SubDepartment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -161,7 +162,10 @@ class OvertimeRequestController extends Controller
             // $duration = json_decode($overtimes->duration);
             // $notes = json_decode($overtimes->note);
 
-            return view('overtimeRequest.action', compact('overtimes', 'employee', 'branch'));
+            $start_date = Carbon::parse($overtimes->start_date)->format('Y-m-d');
+            $end_date = Carbon::parse($overtimes->end_date)->format('Y-m-d');
+
+            return view('overtimeRequest.action', compact('overtimes', 'employee', 'branch', 'start_date', 'end_date'));
         } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }
