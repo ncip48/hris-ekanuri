@@ -343,7 +343,7 @@
                             </div>
                             <div class="form-group col-md-6">
                                 {!! Form::label('language_speaking', __('Spoken Language'),['class'=>'form-label']) !!}
-                                {!! Form::number('language_speaking', null, ['class' => 'form-control']) !!}
+                                {!! Form::text('language_speaking', null, ['class' => 'form-control']) !!}
 
                             </div>
                         </div>

@@ -390,7 +390,7 @@ unset($__errorArgs, $__bag); ?> border-0" <?php if($document->is_required == 1 &
                             <div class="form-group col-md-6">
                                 <?php echo Form::label('language_speaking', __('Spoken Language'),['class'=>'form-label']); ?>
 
-                                <?php echo Form::number('language_speaking', null, ['class' => 'form-control']); ?>
+                                <?php echo Form::text('language_speaking', null, ['class' => 'form-control']); ?>
 
 
                             </div>
@@ -483,7 +483,7 @@ unset($__errorArgs, $__bag); ?> border-0" <?php if($document->is_required == 1 &
                             <div class="form-group col-md-6">
                                 <?php echo Form::label('certification_valid_period', __('Valid Period'),['class'=>'form-label']); ?>
 
-                                <?php echo Form::text('certification_valid_period',null, ['class' => 'form-control']); ?>
+                                <?php echo Form::date('certification_valid_period',null, ['class' => 'form-control']); ?>
 
                             </div>
                             <div class="form-group col-md-6">

@@ -102,15 +102,10 @@ class OvertimeRequestController extends Controller
                 [
                     'employee_id' => 'required',
                     'branch_id' => 'required',
-                    // 'department_id' => 'required',
-                    // 'designation_id' => 'required',
-                    // 'sub_department_id' => 'required',
-                    // 'date' => 'required',
                     'start_date' => 'required',
                     'end_date' => 'required',
                     'duration' => 'required',
                     'note' => 'required',
-                    // 'reason' => 'required',
                 ]
             );
             if ($validator->fails()) {
@@ -118,29 +113,29 @@ class OvertimeRequestController extends Controller
 
                 return redirect()->back()->with('error', $messages->first());
             }
-            // $overtimeRequest = new OvertimeRequest();
-            // $overtimeRequest->employee_id = $request->employee_id;
-            // $overtimeRequest->branch_id = $request->branch_id;
-            // $overtimeRequest->start_date = $request->start_date;
-            // $overtimeRequest->end_date = $request->end_date;
-            // $overtimeRequest->duration = $request->duration;
-            // $overtimeRequest->status = 'Pending';
-            // $overtimeRequest->note = $request->note;
-            // $overtimeRequest->created_by = \Auth::user()->creatorId();
-            // $overtimeRequest->save();
+            $overtimeRequest = new OvertimeRequest();
+            $overtimeRequest->employee_id = $request->employee_id;
+            $overtimeRequest->branch_id = $request->branch_id;
+            $overtimeRequest->start_date = $request->start_date;
+            $overtimeRequest->end_date = $request->end_date;
+            $overtimeRequest->duration = $request->duration;
+            $overtimeRequest->status = 'Pending';
+            $overtimeRequest->note = $request->note;
+            $overtimeRequest->created_by = \Auth::user()->creatorId();
+            $overtimeRequest->save();
 
-            $data = [
-                'employee_id' => $request->employee_id,
-                'branch_id' => $request->branch_id,
-                'start_date' => json_encode($request->start_date),
-                'end_date' => json_encode($request->end_date),
-                'duration' => json_encode($request->duration),
-                'status' => 'Pending',
-                'note' => json_encode($request->note),
-                'created_by' => \Auth::user()->creatorId(),
-            ];
+            // $data = [
+            //     'employee_id' => $request->employee_id,
+            //     'branch_id' => $request->branch_id,
+            //     'start_date' => json_encode($request->start_date),
+            //     'end_date' => json_encode($request->end_date),
+            //     'duration' => json_encode($request->duration),
+            //     'status' => 'Pending',
+            //     'note' => json_encode($request->note),
+            //     'created_by' => \Auth::user()->creatorId(),
+            // ];
 
-            OvertimeRequest::create($data);
+            // OvertimeRequest::create($data);
 
             return redirect()->route('overtime-request.index')->with('success', __('Overtime Request successfully created.'));
         } else {
@@ -161,12 +156,12 @@ class OvertimeRequestController extends Controller
             $employee = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');;
             $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             
-            $start_date = json_decode($overtimes->start_date);
-            $end_date = json_decode($overtimes->end_date);
-            $duration = json_decode($overtimes->duration);
-            $notes = json_decode($overtimes->note);
+            // $start_date = json_decode($overtimes->start_date);
+            // $end_date = json_decode($overtimes->end_date);
+            // $duration = json_decode($overtimes->duration);
+            // $notes = json_decode($overtimes->note);
 
-            return view('overtimeRequest.action', compact('overtimes', 'employee', 'branch', 'start_date', 'end_date', 'duration', 'notes'));
+            return view('overtimeRequest.action', compact('overtimes', 'employee', 'branch'));
         } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }

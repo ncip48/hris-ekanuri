@@ -55,7 +55,7 @@
                             <td><input type="text" name="duration[]" class="form-control" placeholder="Enter Duration" /></td>
                             <td><input type="text" name="note[]" class="form-control" placeholder="Enter Note" /></td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td><input type="date" name="start_date[]" class="form-control" placeholder="Enter Start Date" /></td>
                             <td><input type="date" name="end_date[]" class="form-control" placeholder="Enter End Date" /></td>
                             <td><input type="text" name="duration[]" class="form-control" placeholder="Enter Duration" /></td>
@@ -66,7 +66,7 @@
                             <td><input type="date" name="end_date[]" class="form-control" placeholder="Enter End Date" /></td>
                             <td><input type="text" name="duration[]" class="form-control" placeholder="Enter Duration" /></td>
                             <td><input type="text" name="note[]" class="form-control" placeholder="Enter Note" /></td>
-                        </tr>
+                        </tr> --}}
 
                     </tbody>
                     {{-- <tfoot>
@@ -106,27 +106,24 @@
         $(document).on('click', '.btn_remove', function() {
             var button_id = $(this).attr("id");
             $('#row' + button_id + '').remove();
-            resetIndexes(); // Panggil fungsi untuk mereset nilai i
+            // resetIndexes(); // Panggil fungsi untuk mereset nilai i
         });
 
-        function resetIndexes() {
-            // Ambil semua baris setelah baris yang dihapus
-            var remainingRows = $('#data-input tr').filter(function() {
-                return $(this).attr("id") > button_id;
-            });
+        // function resetIndexes() {
+        //     var remainingRows = $('#data-input tr').filter(function() {
+        //         return $(this).attr("id") > button_id;
+        //     });
 
-            // Ubah indeks untuk setiap baris yang tersisa
-            remainingRows.each(function() {
-                var currentId = parseInt($(this).attr("id").replace("row", ""));
-                var newId = currentId - 1;
-                $(this).attr("id", "row" + newId);
-                $(this).find('td:first').text(newId);
-                $(this).find('.btn_remove').attr("id", newId);
-            });
+        //     remainingRows.each(function() {
+        //         var currentId = parseInt($(this).attr("id").replace("row", ""));
+        //         var newId = currentId - 1;
+        //         $(this).attr("id", "row" + newId);
+        //         $(this).find('td:first').text(newId);
+        //         $(this).find('.btn_remove').attr("id", newId);
+        //     });
 
-            // Setel nilai i menjadi panjang dari baris yang tersisa
-            i = remainingRows.length;
-        }
+        //     i = remainingRows.length;
+        // }
     });
 </script>
 
