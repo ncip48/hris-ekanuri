@@ -43,7 +43,7 @@
                                 @foreach ($overtimes as $overtime)
                                     @php
 
-                                        $createdDate = date('Y-m-d', strtotime($overtime->created_at));
+                                        $createdDate = date('d M Y', strtotime($overtime->created_at));
                                         // dd($createdDate);
                                     @endphp
                                     <tr>
@@ -73,7 +73,7 @@
                                             @can('show overtime request')
                                                 <div class="action-btn bg-warning ms-2">
                                                     <a href="#" data-size="xl" data-ajax-popup="true"
-                                                        data-title="{{ __('Overtime Request Details') }}" 
+                                                        data-title="{{ __('Overtime Request Details') }}"
                                                         data-url="{{ route('overtime-request.show', $overtime->id) }}"
                                                         class="mx-3 btn btn-sm  align-items-center">
                                                         <i class="ti ti-caret-right text-white"></i> </a>
