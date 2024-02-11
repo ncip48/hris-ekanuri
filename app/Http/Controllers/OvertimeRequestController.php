@@ -27,8 +27,8 @@ class OvertimeRequestController extends Controller
         // dd(Auth::user()->can('manage overtime request'));
         if (\Auth::user()->can('manage overtime request')) {
             $overtimes = OvertimeRequest::where('created_by', \Auth::user()->creatorId())
-            ->get();
-// dd($overtimes);
+                ->get();
+            // dd($overtimes);
 
             // Grouping by employee_id and created_at using Eloquent Collection methods
             $groupedOvertimes = $overtimes->groupBy(['employee_id', 'created_at']);
@@ -155,7 +155,7 @@ class OvertimeRequestController extends Controller
             $overtimes = OvertimeRequest::findOrfail($employee_id);
             $employee = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');;
             $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            
+
             // $start_date = json_decode($overtimes->start_date);
             // $end_date = json_decode($overtimes->end_date);
             // $duration = json_decode($overtimes->duration);
@@ -208,9 +208,11 @@ class OvertimeRequestController extends Controller
     }
 
 
-    public function changeaction(Request $request)
+    public function changeaction(Request $request, $id)
     {
-        $overtimeRequest = OvertimeRequest::find($request->overtime_id);
+        // dd($request->all());
+        // $id = $request->overtime_id;
+        $overtimeRequest = OvertimeRequest::find($id);
 
         $overtimeRequest->status = $request->status;
 
@@ -218,14 +220,10 @@ class OvertimeRequestController extends Controller
             $overtimeRequest->status = 'Approved';
             $overtimeRequest->save();
             return redirect()->route('overtime-request.index')->with('success', __('Overtime Request successfully updated.'));
-        }
-        else
-        {
+        } else {
             $overtimeRequest->status = 'Rejected';
             $overtimeRequest->save();
             return redirect()->route('overtime-request.index')->with('success', __('Overtime Request successfully updated.'));
         }
-
-
     }
 }
