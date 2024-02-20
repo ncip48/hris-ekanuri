@@ -125,19 +125,6 @@ class OvertimeRequestController extends Controller
             $overtimeRequest->created_by = \Auth::user()->creatorId();
             $overtimeRequest->save();
 
-            // $data = [
-            //     'employee_id' => $request->employee_id,
-            //     'branch_id' => $request->branch_id,
-            //     'start_date' => json_encode($request->start_date),
-            //     'end_date' => json_encode($request->end_date),
-            //     'duration' => json_encode($request->duration),
-            //     'status' => 'Pending',
-            //     'note' => json_encode($request->note),
-            //     'created_by' => \Auth::user()->creatorId(),
-            // ];
-
-            // OvertimeRequest::create($data);
-
             return redirect()->route('overtime-request.index')->with('success', __('Overtime Request successfully created.'));
         } else {
             return response()->json(['error' => __('Permission denied.')], 401);

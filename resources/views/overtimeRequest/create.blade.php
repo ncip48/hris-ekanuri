@@ -50,10 +50,10 @@
                     </thead>
                     <tbody id="data-input">
                         <tr>
-                            <td><input type="date" name="start_date[]" class="form-control" placeholder="Enter Start Date" /></td>
-                            <td><input type="date" name="end_date[]" class="form-control" placeholder="Enter End Date" /></td>
-                            <td><input type="text" name="duration[]" class="form-control" placeholder="Enter Duration" /></td>
-                            <td><input type="text" name="note[]" class="form-control" placeholder="Enter Note" /></td>
+                            <td><input type="date" name="start_date" class="form-control" placeholder="Enter Start Date" /></td>
+                            <td><input type="date" name="end_date" class="form-control" placeholder="Enter End Date" /></td>
+                            <td><input type="text" name="duration" class="form-control" placeholder="Enter Duration" /></td>
+                            <td><input type="text" name="note" class="form-control" placeholder="Enter Note" /></td>
                         </tr>
                         {{-- <tr>
                             <td><input type="date" name="start_date[]" class="form-control" placeholder="Enter Start Date" /></td>
