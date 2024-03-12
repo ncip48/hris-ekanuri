@@ -1233,7 +1233,7 @@
 
         <!--------------------- Start Products System ----------------------------------->
 
-        @if (Gate::check('manage product & service') || Gate::check('manage product & service'))
+        {{-- @if (Gate::check('manage product & service') || Gate::check('manage product & service'))
             <li class="dash-item dash-hasmenu">
                 <a href="#!" class="dash-link ">
                     <span class="dash-micon"><i class="ti ti-shopping-cart"></i></span><span
@@ -1257,7 +1257,7 @@
                     @endif
                 </ul>
             </li>
-        @endif
+        @endif --}}
 
         <!--------------------- End Products System ----------------------------------->
 
