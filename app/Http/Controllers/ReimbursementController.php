@@ -19,7 +19,7 @@ class ReimbursementController extends Controller
     public function index()
     {
         if (\Auth::user()->can('manage reimbursement')) {
-            if (\Auth::user()->isStaff()) {
+            if (!\Auth::user()->isStaff()) {
                 $reimbursements = Reimbursement::where('created_by', '=', \Auth::user()->creatorId())->get();
             } else {
                 $reimbursements = Reimbursement::where('employee_id', '=', \Auth::user()->getStaffId())->get();
