@@ -159,7 +159,7 @@ class ShiftController extends Controller
             $shift = Shift::find($id);
             if ($shift->created_by == \Auth::user()->creatorId()) {
                 $shift->delete();
-                return redirect()->route('shif.index')->with('success', __('Shift successfully deleted.'));
+                return redirect()->route('shifting.index')->with('success', __('Shift successfully deleted.'));
             } else {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
