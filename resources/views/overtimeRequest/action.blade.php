@@ -55,6 +55,7 @@
 
     </div>
 </div>
+@if (\Auth::user()->type =='company')
 <div class="modal-footer">
     <button type="submit" value="{{ __('Approval') }}" class="btn btn-success" name="status" value="Approval">
         {{ __('Approval') }}
@@ -63,4 +64,5 @@
         {{ __('Reject') }}
     </button>
 </div>
+@endif
 {{ Form::close() }}

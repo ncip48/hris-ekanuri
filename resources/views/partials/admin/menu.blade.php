@@ -332,11 +332,13 @@
                                                         class="dash-item {{ request()->is('request edit identitas*') ? 'active' : '' }}">
                                                         <a class="dash-link" href="">{{ __('Edit Identitas') }}</a>
                                                     </li> --}}
+                                                    @endcan
+                                                    @can('show employee profile')
                                                     <li
                                                         class="dash-item {{ request()->is('employee setup*') ? 'active' : '' }}">
                                                         <a class="dash-link" href="{{route('employee.index')}}">{{ __('Employee Setup') }}</a>
                                                     </li>
-                                                @endcan
+                                                    @endcan
                                             </ul>
                                             {{-- </li> --}}
                                         @endif
