@@ -143,7 +143,7 @@ class ReimbursementController extends Controller
      */
     public function update(Request $request, Reimbursement $reimbursement)
     {
-        if (\Auth::user()->can('edit rating behavior')) {
+        if (\Auth::user()->can('edit reimbursement')) {
             if ($reimbursement->created_by == \Auth::user()->creatorId()) {
                 $validator = \Validator::make(
                     $request->all(),
@@ -201,7 +201,7 @@ class ReimbursementController extends Controller
      */
     public function destroy(Reimbursement $reimbursement)
     {
-        if (\Auth::user()->can('delete rating behavior')) {
+        if (\Auth::user()->can('delete reimbursement')) {
             if ($reimbursement->created_by == \Auth::user()->creatorId()) {
                 //unlink if file exist
                 if ($reimbursement->file) {
