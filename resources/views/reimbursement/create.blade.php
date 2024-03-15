@@ -1,7 +1,7 @@
 {{ Form::open(['url' => 'reimbursement', 'method' => 'post', 'files' => true]) }}
 <div class="modal-body">
     <div class="row ">
-        @if (\Auth::user()->isStaff())
+        @if (!auth()->user()->isStaff())
             <div class="col-12">
                 <div class="form-group">
                     {{ Form::label('employee_id', __('Employee'), ['class' => 'form-label']) }}
