@@ -36,7 +36,7 @@ class ReimbursementController extends Controller
      */
     public function create()
     {
-        if (\Auth::user()->can('create rating behavior')) {
+        if (\Auth::user()->can('create reimbursement')) {
             $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $subDepartment = SubDepartment::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
