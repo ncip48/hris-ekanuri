@@ -64,7 +64,7 @@ class ReimbursementController extends Controller
                 'file' => 'required',
             ];
 
-            if (\Auth::user()->isStaff()) {
+            if (\Auth::user()->isStaff() == false) {
                 $rules['employee_id'] = 'required';
             }
 
