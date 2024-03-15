@@ -80,6 +80,11 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
+    public function getStaffId()
+    {
+        return Employee::where('user_id', $this->id)->first()->id;
+    }
+
     public function creatorId()
     {
         if ($this->type == 'company' || $this->type == 'super admin') {
