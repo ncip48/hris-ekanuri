@@ -1799,7 +1799,5 @@ Route::group(['middleware' => ['verified']], function () {
 Route::any('/cookie-consent', [SystemController::class, 'CookieConsent'])->name('cookie-consent');
 
 Route::get('/clear-cache', function () {
-    Artisan::call('optimize:clear');
-
-    return "Cache cleared successfully";
+    return Artisan::call('optimize:clear');
 });
