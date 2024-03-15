@@ -151,8 +151,7 @@ use App\Http\Controllers\OvertimeRequestController;
 use App\Http\Controllers\RatingBehaviorController;
 use App\Http\Controllers\ReimbursementController;
 use App\Http\Controllers\WarehouseTransferController;
-
-
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -1798,3 +1797,9 @@ Route::group(['middleware' => ['verified']], function () {
 });
 
 Route::any('/cookie-consent', [SystemController::class, 'CookieConsent'])->name('cookie-consent');
+
+Route::get('/clear-cache', function () {
+    Artisan::call('optimize:clear');
+
+    return "Cache cleared successfully";
+});
