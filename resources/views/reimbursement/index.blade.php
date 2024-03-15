@@ -12,7 +12,7 @@
 
 @section('action-btn')
     <div class="float-end">
-        @can('create class')
+        @can('create reimbursement')
             <a href="#" data-url="{{ route('reimbursement.create') }}" data-ajax-popup="true"
                 data-title="{{ __('Create New Reimbursement') }}" data-bs-toggle="tooltip" title="{{ __('Create') }}"
                 class="btn btn-sm btn-primary">
