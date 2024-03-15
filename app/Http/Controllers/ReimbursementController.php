@@ -90,7 +90,7 @@ class ReimbursementController extends Controller
             $reimbursement->date  = $request->date;
             $reimbursement->description  = $request->description;
             $reimbursement->file  = $fileName;
-            $reimbursement->created_by = \Auth::user()->id;
+            $reimbursement->created_by = \Auth::user()->creatorId();
             $reimbursement->save();
 
             return redirect()->route('reimbursement.index')->with('success', __('Reimbursement successfully created.'));
