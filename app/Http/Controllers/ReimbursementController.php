@@ -86,11 +86,11 @@ class ReimbursementController extends Controller
             $reimbursement             = new Reimbursement();
             // $reimbursement->department_id  = $request->department_id;
             // $reimbursement->branch_id  = $request->branch_id;
-            $reimbursement->employee_id  = \Auth::user()->type == 'staf' ? \Auth::user()->creatorId() : $request->employee_id;
+            $reimbursement->employee_id  = \Auth::user()->type == 'staf' ? \Auth::user()->id : $request->employee_id;
             $reimbursement->date  = $request->date;
             $reimbursement->description  = $request->description;
             $reimbursement->file  = $fileName;
-            $reimbursement->created_by = \Auth::user()->creatorId();
+            $reimbursement->created_by = \Auth::user()->id;
             $reimbursement->save();
 
             return redirect()->route('reimbursement.index')->with('success', __('Reimbursement successfully created.'));
