@@ -48,7 +48,13 @@
                                $date = date('Y-m-d', strtotime($report->date_of_report));
                            @endphp
                                 <tr>
-                                    <td><a href="{{route('employee.show',\Illuminate\Support\Facades\Crypt::encrypt($report->employee->employee_id))}}" class="btn btn-outline-primary">{{ \Auth::user()->employeeIdFormat($report->employee->employee_id) }}</a></td>
+                                    <td>
+                                        @can('show employee profile')
+                                        <a href="{{route('employee.show',\Illuminate\Support\Facades\Crypt::encrypt($report->employee->employee_id))}}" class="btn btn-outline-primary">{{ \Auth::user()->employeeIdFormat($report->employee->employee_id) }}</a>
+                                        @else
+                                        <a href="#"  class="btn btn-outline-primary">{{ \Auth::user()->employeeIdFormat($report->employee->employee_id) }}</a>
+                                        @endcan
+                                    </td>
                                     <td>{{ $report->employee->name }}</td>
                                     {{-- <td>{{ $report->employee->email }}</td> --}}
                                     <td>{{ $report->branch->name }}</td>
