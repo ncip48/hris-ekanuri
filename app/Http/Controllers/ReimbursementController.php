@@ -164,7 +164,9 @@ class ReimbursementController extends Controller
 
                 // $reimbursement->branch_id = $request->branch_id;
                 // $reimbursement->department_id = $request->department_id;
-                $reimbursement->employee_id = $request->employee_id;
+                if (!auth()->user()->isStaff()) {
+                    $reimbursement->employee_id = $request->employee_id;
+                }
                 $reimbursement->date = $request->date;
                 $reimbursement->description = $request->description;
                 if ($request->file('file')) {
