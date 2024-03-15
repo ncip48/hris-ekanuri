@@ -1,12 +1,14 @@
 {{ Form::open(['url' => 'reimbursement', 'method' => 'post', 'files' => true]) }}
 <div class="modal-body">
     <div class="row ">
-        <div class="col-12">
-            <div class="form-group">
-                {{ Form::label('employee_id', __('Employee'), ['class' => 'form-label']) }}
-                {{ Form::select('employee_id', $employee, null, ['class' => 'form-control select', 'placeholder' => __('Select Employee')]) }}
+        @if (\Auth::user()->isStaff())
+            <div class="col-12">
+                <div class="form-group">
+                    {{ Form::label('employee_id', __('Employee'), ['class' => 'form-label']) }}
+                    {{ Form::select('employee_id', $employee, null, ['class' => 'form-control select', 'placeholder' => __('Select Employee')]) }}
+                </div>
             </div>
-        </div>
+        @endif
         <div class="col-12">
             <div class="form-group">
                 {{ Form::label('date', __('Date'), ['class' => 'form-label']) }}

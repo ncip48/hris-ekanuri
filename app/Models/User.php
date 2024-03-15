@@ -59,12 +59,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getProfileAttribute()
     {
 
-        if(!empty($this->avatar) && \Storage::exists($this->avatar))
-        {
+        if (!empty($this->avatar) && \Storage::exists($this->avatar)) {
             return $this->attributes['avatar'] = asset(\Storage::url($this->avatar));
-        }
-        else
-        {
+        } else {
             return $this->attributes['avatar'] = asset(\Storage::url('avatar.png'));
         }
     }
@@ -74,26 +71,29 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->id;
     }
 
+    public function isStaff()
+    {
+        if ($this->type == 'company' || $this->type == 'super admin') {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function creatorId()
     {
-        if($this->type == 'company' || $this->type == 'super admin')
-        {
+        if ($this->type == 'company' || $this->type == 'super admin') {
             return $this->id;
-        }
-        else
-        {
+        } else {
             return $this->created_by;
         }
     }
 
     public function ownerId()
     {
-        if($this->type == 'company' || $this->type == 'super admin')
-        {
+        if ($this->type == 'company' || $this->type == 'super admin') {
             return $this->id;
-        }
-        else
-        {
+        } else {
             return $this->created_by;
         }
     }
@@ -101,12 +101,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function ownerDetails()
     {
 
-        if($this->type == 'company' || $this->type == 'super admin')
-        {
+        if ($this->type == 'company' || $this->type == 'super admin') {
             return User::where('id', $this->id)->first();
-        }
-        else
-        {
+        } else {
             return User::where('id', $this->created_by)->first();
         }
     }
@@ -121,10 +118,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $settings = Utility::settings();
 
-//        return (($settings['site_currency_symbol_position'] == "pre") ? $settings['site_currency_symbol'] : '') . number_format($price, $settings['decimal_number']) . (($settings['site_currency_symbol_position'] == "post") ? $settings['site_currency_symbol'] : '');
+        //        return (($settings['site_currency_symbol_position'] == "pre") ? $settings['site_currency_symbol'] : '') . number_format($price, $settings['decimal_number']) . (($settings['site_currency_symbol_position'] == "post") ? $settings['site_currency_symbol'] : '');
         return (($settings['site_currency_symbol_position'] == "pre") ? $settings['site_currency_symbol'] : '') . number_format($price, Utility::getValByName('decimal_number')) . (($settings['site_currency_symbol_position'] == "post") ? $settings['site_currency_symbol'] : '');
-
-
     }
 
     public static function priceFormats($price)
@@ -214,32 +209,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne('App\Models\Plan', 'id', 'plan');
     }
 
-    public function assignPlan($planID, $company_id =0)
+    public function assignPlan($planID, $company_id = 0)
     {
         $plan = Plan::find($planID);
-        if($plan)
-        {
+        if ($plan) {
             $this->plan = $plan->id;
-            if($plan->duration == 'month')
-            {
+            if ($plan->duration == 'month') {
                 $this->plan_expire_date = Carbon::now()->addMonths(1)->isoFormat('YYYY-MM-DD');
-            }
-            elseif($plan->duration == 'year')
-            {
+            } elseif ($plan->duration == 'year') {
                 $this->plan_expire_date = Carbon::now()->addYears(1)->isoFormat('YYYY-MM-DD');
-            }
-            else
-            {
-                $this->plan_expire_date= null;
+            } else {
+                $this->plan_expire_date = null;
             }
             $this->save();
 
-            if($company_id !=0)
-            {
+            if ($company_id != 0) {
                 $user_id = $company_id;
-            }
-            else{
-                $user_id= \Auth::user()->creatorId();
+            } else {
+                $user_id = \Auth::user()->creatorId();
             }
 
             $users     = User::where('created_by', '=', $user_id)->where('type', '!=', 'super admin')->where('type', '!=', 'company')->where('type', '!=', 'client')->get();
@@ -248,81 +235,57 @@ class User extends Authenticatable implements MustVerifyEmail
             $venders   = Vender::where('created_by', '=', $user_id)->get();
 
 
-            if($plan->max_users == -1)
-            {
-                foreach($users as $user)
-                {
+            if ($plan->max_users == -1) {
+                foreach ($users as $user) {
                     $user->is_active = 1;
                     $user->save();
                 }
-            }
-            else
-            {
+            } else {
                 $userCount = 0;
-                foreach($users as $user)
-                {
+                foreach ($users as $user) {
                     $userCount++;
-                    if($userCount <= $plan->max_users)
-                    {
+                    if ($userCount <= $plan->max_users) {
                         $user->is_active = 1;
                         $user->save();
-                    }
-                    else
-                    {
+                    } else {
                         $user->is_active = 0;
                         $user->save();
                     }
                 }
             }
 
-            if($plan->max_clients == -1)
-            {
-                foreach($clients as $client)
-                {
+            if ($plan->max_clients == -1) {
+                foreach ($clients as $client) {
                     $client->is_active = 1;
                     $client->save();
                 }
-            }
-            else
-            {
+            } else {
                 $clientCount = 0;
-                foreach($clients as $client)
-                {
+                foreach ($clients as $client) {
                     $clientCount++;
-                    if($clientCount <= $plan->max_clients)
-                    {
+                    if ($clientCount <= $plan->max_clients) {
                         $client->is_active = 1;
                         $client->save();
-                    }
-                    else
-                    {
+                    } else {
                         $client->is_active = 0;
                         $client->save();
                     }
                 }
             }
 
-            if($plan->max_customers == -1)
-            {
-                foreach($customers as $customer)
-                {
+            if ($plan->max_customers == -1) {
+                foreach ($customers as $customer) {
                     $customer->is_active = 1;
                     $customer->save();
                 }
-            }
-            else
-            {
+            } else {
                 $customerCount = 0;
-                foreach($customers as $customer)
-                {
+                foreach ($customers as $customer) {
                     $customerCount++;
-                    if($customerCount <= $plan->max_customers)
-                    {
+                    if ($customerCount <= $plan->max_customers) {
                         $customer->is_active = 1;
                         $customer->save();
-                    }
-                    else
-                    {
+                    } else {
                         $customer->is_active = 0;
                         $customer->save();
                     }
@@ -330,27 +293,19 @@ class User extends Authenticatable implements MustVerifyEmail
             }
 
 
-            if($plan->max_venders == -1)
-            {
-                foreach($venders as $vender)
-                {
+            if ($plan->max_venders == -1) {
+                foreach ($venders as $vender) {
                     $vender->is_active = 1;
                     $vender->save();
                 }
-            }
-            else
-            {
+            } else {
                 $venderCount = 0;
-                foreach($venders as $vender)
-                {
+                foreach ($venders as $vender) {
                     $venderCount++;
-                    if($venderCount <= $plan->max_venders)
-                    {
+                    if ($venderCount <= $plan->max_venders) {
                         $vender->is_active = 1;
                         $vender->save();
-                    }
-                    else
-                    {
+                    } else {
                         $vender->is_active = 0;
                         $vender->save();
                     }
@@ -358,9 +313,7 @@ class User extends Authenticatable implements MustVerifyEmail
             }
 
             return ['is_success' => true];
-        }
-        else
-        {
+        } else {
             return [
                 'is_success' => false,
                 'error' => 'Plan is deleted.',
@@ -405,10 +358,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function countPaidCompany()
     {
         return User::where('type', '=', 'company')->whereNotIn(
-            'plan', [
-                      0,
-                      1,
-                  ]
+            'plan',
+            [
+                0,
+                1,
+            ]
         )->where('created_by', '=', \Auth::user()->id)->count();
     }
 
@@ -435,10 +389,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function todayIncome()
     {
         $revenue      = Revenue::where('created_by', '=', $this->creatorId())->whereRaw('Date(date) = CURDATE()')->where('created_by', \Auth::user()->creatorId())->sum('amount');
-        $invoices     = Invoice:: select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('Date(send_date) = CURDATE()')->get();
+        $invoices     = Invoice::select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('Date(send_date) = CURDATE()')->get();
         $invoiceArray = array();
-        foreach($invoices as $invoice)
-        {
+        foreach ($invoices as $invoice) {
             $invoiceArray[] = $invoice->getTotal();
         }
         $totalIncome = (!empty($revenue) ? $revenue : 0) + (!empty($invoiceArray) ? array_sum($invoiceArray) : 0);
@@ -450,11 +403,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $payment = Payment::where('created_by', '=', $this->creatorId())->where('created_by', \Auth::user()->creatorId())->whereRaw('Date(date) = CURDATE()')->sum('amount');
 
-        $bills = Bill:: select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('Date(send_date) = CURDATE()')->get();
+        $bills = Bill::select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('Date(send_date) = CURDATE()')->get();
 
         $billArray = array();
-        foreach($bills as $bill)
-        {
+        foreach ($bills as $bill) {
             $billArray[] = $bill->getTotal();
         }
 
@@ -468,17 +420,15 @@ class User extends Authenticatable implements MustVerifyEmail
         $currentMonth = date('m');
         $revenue      = Revenue::where('created_by', '=', $this->creatorId())->whereRaw('MONTH(date) = ?', [$currentMonth])->sum('amount');
 
-        $invoices = Invoice:: select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('MONTH(send_date) = ?', [$currentMonth])->get();
+        $invoices = Invoice::select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('MONTH(send_date) = ?', [$currentMonth])->get();
 
         $invoiceArray = array();
-        foreach($invoices as $invoice)
-        {
+        foreach ($invoices as $invoice) {
             $invoiceArray[] = $invoice->getTotal();
         }
         $totalIncome = (!empty($revenue) ? $revenue : 0) + (!empty($invoiceArray) ? array_sum($invoiceArray) : 0);
 
         return $totalIncome;
-
     }
     public function incomecat()
     {
@@ -490,20 +440,17 @@ class User extends Authenticatable implements MustVerifyEmail
         $incomes = Revenue::selectRaw('sum(revenues.amount) as amount,MONTH(date) as month,YEAR(date) as year,category_id')->leftjoin('product_service_categories', 'revenues.category_id', '=', 'product_service_categories.id')->where('product_service_categories.type', '=', 1);
 
 
-        $invoices = Invoice:: select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('MONTH(send_date) = ?', [$currentMonth])->get();
+        $invoices = Invoice::select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('MONTH(send_date) = ?', [$currentMonth])->get();
 
 
 
         $invoiceArray = array();
-        foreach($invoices as $invoice)
-        {
+        foreach ($invoices as $invoice) {
             $invoiceArray[] = $invoice->getTotal();
         }
         $totalIncome = (!empty($revenue) ? $revenue : 0) + (!empty($invoiceArray) ? array_sum($invoiceArray) : 0);
 
         return $totalIncome;
-
-
     }
 
     public function expenseCurrentMonth()
@@ -512,10 +459,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $payment = Payment::where('created_by', '=', $this->creatorId())->whereRaw('MONTH(date) = ?', [$currentMonth])->sum('amount');
 
-        $bills     = Bill:: select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('MONTH(send_date) = ?', [$currentMonth])->get();
+        $bills     = Bill::select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('MONTH(send_date) = ?', [$currentMonth])->get();
         $billArray = array();
-        foreach($bills as $bill)
-        {
+        foreach ($bills as $bill) {
             $billArray[] = $bill->getTotal();
         }
 
@@ -541,36 +487,33 @@ class User extends Authenticatable implements MustVerifyEmail
         $dataArr['month'] = $month;
 
 
-        for($i = 1; $i <= 12; $i++)
-        {
+        for ($i = 1; $i <= 12; $i++) {
             $monthlyIncome = Revenue::selectRaw('sum(amount) amount')->where('created_by', '=', $this->creatorId())->whereRaw('year(`date`) = ?', array(date('Y')))->whereRaw('month(`date`) = ?', $i)->first();
-            $invoices      = Invoice:: select('*')->where('created_by', \Auth::user()->creatorId())
+            $invoices      = Invoice::select('*')->where('created_by', \Auth::user()->creatorId())
                 ->whereRaw('year(`send_date`) = ?', array(date('Y')))
                 ->whereRaw('month(`send_date`) = ?', $i)->get();
 
 
             $invoiceArray = array();
-            foreach($invoices as $invoice)
-            {
+            foreach ($invoices as $invoice) {
                 $invoiceArray[] = $invoice->getTotal();
             }
             $totalIncome = (!empty($monthlyIncome) ? $monthlyIncome->amount : 0) + (!empty($invoiceArray) ? array_sum($invoiceArray) : 0);
 
 
-            $incomeArr[] = !empty($totalIncome) ? str_replace(",", "", number_format($totalIncome, 2) ): 0;
+            $incomeArr[] = !empty($totalIncome) ? str_replace(",", "", number_format($totalIncome, 2)) : 0;
 
 
             $monthlyExpense = Payment::selectRaw('sum(amount) amount')->where('created_by', '=', $this->creatorId())->whereRaw('year(`date`) = ?', array(date('Y')))->whereRaw('month(`date`) = ?', $i)->first();
-            $bills          = Bill:: select('*')->where('created_by', \Auth::user()->creatorId())->whereRaw('year(`send_date`) = ?', array(date('Y')))->whereRaw('month(`send_date`) = ?', $i)->get();
+            $bills          = Bill::select('*')->where('created_by', \Auth::user()->creatorId())->whereRaw('year(`send_date`) = ?', array(date('Y')))->whereRaw('month(`send_date`) = ?', $i)->get();
             $billArray      = array();
-            foreach($bills as $bill)
-            {
+            foreach ($bills as $bill) {
                 $billArray[] = $bill->getTotal();
             }
 
             $totalExpense = (!empty($monthlyExpense) ? $monthlyExpense->amount : 0) + (!empty($billArray) ? array_sum($billArray) : 0);
 
-            $expenseArr[] = !empty($totalExpense) ? str_replace(",", "", number_format($totalExpense, 2) ): 0;
+            $expenseArr[] = !empty($totalExpense) ? str_replace(",", "", number_format($totalExpense, 2)) : 0;
         }
 
 
@@ -579,8 +522,6 @@ class User extends Authenticatable implements MustVerifyEmail
         $dataArr['expense'] = $expenseArr;
 
         return $dataArr;
-
-
     }
 
     public function getIncExpLineChartDate()
@@ -593,8 +534,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $arrDate       = [];
         $arrDateFormat = [];
 
-        for($i = 0; $i <= 15 - 1; $i++)
-        {
+        for ($i = 0; $i <= 15 - 1; $i++) {
             $date = date($format, mktime(0, 0, 0, $m, ($de - $i), $y));
 
             $arrDay[]        = date('D', mktime(0, 0, 0, $m, ($de - $i), $y));
@@ -602,14 +542,12 @@ class User extends Authenticatable implements MustVerifyEmail
             $arrDateFormat[] = date("d-M", strtotime($date));;
         }
         $dataArr['day'] = $arrDateFormat;
-        for($i = 0; $i < count($arrDate); $i++)
-        {
+        for ($i = 0; $i < count($arrDate); $i++) {
             $dayIncome = Revenue::selectRaw('sum(amount) amount')->where('created_by', \Auth::user()->creatorId())->whereRaw('date = ?', $arrDate[$i])->first();
 
-            $invoices     = Invoice:: select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('send_date = ?', $arrDate[$i])->get();
+            $invoices     = Invoice::select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('send_date = ?', $arrDate[$i])->get();
             $invoiceArray = array();
-            foreach($invoices as $invoice)
-            {
+            foreach ($invoices as $invoice) {
                 $invoiceArray[] = $invoice->getTotal();
             }
 
@@ -618,10 +556,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
             $dayExpense = Payment::selectRaw('sum(amount) amount')->where('created_by', \Auth::user()->creatorId())->whereRaw('date = ?', $arrDate[$i])->first();
 
-            $bills     = Bill:: select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('send_date = ?', $arrDate[$i])->get();
+            $bills     = Bill::select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('send_date = ?', $arrDate[$i])->get();
             $billArray = array();
-            foreach($bills as $bill)
-            {
+            foreach ($bills as $bill) {
                 $billArray[] = $bill->getTotal();
             }
             $expenseAmount = (!empty($dayExpense->amount) ? $dayExpense->amount : 0) + (!empty($billArray) ? array_sum($billArray) : 0);
@@ -652,17 +589,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function planPrice()
     {
         $user = \Auth::user();
-        if($user->type == 'super admin')
-        {
+        if ($user->type == 'super admin') {
             $userId = $user->id;
-        }
-        else
-        {
+        } else {
             $userId = $user->created_by;
         }
 
         return DB::table('settings')->where('created_by', '=', $userId)->get()->pluck('value', 'name');
-
     }
 
     public function currentPlan()
@@ -674,12 +607,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $staticstart  = date('Y-m-d', strtotime('last Week'));
         $currentDate  = date('Y-m-d');
-        $invoices     = Invoice:: select('*')->where('created_by', \Auth::user()->creatorId())->where('issue_date', '>=', $staticstart)->where('issue_date', '<=', $currentDate)->get();
+        $invoices     = Invoice::select('*')->where('created_by', \Auth::user()->creatorId())->where('issue_date', '>=', $staticstart)->where('issue_date', '<=', $currentDate)->get();
         $invoiceTotal = 0;
         $invoicePaid  = 0;
         $invoiceDue   = 0;
-        foreach($invoices as $invoice)
-        {
+        foreach ($invoices as $invoice) {
             $invoiceTotal += $invoice->getTotal();
             $invoicePaid  += ($invoice->getTotal() - $invoice->getDue());
             $invoiceDue   += $invoice->getDue();
@@ -696,12 +628,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $staticstart  = date('Y-m-d', strtotime('last Month'));
         $currentDate  = date('Y-m-d');
-        $invoices     = Invoice:: select('*')->where('created_by', \Auth::user()->creatorId())->where('issue_date', '>=', $staticstart)->where('issue_date', '<=', $currentDate)->get();
+        $invoices     = Invoice::select('*')->where('created_by', \Auth::user()->creatorId())->where('issue_date', '>=', $staticstart)->where('issue_date', '<=', $currentDate)->get();
         $invoiceTotal = 0;
         $invoicePaid  = 0;
         $invoiceDue   = 0;
-        foreach($invoices as $invoice)
-        {
+        foreach ($invoices as $invoice) {
             $invoiceTotal += $invoice->getTotal();
             $invoicePaid  += ($invoice->getTotal() - $invoice->getDue());
             $invoiceDue   += $invoice->getDue();
@@ -718,12 +649,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $staticstart = date('Y-m-d', strtotime('last Week'));
         $currentDate = date('Y-m-d');
-        $bills       = Bill:: select('*')->where('created_by', \Auth::user()->creatorId())->where('bill_date', '>=', $staticstart)->where('bill_date', '<=', $currentDate)->get();
+        $bills       = Bill::select('*')->where('created_by', \Auth::user()->creatorId())->where('bill_date', '>=', $staticstart)->where('bill_date', '<=', $currentDate)->get();
         $billTotal   = 0;
         $billPaid    = 0;
         $billDue     = 0;
-        foreach($bills as $bill)
-        {
+        foreach ($bills as $bill) {
             $billTotal += $bill->getTotal();
             $billPaid  += ($bill->getTotal() - $bill->getDue());
             $billDue   += $bill->getDue();
@@ -740,12 +670,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $staticstart = date('Y-m-d', strtotime('last Month'));
         $currentDate = date('Y-m-d');
-        $bills       = Bill:: select('*')->where('created_by', \Auth::user()->creatorId())->where('bill_date', '>=', $staticstart)->where('bill_date', '<=', $currentDate)->get();
+        $bills       = Bill::select('*')->where('created_by', \Auth::user()->creatorId())->where('bill_date', '>=', $staticstart)->where('bill_date', '<=', $currentDate)->get();
         $billTotal   = 0;
         $billPaid    = 0;
         $billDue     = 0;
-        foreach($bills as $bill)
-        {
+        foreach ($bills as $bill) {
             $billTotal += $bill->getTotal();
             $billPaid  += ($bill->getTotal() - $bill->getDue());
             $billDue   += $bill->getDue();
@@ -828,8 +757,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function checkProject($project_id)
     {
         $user_projects = $this->projects()->pluck('project_id')->toArray();
-        if(array_key_exists($project_id, $user_projects))
-        {
+        if (array_key_exists($project_id, $user_projects)) {
             $projectstatus = $user_projects[$project_id] == 'owner' ? 'Owner' : 'Shared';
         }
 
@@ -840,19 +768,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getImgImageAttribute()
     {
         $userDetail = Employee::where('user_id', $this->id)->first();
-        if(!empty($userDetail))
-        {
-            if(!empty($userDetail->avatar))
-            {
+        if (!empty($userDetail)) {
+            if (!empty($userDetail->avatar)) {
                 return asset(\Storage::url($userDetail->avatar));
-            }
-            else
-            {
+            } else {
                 return asset(\Storage::url('avatar.png'));
             }
-        }
-        else
-        {
+        } else {
             return asset(\Storage::url('avatar.png'));
         }
     }
@@ -860,14 +782,14 @@ class User extends Authenticatable implements MustVerifyEmail
     // Get task users
     public function tasks()
     {
-        if(\Auth::check()){
+        if (\Auth::check()) {
             $user         = Auth::user();
-        }else{
+        } else {
             $user         = User::find($this->id);
         }
-        if($user->type=='company'){
-            return ProjectTask::where('created_by',$user->creatorId())->get();
-        }else{
+        if ($user->type == 'company') {
+            return ProjectTask::where('created_by', $user->creatorId())->get();
+        } else {
             return ProjectTask::whereRaw("find_in_set('" . $this->id . "',assign_to)")->get();
         }
     }
@@ -897,16 +819,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function total_lead()
     {
-        if(\Auth::user()->type == 'company')
-        {
+        if (\Auth::user()->type == 'company') {
             return Lead::where('created_by', '=', $this->creatorId())->count();
-        }
-        elseif(\Auth::user()->type == 'client')
-        {
+        } elseif (\Auth::user()->type == 'client') {
             return Lead::where('client', '=', $this->authId())->count();
-        }
-        else
-        {
+        } else {
             return Lead::where('owner', '=', $this->authId())->count();
         }
     }
@@ -918,67 +835,49 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function user_project()
     {
-        if(\Auth::user()->type != 'client')
-        {
+        if (\Auth::user()->type != 'client') {
             return $this->belongsToMany('App\Models\Project', 'project_users', 'user_id', 'project_id')->count();
-        }
-        else
-        {
+        } else {
             return Project::where('client_id', '=', $this->authId())->count();
         }
     }
 
     public function created_total_project_task()
     {
-        if(\Auth::user()->type == 'company')
-        {
+        if (\Auth::user()->type == 'company') {
             return ProjectTask::join('projects', 'projects.id', '=', 'project_tasks.project_id')->where('projects.created_by', '=', $this->creatorId())->count();
-        }
-        elseif(\Auth::user()->type == 'client')
-        {
+        } elseif (\Auth::user()->type == 'client') {
             return ProjectTask::join('projects', 'projects.id', '=', 'project_tasks.project_id')->where('projects.client_id', '=', $this->authId())->count();
-        }
-        else
-        {
+        } else {
             return ProjectTask::select('project_tasks.*', 'project_users.id as up_id')->join('project_users', 'project_users.project_id', '=', 'project_tasks.project_id')->where('project_users.user_id', '=', $this->authId())->count();
         }
-
     }
 
     public function project_complete_task($project_last_stage)
     {
-        if(\Auth::user()->type == 'company')
-        {
+        if (\Auth::user()->type == 'company') {
             return ProjectTask::join('projects', 'projects.id', '=', 'project_tasks.project_id')->where('projects.created_by', '=', $this->creatorId())->where('project_tasks.stage_id', '=', $project_last_stage)->count();
-        }
-        elseif(\Auth::user()->type == 'client')
-        {
+        } elseif (\Auth::user()->type == 'client') {
             $user_projects = Project::where('client_id', \Auth::user()->id)->pluck('id', 'id')->toArray();
 
             return ProjectTask::whereIn('project_id', $user_projects)->join('projects', 'projects.id', '=', 'project_tasks.project_id')->where('project_tasks.stage_id', '=', $project_last_stage)->count();
-        }
-        else
-        {
+        } else {
             return ProjectTask::select('project_tasks.*', 'project_users.id as up_id')->join('project_users', 'project_users.project_id', '=', 'project_tasks.project_id')->where('project_users.user_id', '=', $this->authId())->where('project_tasks.stage_id', '=', $project_last_stage)->count();
         }
     }
 
     public function created_top_due_task()
     {
-        if(\Auth::user()->type == 'company')
-        {
+        if (\Auth::user()->type == 'company') {
             return ProjectTask::select('projects.*', 'project_tasks.id as task_id', 'project_tasks.name', 'project_tasks.end_date as task_due_date', 'project_tasks.assign_to', 'projectstages.name as stage_name')->join('projects', 'projects.id', '=', 'project_tasks.project_id')->join('projectstages', 'project_tasks.stage_id', '=', 'projectstages.id')->where('projects.created_by', '=', \Auth::user()->creatorId())->where('project_tasks.end_date', '>', date('Y-m-d'))->limit(5)->orderBy('task_due_date', 'ASC')->get();
-        }
-        elseif(\Auth::user()->type == 'client')
-        {
+        } elseif (\Auth::user()->type == 'client') {
             $user_projects = Project::where('client_id', \Auth::user()->id)->pluck('id', 'id')->toArray();
 
             return ProjectTask::whereIn('project_id', $user_projects)->join('projects', 'projects.id', '=', 'project_tasks.project_id')->where('project_tasks.end_date', '>', date('Y-m-d'))->limit(5)->get();
-        }
-        else
-        {
+        } else {
             return ProjectTask::select('project_tasks.*', 'project_tasks.end_date as task_due_date', 'project_users.id as up_id', 'projects.project_name as project_name', 'projectstages.name as stage_name')->join('project_users', 'project_users.project_id', '=', 'project_tasks.project_id')->join('projects', 'project_users.project_id', '=', 'projects.id')->join('projectstages', 'project_tasks.stage_id', '=', 'projectstages.id')->where('project_users.user_id', '=', $this->authId())->where('project_tasks.end_date', '>', date('Y-m-d'))->limit(5)->orderBy(
-                'project_tasks.end_date', 'ASC'
+                'project_tasks.end_date',
+                'ASC'
             )->get();
         }
     }
@@ -987,78 +886,59 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $user_type = \Auth::user()->type;
 
-        if($user_type == 'company' || $user_type == 'super admin')
-        {
+        if ($user_type == 'company' || $user_type == 'super admin') {
             $user = User::where('id', \Auth::user()->id)->first();
-
-        }
-        else
-        {
+        } else {
             $user = User::where('id', \Auth::user()->created_by)->first();
         }
 
-        return !empty($user->plan)?Plan::find($user->plan)->crm:'';
+        return !empty($user->plan) ? Plan::find($user->plan)->crm : '';
     }
 
     public static function show_hrm()
     {
         $user_type = \Auth::user()->type;
-        if($user_type == 'company' || $user_type == 'super admin')
-        {
+        if ($user_type == 'company' || $user_type == 'super admin') {
             $user = User::where('id', \Auth::user()->id)->first();
-        }
-        else
-        {
+        } else {
             $user = User::where('id', \Auth::user()->created_by)->first();
         }
 
-        return !empty($user->plan)?Plan::find($user->plan)->hrm:'';
-
+        return !empty($user->plan) ? Plan::find($user->plan)->hrm : '';
     }
 
     public static function show_account()
     {
         $user_type = \Auth::user()->type;
-        if($user_type == 'company' || $user_type == 'super admin')
-        {
+        if ($user_type == 'company' || $user_type == 'super admin') {
             $user = User::where('id', \Auth::user()->id)->first();
-        }
-        else
-        {
+        } else {
             $user = User::where('id', \Auth::user()->created_by)->first();
         }
 
-        return !empty($user->plan)?Plan::find($user->plan)->account:'';
+        return !empty($user->plan) ? Plan::find($user->plan)->account : '';
     }
 
     public static function show_project()
     {
         $user_type = \Auth::user()->type;
-        if($user_type == 'company' || $user_type == 'super admin')
-        {
+        if ($user_type == 'company' || $user_type == 'super admin') {
             $user = User::where('id', \Auth::user()->id)->first();
-        }
-        else
-        {
+        } else {
             $user = User::where('id', \Auth::user()->created_by)->first();
         }
-        return !empty($user->plan)?Plan::find($user->plan)->project:'';
-
+        return !empty($user->plan) ? Plan::find($user->plan)->project : '';
     }
 
     public static function show_pos()
     {
         $user_type = \Auth::user()->type;
-        if($user_type == 'company' || $user_type == 'super admin')
-        {
+        if ($user_type == 'company' || $user_type == 'super admin') {
             $user = User::where('id', \Auth::user()->id)->first();
-        }
-        else
-        {
+        } else {
             $user = User::where('id', \Auth::user()->created_by)->first();
         }
-        return !empty($user->plan)?Plan::find($user->plan)->pos:'';
-
+        return !empty($user->plan) ? Plan::find($user->plan)->pos : '';
     }
 
 
@@ -1108,11 +988,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
         ];
 
-        foreach($emailTemplate as $eTemp)
-        {
-            $emailTemp = EmailTemplate::where('name',$eTemp)->count();
-            if($emailTemp == 0)
-            {
+        foreach ($emailTemplate as $eTemp) {
+            $emailTemp = EmailTemplate::where('name', $eTemp)->count();
+            if ($emailTemp == 0) {
                 EmailTemplate::create(
                     [
                         'name' => $eTemp,
@@ -1122,7 +1000,6 @@ class User extends Authenticatable implements MustVerifyEmail
                     ]
                 );
             }
-
         }
 
         $defaultTemplate = [
@@ -1148,7 +1025,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
                 ],
             ],
-            'new_client' =>[
+            'new_client' => [
                 'subject' => 'New Client',
                 'lang' => [
                     'ar' => '<p>مرحبا { client_name } ، </p><p>أنت الآن Client ..</p><p>البريد الالكتروني : { client_email } </p><p>كلمة السرية : { client_password }</p><p>{ app_url }</p><p>شكرا</p><p>{ app_name }</p>',
@@ -1170,7 +1047,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
                 ],
             ],
-            'new_support_ticket' =>[
+            'new_support_ticket' => [
                 'subject' => 'New Support Ticket',
                 'lang' => [
                     'ar' => '<p><span style="background-color: rgb(248, 249, 250); color: rgb(34, 34, 34); font-family: inherit; font-size: 24px; text-align: right; white-space: pre-wrap;">مرحبا</span><span style="font-size: 12pt;">&nbsp;{support_name}</span><br><br></p><p><span style="background-color: rgb(248, 249, 250); color: rgb(34, 34, 34); font-family: inherit; font-size: 24px; text-align: right; white-space: pre-wrap;">تم فتح تذكرة دعم جديدة.</span><span style="font-size: 12pt;">.</span><br><br></p><p><span style="background-color: rgb(248, 249, 250); color: rgb(34, 34, 34); font-family: inherit; font-size: 24px; text-align: right; white-space: pre-wrap;">عنوان</span><span style="font-size: 12pt;"><strong>:</strong>&nbsp;{support_title}</span><br></p><p><span style="background-color: rgb(248, 249, 250); color: rgb(34, 34, 34); font-family: inherit; font-size: 24px; text-align: right; white-space: pre-wrap;">أفضلية</span><span style="font-size: 12pt;"><strong>:</strong>&nbsp;{support_priority}</span><span style="font-size: 12pt;"><br></span></p><p><span style="background-color: rgb(248, 249, 250); color: rgb(34, 34, 34); font-family: inherit; font-size: 24px; text-align: right; white-space: pre-wrap;">تاريخ الانتهاء</span><span style="font-size: 12pt;">: {support_end_date}</span></p><p><span style="background-color: rgb(248, 249, 250); color: rgb(34, 34, 34); font-family: inherit; font-size: 24px; text-align: right; white-space: pre-wrap;">رسالة دعم</span><span style="font-size: 12pt;"><strong>:</strong></span><br><span style="font-size: 12pt;">{support_description}</span><span style="font-size: 12pt;"><br><br></span></p><p><span style="background-color: rgb(248, 249, 250); color: rgb(34, 34, 34); font-family: inherit; font-size: 24px; text-align: right; white-space: pre-wrap;">أطيب التحيات،</span><span style="font-size: 12pt;">,</span><br>{app_name}</p>',
@@ -1256,7 +1133,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
                 ],
             ],
-            'customer_invoice_sent' =>[
+            'customer_invoice_sent' => [
                 'subject' => 'Customer Invoice Sent',
                 'lang' => [
                     'ar' => '<p>مرحب<span style="text-align: var(--bs-body-text-align);">مرحبا ، { invoice_name }</span></p><p>مرحبا بك في { app_name }</p><p>أتمنى أن يجدك هذا البريد الإلكتروني جيدا برجاء الرجوع الى رقم الفاتورة الملحقة { invoice_number } للخدمة / الخدمة.</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">ببساطة ، اضغط على الاختيار بأسفل :&nbsp;</span></p><p>{ invoice_url }</p><p>إشعر بالحرية للوصول إلى الخارج إذا عندك أي أسئلة.</p><p>شكرا لك</p><p>Regards,</p><p>{ company_name }</p><p>{ app_url }</p><div><br></div>',
@@ -1278,7 +1155,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
                 ],
             ],
-            'new_invoice_payment' =>[
+            'new_invoice_payment' => [
                 'subject' => 'New Invoice Payment',
                 'lang' => [
                     'ar' => '<p>Hej.</p>
@@ -1292,7 +1169,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Med venlig hilsen</p>
                     <p>{ company_name }</p>
                     <p>{ app_url }</p>',
-                    'zh'=>'<p><span style="color: #1d1c1d; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">嗨，</span></span></p>
+                    'zh' => '<p><span style="color: #1d1c1d; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">嗨，</span></span></p>
                     <p><span style="color: #1d1c1d; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">欢迎来到 {app_name}</span></span></p>
                     <p><span style="color: #1d1c1d; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">亲爱的{invoice_ payment_name}</span></span></p>
                     <p><span style="color: #1d1c1d; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">我们已收到您于 {invoice_ payment_date} 日期提交的 {invoice_number} 金额为 {invoice_ payment_amount} 的付款</span></span></p>
@@ -1360,7 +1237,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>{company_name}</p>
                     <p>{app_url}</p>',
-                    'he' =>'<p><span style="color: #1d1c1d; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">שלום,</span></span></p>
+                    'he' => '<p><span style="color: #1d1c1d; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">שלום,</span></span></p>
                     <p><span style="color: #1d1c1d; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">ברוך הבא אל {app_name}</span></span></p>
                     <p><span style="color: #1d1c1d; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">{invoice_payment_name}</span></span></p> היקר
                     <p><span style="color: #1d1c1d; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif;"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">קיבלנו את התשלום שלך בסכום {invoice_payment_amount} עבור {invoice_number} שנשלח בתאריך {invoice_payment_date}</span></span></p>
@@ -1463,7 +1340,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>{app_url}</p>',
                 ],
             ],
-            'new_payment_reminder' =>[
+            'new_payment_reminder' => [
                 'subject' => 'New Payment Reminder',
                 'lang' => [
                     'ar' => '<p>عزيزي ، { payment_reminder_name }</p>
@@ -1476,7 +1353,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>{ company_name }</p>
                     <p>{ app_url }</p>
                     <p>&nbsp;</p>',
-                    'zh' =>'<p>亲爱的，{ payment_reminder_name}</p>
+                    'zh' => '<p>亲爱的，{ payment_reminder_name}</p>
                     <p>希望您一切顺利。这只是一个提醒，我们于 { payment_reminder_date} 发送的发票 {invoice_ payment_number} 总应付金额 {invoice_ payment_dueAmount} 的付款将于今天到期。</p>
                     <p>您可以向发票上指定的银行帐户付款。</p>
                     <p>我确信您很忙，但如果您有机会花点时间查看一下发票，我将不胜感激。</p>
@@ -1536,7 +1413,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>{ company_name }</p>
                     <p>{ app_url }</p>
                     <p>&nbsp;</p>',
-                    'he' =>'<p>שלום, {payment_reminder_name}</p>
+                    'he' => '<p>שלום, {payment_reminder_name}</p>
                     <p>אני מקווה ששלומך טוב. זוהי רק תזכורת לכך שהתשלום על החשבונית {invoice_payment_number} total dueAmount {invoice_payment_dueAmount} , ששלחנו בתאריך {payment_reminder_date}, יבוא היום.</p>
                     <p>תוכל לבצע תשלום לחשבון הבנק המצוין בחשבונית.</p>
                     <p>אני בטוח שאתה עסוק, אבל אשמח אם תוכל להקדיש רגע ולעיין בחשבונית כשתהיה לך הזדמנות.</p>
@@ -1606,7 +1483,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>{company_name}</p>
                     <p>{app_url}</p>
                     <p>&nbsp;</p>',
-                    'tr' =>'<p>Sayın {payment_reminder_name}</p>
+                    'tr' => '<p>Sayın {payment_reminder_name}</p>
                     <p>Umarım iyisinizdir. Bu yalnızca, {payment_reminder_date} tarihinde gönderdiğimiz {invoice_payment_number} toplam vade tutarı {invoice_payment_dueAmount} tutarındaki faturanın ödemesinin bugün yapılması gerektiğini hatırlatma amaçlıdır.</p>
                     <p>Faturada belirtilen banka hesabına ödeme yapabilirsiniz.</p>
                     <p>Yoğun olduğunuzdan eminim ama fırsat bulduğunuzda bir dakikanızı ayırıp faturaya göz atarsanız sevinirim.</p>
@@ -1628,7 +1505,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>&nbsp;</p>',
                 ],
             ],
-            'new_bill_payment' =>[
+            'new_bill_payment' => [
                 'subject' => 'New Bill Payment',
                 'lang' => [
                     'ar' => '<p>مرحبا ، { payment_name }</p><p>مرحبا بك في { app_name }</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">نحن نكتب لإبلاغكم بأننا قد أرسلنا مدفوعات (payment_الفاتورة) } الخاصة بك.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">لقد أرسلنا قيمتك { payment_cama } لأجل { payment_فاتورة } قمت بالاحالة في التاريخ { payment_date } من خلال { payment_method }.</span></p><p>شكرا جزيلا لك وطاب يومك ! !!!</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{ company_name }</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{ app_url }</span><br></p>',
@@ -1638,7 +1515,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     'en' => '<p>Hi , {payment_name}</p><p>Welcome to {app_name}</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">We are writing to inform you that we has sent your {payment_bill} payment.</span></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">We has sent your amount {payment_amount} payment for {payment_bill} submited&nbsp; on date {payment_date} via {payment_method}.</span></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Thank You very much and have a good day !!!!</span></p><p>{company_name}</p><p>{app_url}</p>',
                     'es' => '<p>Hola, {nombre_pago}</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Bienvenido a {app_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Estamos escribiendo para informarle que hemos enviado su pago {payment_bill}.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Hemos enviado su importe {payment_amount} pago para {payment_bill} submitado en la fecha {payment_date} a través de {payment_method}.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Thank You very much and have a good day! !!!</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{nombre_empresa}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_url}</span><br></p>',
                     'fr' => '<p>Salut, { payment_name }</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Bienvenue dans { app_name }</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Nous vous écrivons pour vous informer que nous avons envoyé votre paiement { payment_bill }.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Nous avons envoyé votre paiement { payment_amount } pour { payment_bill } soumis à la date { payment_date } via { payment_method }.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Merci beaucoup et avez un bon jour ! !!!</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{ nom_entreprise }</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{ adresse_url }</span><br></p>',
-                    'he' =>'<p>היי, {payment_name}</p><p>ברוכים הבאים אל {app_name}</p><p><span style="font-family: var(--bs-body-font-family); font -weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">אנו כותבים כדי להודיע ​​לך ששלחנו את התשלום שלך ב-{payment_bill} .</span></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight) ; text-align: var(--bs-body-text-align);">שלחנו את הסכום שלך {payment_amount} תשלום עבור {payment_bill} שנשלח  בתאריך {payment_date} באמצעות {payment_method}.</span></ p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var( --bs-body-text-align);">תודה רבה ויום טוב!!!!</span></p><p>{company_name}</p><p>{app_url} </p>',
+                    'he' => '<p>היי, {payment_name}</p><p>ברוכים הבאים אל {app_name}</p><p><span style="font-family: var(--bs-body-font-family); font -weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">אנו כותבים כדי להודיע ​​לך ששלחנו את התשלום שלך ב-{payment_bill} .</span></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight) ; text-align: var(--bs-body-text-align);">שלחנו את הסכום שלך {payment_amount} תשלום עבור {payment_bill} שנשלח  בתאריך {payment_date} באמצעות {payment_method}.</span></ p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var( --bs-body-text-align);">תודה רבה ויום טוב!!!!</span></p><p>{company_name}</p><p>{app_url} </p>',
                     'it' => '<p>Ciao, {payment_name}</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Benvenuti in {app_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Scriviamo per informarti che abbiamo inviato il tuo pagamento {payment_bill}.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Abbiamo inviato la tua quantità {payment_amount} pagamento per {payment_bill} subita alla data {payment_date} tramite {payment_method}.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Grazie mille e buona giornata! !!!</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{company_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_url}</span><br></p>',
                     'ja' => '<p>こんにちは、 {payment_name}</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_name} へようこそ</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{payment_紙幣} の支払いを送信したことをお知らせするために執筆しています。</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{payment_date } に提出された {payment_議案} に対する金額 {payment_金額} の支払いは、 {payment_method}を介して送信されました。</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">ありがとうございます。良い日をお願いします。</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{ company_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_url}</span><br></p>',
                     'nl' => '<p>Hallo, { payment_name }</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Welkom bij { app_name }</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Wij schrijven u om u te informeren dat wij uw betaling van { payment_bill } hebben verzonden.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">We hebben uw bedrag { payment_amount } betaling voor { payment_bill } verzonden op datum { payment_date } via { payment_method }.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Hartelijk dank en hebben een goede dag! !!!</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{ bedrijfsnaam }</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{ app_url }</span><br></p>',
@@ -1650,11 +1527,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
                 ],
             ],
-            'bill_resent' =>[
+            'bill_resent' => [
                 'subject' => 'Bill Resent',
                 'lang' => [
                     'ar' => '<p>مرحبا ، { bill_name }</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">مرحبا بك في { app_name }</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">أتمنى أن يجدك هذا البريد الإلكتروني جيدا برجاء الرجوع الى رقم الفاتورة الملحقة { bill_bill } لخدمة المنتج / الخدمة.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ببساطة اضغط على الاختيار بأسفل.</span></p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { bill_url }</p><p>إشعر بالحرية للوصول إلى الخارج إذا عندك أي أسئلة.</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">شكرا لعملك ! !!!</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Regards,</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{ company_name }</span></p><p>{ app_url }</p><div><br></div>',
-                    'zh' =>'<p><span style="font-family: var(--bs-body-font-family); 字体粗细: var(--bs-body-font-weight); 文本对齐: var(-- bs-body-text-align);">嗨，{bill_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family ); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">欢迎使用 {app_name}</span><br> </p><p><span style="font-family: var(--bs-body-font-family); 字体粗细: var(--bs-body-font-weight); 文本对齐: var(--bs-body-text-align);">希望这封电子邮件能让您满意！请参阅随附的产品/服务帐单编号 {bill_bill}。</span><br></p><p><span style="font-family: var(--bs-body-font-family); font -weight: var(--bs-body-font-weight); 文本对齐: var(--bs-body-text-align);">                                                                                                                   只需点击下面的按钮即可。</span><br>< /p><p><span style="font-family: var(--bs-body-font-family); 字体粗细: var(--bs-body-font-weight); 文本对齐: var (--bs-body-text-align);">                                                                                                                                  {bill_url}</span></p><p>如果您有任何疑问，请随时与我们联系。</p><p><span style= “字体系列：var（--bs-body-font-family）；字体粗细：var（--bs-body-font-weight）；文本对齐：var（--bs-body-text-align） );">感谢您的惠顾！！！</span><br></p><p><span style="font-family: var(--bs-body-font-family); font -权重：var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">问候，</span><br></p><p><span style="font-family: var(--bs-正文字体系列）；字体粗细：var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{company_name}</span><br></p><p><span style="font-family: var(--bs -正文字体系列）；字体粗细：var(--bs-body-font-weight);文本对齐：var(--bs-body-text-align);">{app_url}</span><br></p><div><br></div>',
+                    'zh' => '<p><span style="font-family: var(--bs-body-font-family); 字体粗细: var(--bs-body-font-weight); 文本对齐: var(-- bs-body-text-align);">嗨，{bill_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family ); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">欢迎使用 {app_name}</span><br> </p><p><span style="font-family: var(--bs-body-font-family); 字体粗细: var(--bs-body-font-weight); 文本对齐: var(--bs-body-text-align);">希望这封电子邮件能让您满意！请参阅随附的产品/服务帐单编号 {bill_bill}。</span><br></p><p><span style="font-family: var(--bs-body-font-family); font -weight: var(--bs-body-font-weight); 文本对齐: var(--bs-body-text-align);">                                                                                                                   只需点击下面的按钮即可。</span><br>< /p><p><span style="font-family: var(--bs-body-font-family); 字体粗细: var(--bs-body-font-weight); 文本对齐: var (--bs-body-text-align);">                                                                                                                                  {bill_url}</span></p><p>如果您有任何疑问，请随时与我们联系。</p><p><span style= “字体系列：var（--bs-body-font-family）；字体粗细：var（--bs-body-font-weight）；文本对齐：var（--bs-body-text-align） );">感谢您的惠顾！！！</span><br></p><p><span style="font-family: var(--bs-body-font-family); font -权重：var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">问候，</span><br></p><p><span style="font-family: var(--bs-正文字体系列）；字体粗细：var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{company_name}</span><br></p><p><span style="font-family: var(--bs -正文字体系列）；字体粗细：var(--bs-body-font-weight);文本对齐：var(--bs-body-text-align);">{app_url}</span><br></p><div><br></div>',
                     'da' => '<p>Hej, { bill_name }</p><p>Velkommen til { app_name }</p><p>Håber denne e-mail finder dig godt! Se vedlagte fakturanummer { bill_bill } for product/service.</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Klik på knappen nedenfor.</span></p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ bill_url }</p><p>Du er velkommen til at række ud, hvis du har nogen spørgsmål.</p><p>Tak for din virksomhed! !!!</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Med venlig hilsen</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{ company_name }</span></p><p>{ app_url }</p>',
                     'de' => '<p>Hi, {bill_name}</p><p>Willkommen bei {app_name}</p><p>Hoffe, diese E-Mail findet dich gut! Bitte sehen Sie die angehängte Rechnungsnummer {bill_bill} für Produkt/Service an.</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Klicken Sie einfach auf den Button unten.</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {bill_url}</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Fühlen Sie sich frei, wenn Sie Fragen haben.</span></p><p>Vielen Dank für Ihr Geschäft! !!!</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Betrachtet,</span></p><p>{company_name}</p><p>{app_url}</p>',
                     'en' => '<p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Hi , {bill_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Welcome to {app_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Hope this email finds you well! Please see attached bill number {bill_bill} for product/service.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Simply click on the button below .</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{bill_url}</span></p><p>Feel free to reach out if you have any questions.</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Thank You for your business !!!!</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Regards,</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{company_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_url}</span><br></p><div><br></div>',
@@ -1667,7 +1544,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     'pl' => '<p>Witaj, {nazwa_faktury }</p><p>Witamy w aplikacji {app_name }</p><p>Mam nadzieję, że ta wiadomość znajdzie Cię dobrze! Zapoznaj się z załączonym numerem rachunku {bill_bill } dla produktu/usługi.</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Wystarczy kliknąć na przycisk poniżej.</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{adres_URL_faktury }</p><p>Czuj się swobodnie, jeśli masz jakieś pytania.</p><p>Dziękujemy za swój biznes! !!!</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">W odniesieniu do</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{company_name }</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_url }</span><br></p><div><br></div>',
                     'ru' => '<p>Привет, { bill_name }</p><p>Вас приветствует { app_name }</p><p>Надеюсь, это электронное письмо найдет вас хорошо! См. прилагаемый номер счета { bill_bill } для product/service.</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Просто нажмите на кнопку внизу.</span></p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { bill_url }</p><p>Не стеснитесь, если у вас есть вопросы.</p><p>Спасибо за ваш бизнес! !!!</p><p>С уважением,</p><p>{ company_name }</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{ app_url }</span><br></p>',
                     'pt' => '<p>Oi, {bill_name}</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Bem-vindo a {app_name}</span></p><p>Espero que este e-mail encontre você bem! Por favor, consulte o número de faturamento conectado {bill_bill} para produto/serviço.</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Basta clicar no botão abaixo.</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{bill_url}</p><p>Sinta-se à vontade para alcançar fora se você tiver alguma dúvida.</p><p>Obrigado pelo seu negócio! !!!</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Considera,</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{company_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_url}</span><br></p><div><br></div>',
-                    'tr' =>'<p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(-- bs-body-text-align);">Merhaba, {bill_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family) ); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_name}</span><br> e hoş geldiniz </p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Umarım bu e-posta sizi bulur! Lütfen ürün/hizmet için ekteki {bill_bill} fatura numarasına bakın.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font -ağırlık: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">                                                                                                                 Aşağıdaki düğmeyi tıklamanız yeterlidir .</span><br>< /p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var (--bs-body-text-align);">                                                                                                                                {bill_url}</span></p><p>Sorularınız varsa bize ulaşmaktan çekinmeyin.</p><p><span style= "font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align) );">İlginiz için teşekkürler !!!!span><br></p><p><span style="font-family: var(--bs-body-font-family); font -ağırlık: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Saygılarımızla,</span><br></p><p><span style="font-family: var(--bs- gövde-yazı tipi-ailesi); yazı tipi ağırlığı: var(--bs-body-font-ağırlığı); text-align: var(--bs-body-text-align);">{şirket_adı}</span><br></p><p><span style="font-family: var(--bs) -body-font-ailesi); yazı tipi ağırlığı: var(--bs-body-font-ağırlığı); metin hizalama: var(--bs-body-text-align);">{app_url}</span><br></p><div><br></div>',
+                    'tr' => '<p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(-- bs-body-text-align);">Merhaba, {bill_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family) ); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_name}</span><br> e hoş geldiniz </p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Umarım bu e-posta sizi bulur! Lütfen ürün/hizmet için ekteki {bill_bill} fatura numarasına bakın.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font -ağırlık: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">                                                                                                                 Aşağıdaki düğmeyi tıklamanız yeterlidir .</span><br>< /p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var (--bs-body-text-align);">                                                                                                                                {bill_url}</span></p><p>Sorularınız varsa bize ulaşmaktan çekinmeyin.</p><p><span style= "font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align) );">İlginiz için teşekkürler !!!!span><br></p><p><span style="font-family: var(--bs-body-font-family); font -ağırlık: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Saygılarımızla,</span><br></p><p><span style="font-family: var(--bs- gövde-yazı tipi-ailesi); yazı tipi ağırlığı: var(--bs-body-font-ağırlığı); text-align: var(--bs-body-text-align);">{şirket_adı}</span><br></p><p><span style="font-family: var(--bs) -body-font-ailesi); yazı tipi ağırlığı: var(--bs-body-font-ağırlığı); metin hizalama: var(--bs-body-text-align);">{app_url}</span><br></p><div><br></div>',
                     'pt-br' => '<p>Oi, {bill_name}</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Bem-vindo a {app_name}</span></p><p>Espero que este e-mail encontre você bem! Por favor, consulte o número de faturamento conectado {bill_bill} para produto/serviço.</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Basta clicar no botão abaixo.</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{bill_url}</p><p>Sinta-se à vontade para alcançar fora se você tiver alguma dúvida.</p><p>Obrigado pelo seu negócio! !!!</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Considera,</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{company_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_url}</span><br></p><div><br></div>',
 
                 ],
@@ -1685,7 +1562,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>{ company_name }</p>
                     <p>{ app_url }</p>',
-                    'zh' =>'<p>嗨，{proposal_name}</p>
+                    'zh' => '<p>嗨，{proposal_name}</p>
                     <p>希望这封电子邮件能让您满意！请参阅随附的产品/服务提案编号 {proposal_number}。</p>
                     <p>只需点击下面的按钮</p>
                     <p>{proposal_url}</p>
@@ -1837,11 +1714,11 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>{app_url}</p>',
                 ],
             ],
-            'complaint_resent' =>[
+            'complaint_resent' => [
                 'subject' => 'Complaint Resent',
                 'lang' => [
                     'ar' => '<p>مرحبا</p><p>مرحبا بك في { app_name }</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">(د) إدارة الموارد البشرية / الشركة لإرسال خطاب الشكاوى.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">عزيزي { demyt_name }</span></p><p>أود أن أبلغ عن صراع بينك وبين الشخص الآخر وقد وقعت عدة حوادث خلال الأيام القليلة الماضية ، وأشعر أن الوقت قد حان للإبلاغ عن شكوى رسمية ضده / هي.</p><p>إشعر بالحرية للوصول إلى الخارج إذا عندك أي أسئلة.</p><p>شكرا لك</p><p>Regards,</p><p>قسم الموارد البشرية</p><p>{ company_name }</p><p>{ app_url }</p><div><br></div>',
-                    'zh' =>'<p><font color="#1d1c1d"face="Slack-Lato、Slack-Fractions、appleLogo、sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures; ">嗨，</span></font></p><p><span style="font-size: 15px; font-variant-ligatures: common-ligatures; color: rgb(29, 28, 29) ; 字体系列：Slack-Lato、Slack-Fractions、appleLogo、sans-serif；字体粗细：var(--bs-body-font-weight)；文本对齐：var(--bs-body-text- align);">欢迎来到 {app_name}</span><br></p><p><font color="#1d1c1d"face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"> <span style="font-size: 15px; font-variant-ligatures: common-ligatures;">人力资源部门/公司发送投诉信。<br></span></font></p><p> <font color="#1d1c1d"face="Slack-Lato、Slack-Fractions、appleLogo、sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">亲爱的{complaint_name}</span></font></p><p>我想举报您与他人之间的冲突。过去几天发生了几起事件，我觉得是时候对他/她提出正式投诉了。</p><p>如果您有任何疑问，请随时与我们联系。</p> <p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common -ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">谢谢，</span></p> <p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common -ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">问候，</span></p>< p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common-连字; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">人力资源部门。</span></p>< p><span style="颜色: rgb(29, 28, 29);字体系列：Slack-Lato、Slack-Fractions、appleLogo、sans-serif；字体大小：15px；字体变体连字：常见连字；字体粗细：var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{company_name}</span><span style="color: rgb(29, 28, 29);字体系列：Slack-Lato、Slack-Fractions、appleLogo、sans-serif；字体大小：15px；字体变体连字：常见连字；字体粗细：var(--bs-body-font-weight);文本对齐：var(--bs-body-text-align);"><br></span></p><p><span style="font-size: 15px;字体变体连字：常见连字；颜色：rgb(29,28,29)；字体系列：Slack-Lato、Slack-Fractions、appleLogo、sans-serif；字体粗细：var(--bs-body-font-weight);文本对齐：var(--bs-body-text-align);">{app_url}</span><br></p>',
+                    'zh' => '<p><font color="#1d1c1d"face="Slack-Lato、Slack-Fractions、appleLogo、sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures; ">嗨，</span></font></p><p><span style="font-size: 15px; font-variant-ligatures: common-ligatures; color: rgb(29, 28, 29) ; 字体系列：Slack-Lato、Slack-Fractions、appleLogo、sans-serif；字体粗细：var(--bs-body-font-weight)；文本对齐：var(--bs-body-text- align);">欢迎来到 {app_name}</span><br></p><p><font color="#1d1c1d"face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"> <span style="font-size: 15px; font-variant-ligatures: common-ligatures;">人力资源部门/公司发送投诉信。<br></span></font></p><p> <font color="#1d1c1d"face="Slack-Lato、Slack-Fractions、appleLogo、sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">亲爱的{complaint_name}</span></font></p><p>我想举报您与他人之间的冲突。过去几天发生了几起事件，我觉得是时候对他/她提出正式投诉了。</p><p>如果您有任何疑问，请随时与我们联系。</p> <p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common -ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">谢谢，</span></p> <p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common -ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">问候，</span></p>< p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common-连字; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">人力资源部门。</span></p>< p><span style="颜色: rgb(29, 28, 29);字体系列：Slack-Lato、Slack-Fractions、appleLogo、sans-serif；字体大小：15px；字体变体连字：常见连字；字体粗细：var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{company_name}</span><span style="color: rgb(29, 28, 29);字体系列：Slack-Lato、Slack-Fractions、appleLogo、sans-serif；字体大小：15px；字体变体连字：常见连字；字体粗细：var(--bs-body-font-weight);文本对齐：var(--bs-body-text-align);"><br></span></p><p><span style="font-size: 15px;字体变体连字：常见连字；颜色：rgb(29,28,29)；字体系列：Slack-Lato、Slack-Fractions、appleLogo、sans-serif；字体粗细：var(--bs-body-font-weight);文本对齐：var(--bs-body-text-align);">{app_url}</span><br></p>',
                     'da' => '<p>Hej.</p><p>Velkommen til { app_name }</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">HR department/company to send klager brev.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Kære { klaint_name }</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Jeg vil gerne anmelde en konflikt mellem dig og den anden person. Der har været flere tilfælde i løbet af de seneste dage, og jeg mener, at tiden er inde til at anmelde en formel klage over for ham.</span></p><p>Du er velkommen til at række ud, hvis du har nogen spørgsmål.</p><p>Tak.</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Med venlig hilsen</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">HR-afdelingen.</span></p><p>{ company_name }</p><p>{ app_url }</p><div><br></div>',
                     'de' => '<p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Hi,</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Willkommen bei {app_name}</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Personalabteilung/Unternehmen, um Beschwerdeschreiben zu versenden.</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Sehr geehrter {beanstandname}</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Ich möchte einen Konflikt zwischen Ihnen und der anderen Person melden. Es gab in den letzten Tagen mehrere Zwischenfälle, und ich bin der Meinung, dass es an der Zeit ist, eine formelle Beschwerde gegen ihn zu erstatten.</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Fühlen Sie sich frei, wenn Sie Fragen haben.</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Vielen Dank,</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Betrachtet,</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Personalabteilung.</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">{company_name}</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">{app_url}</font></p><div><br></div><p></p>',
                     'en' => '<p><font color="#1d1c1d" face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">Hi ,</span></font></p><p><span style="font-size: 15px; font-variant-ligatures: common-ligatures; color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Welcome to {app_name}</span><br></p><p><font color="#1d1c1d" face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">HR department/company to send complaints letter.<br></span></font></p><p><font color="#1d1c1d" face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">Dear {complaint_name}</span></font></p><p>I would like to report a conflict between you and the other person. There  have been several incidents over the last few days, and I feel that its is time to report a formal complaint against him/her.</p><p>Feel free to reach out if you have any questions.</p><p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common-ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Thank You,</span></p><p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common-ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Regards,</span></p><p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common-ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">HR Department.</span></p><p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common-ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{company_name}</span><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-ligatures: common-ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);"><br></span></p><p><span style="font-size: 15px; font-variant-ligatures: common-ligatures; color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_url}</span><br></p>',
@@ -1854,22 +1731,22 @@ class User extends Authenticatable implements MustVerifyEmail
                     'pl' => '<p>Witam,</p><p>Witamy w aplikacji {app_name }</p><p>Dział kadr/firma, aby wysłać reklamacje.</p><p>Szanowny {skarga }</p><p>Chciałbym zgłosić konflikt między tobą a drugą osobą. W ciągu ostatnich kilku dni doszło do kilku incydentów i uważam, że nadszedł czas, aby zgłosić przeciwko nim formalną skargę.</p><p>Czuj się swobodnie, jeśli masz jakieś pytania.</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Dziękuję,</span></p><p>W odniesieniu do</p><p>Dział HR.</p><p>{company_name }</p><p>{app_url }</p><div><br></div>',
                     'ru' => '<p>Привет.</p><p>Вас приветствует { app_name }</p><p>Отдел кадров/компания для направления письма с жалобами.</p><p>Уважаемый { имя-жалобы }</p><p>Я хотел бы сообщить о конфликте между вами и другим человеком. За последние несколько дней произошло несколько инцидентов, и я считаю, что настало время для того, чтобы сообщить об официальной жалобе против него.</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Не стеснитесь, если у вас есть вопросы.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Спасибо.</span></p><p>С уважением,</p><p>Отдел кадров.</p><p>{ company_name }</p><p>{ app_url }</p><div><br></div>',
                     'pt' => '<p style=""><span style="font-size: 14.4px;">Oi,</span></p><p style=""><span style="font-size: 14.4px;">Bem-vindo a {app_name}</span></p><p style=""><span style="font-size: 14.4px;">HR department/empresa para enviar carta de reclamações.</span></p><p style=""><span style="font-size: 14.4px;">Querido {reclamnome_}</span></p><p style=""><span style="font-size: 14.4px;">Eu gostaria de relatar um conflito entre você e a outra pessoa. Houve vários incidentes ao longo dos últimos dias, e eu sinto que o seu é tempo de relatar uma queixa formal contra him/her.</span></p><p style=""><span style="font-size: 14.4px;">Sinta-se à vontade para alcançar fora se você tiver alguma dúvida.</span></p><p style=""><span style="font-size: 14.4px;">Obrigado,</span></p><p style=""><span style="font-size: 14.4px; font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Considera,</span></p><p style=""><span style="font-size: 14.4px;">Departamento de RH.</span></p><p style=""><span style="font-size: 14.4px;">{company_name}</span></p><p style=""><span style="font-size: 14.4px;">{app_url}</span></p><div><br></div>',
-                    'tr' =>'<p><font color="#1d1c1d" face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures; ">Merhaba ,</span></font></p><p><span style="font-size: 15px; font-variant-ligatures: common-ligatures; color: rgb(29, 28, 29) ; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text- align);">{app_name}</span><br></p><p><font color="#1d1c1d" face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"> hoş geldiniz <span style="font-size: 15px; font-variant-ligatures: common-ligatures;">Şikayet mektubu göndermek için İK departmanı/şirketi.<br></span></font></p><p> <font color="#1d1c1d" face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">Sevgili {complaint_name}</span></font></p><p>Sizinle diğer kişi arasındaki bir anlaşmazlığı bildirmek istiyorum. Son birkaç gün içinde birkaç olay yaşandı ve ona karşı resmi bir şikayette bulunmanın zamanının geldiğini düşünüyorum.</p><p>Sorularınız varsa bize ulaşmaktan çekinmeyin.</p> <p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-bitişik harfler: ortak -ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Teşekkürler,</span></p> <p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-bitişik harfler: ortak -bitişik harfler; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Saygılarımızla,</span></p>< p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-bitişik harfler: ortak- bitişik harfler; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">İK Departmanı.</span></p>< p><span style="renk: rgb(29, 28, 29); yazı tipi ailesi: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; yazı tipi boyutu: 15 piksel; font-varyant-bitişik harfler: ortak bitişik harfler; yazı tipi ağırlığı: var(--bs-body-font-ağırlığı); text-align: var(--bs-body-text-align);">{company_name}</span><span style="color: rgb(29, 28, 29); yazı tipi ailesi: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; yazı tipi boyutu: 15 piksel; font-varyant-bitişik harfler: ortak bitişik harfler; yazı tipi ağırlığı: var(--bs-body-font-ağırlığı); text-align: var(--bs-body-text-align);"><br></span></p><p><span style="font-size: 15px; font-varyant-bitişik harfler: ortak bitişik harfler; renk: rgb(29, 28, 29); yazı tipi ailesi: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; yazı tipi ağırlığı: var(--bs-body-font-ağırlığı); metin hizalama: var(--bs-body-text-align);">{app_url}</span><br></p>',
+                    'tr' => '<p><font color="#1d1c1d" face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures; ">Merhaba ,</span></font></p><p><span style="font-size: 15px; font-variant-ligatures: common-ligatures; color: rgb(29, 28, 29) ; font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text- align);">{app_name}</span><br></p><p><font color="#1d1c1d" face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"> hoş geldiniz <span style="font-size: 15px; font-variant-ligatures: common-ligatures;">Şikayet mektubu göndermek için İK departmanı/şirketi.<br></span></font></p><p> <font color="#1d1c1d" face="Slack-Lato, Slack-Fractions, appleLogo, sans-serif"><span style="font-size: 15px; font-variant-ligatures: common-ligatures;">Sevgili {complaint_name}</span></font></p><p>Sizinle diğer kişi arasındaki bir anlaşmazlığı bildirmek istiyorum. Son birkaç gün içinde birkaç olay yaşandı ve ona karşı resmi bir şikayette bulunmanın zamanının geldiğini düşünüyorum.</p><p>Sorularınız varsa bize ulaşmaktan çekinmeyin.</p> <p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-bitişik harfler: ortak -ligatures; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Teşekkürler,</span></p> <p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-bitişik harfler: ortak -bitişik harfler; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Saygılarımızla,</span></p>< p><span style="color: rgb(29, 28, 29); font-family: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; font-size: 15px; font-variant-bitişik harfler: ortak- bitişik harfler; font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">İK Departmanı.</span></p>< p><span style="renk: rgb(29, 28, 29); yazı tipi ailesi: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; yazı tipi boyutu: 15 piksel; font-varyant-bitişik harfler: ortak bitişik harfler; yazı tipi ağırlığı: var(--bs-body-font-ağırlığı); text-align: var(--bs-body-text-align);">{company_name}</span><span style="color: rgb(29, 28, 29); yazı tipi ailesi: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; yazı tipi boyutu: 15 piksel; font-varyant-bitişik harfler: ortak bitişik harfler; yazı tipi ağırlığı: var(--bs-body-font-ağırlığı); text-align: var(--bs-body-text-align);"><br></span></p><p><span style="font-size: 15px; font-varyant-bitişik harfler: ortak bitişik harfler; renk: rgb(29, 28, 29); yazı tipi ailesi: Slack-Lato, Slack-Fractions, appleLogo, sans-serif; yazı tipi ağırlığı: var(--bs-body-font-ağırlığı); metin hizalama: var(--bs-body-text-align);">{app_url}</span><br></p>',
                     'pt-br' => '<p style=""><span style="font-size: 14.4px;">Oi,</span></p><p style=""><span style="font-size: 14.4px;">Bem-vindo a {app_name}</span></p><p style=""><span style="font-size: 14.4px;">HR department/empresa para enviar carta de reclamações.</span></p><p style=""><span style="font-size: 14.4px;">Querido {reclamnome_}</span></p><p style=""><span style="font-size: 14.4px;">Eu gostaria de relatar um conflito entre você e a outra pessoa. Houve vários incidentes ao longo dos últimos dias, e eu sinto que o seu é tempo de relatar uma queixa formal contra him/her.</span></p><p style=""><span style="font-size: 14.4px;">Sinta-se à vontade para alcançar fora se você tiver alguma dúvida.</span></p><p style=""><span style="font-size: 14.4px;">Obrigado,</span></p><p style=""><span style="font-size: 14.4px; font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Considera,</span></p><p style=""><span style="font-size: 14.4px;">Departamento de RH.</span></p><p style=""><span style="font-size: 14.4px;">{company_name}</span></p><p style=""><span style="font-size: 14.4px;">{app_url}</span></p><div><br></div>',
 
                 ],
             ],
-            'leave_action_sent' =>[
+            'leave_action_sent' => [
                 'subject' => 'Leave Action Sent',
                 'lang' => [
                     'ar' => '<p>الموضوع : " إدارة الموارد البشرية / الشركة لإرسال رسالة موافقة إلى { leave_status } إجازة أو إجازة ".</p><p>مرحبا ، { leave_name }</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; لدي { leave_status } طلب ترك لأجل { leave_لسبب } من { leave_start_date } الى { leave_end_date }. { total_leave_yأيام } أيام لدي { leave_status } طلب الخروج الخاص بك الى { leave_لسبب }.</p><p>ونحن نطلب منكم أن تكملوا كل أعمالكم المعلقة أو أي قضية مهمة أخرى لكي لا تواجه الشركة أي خسارة أو مشكلة أثناء غيابكم ونحن نقدر لكم مدى عمق تفكيركم في إبلاغنا بذلك مسبقا.</p><p>إشعر بالحرية للوصول إلى الخارج إذا عندك أي أسئلة.</p><p>شكرا لك</p><p>Regards,</p><p>إدارة الموارد البشرية ،</p><p>{ app_name }</p><p>{ app_url }</p><div><br></div>',
-                    'zh' =>'<p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">主题 : "要发送的人力资源部门/公司{leave_status}休假或请假的批准函”。</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line -height: 28px;">﻿嗨，{leave_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="行高：28px;"><span style="font-family: var(--bs-body-font-family); 字体粗细：var(--bs-body-font-weight); 文本对齐: var(--bs-body-text-align);">            我有 {leave_status} 您从 {leave_start_date} 到 {leave_end_date} 提出的请假申请 {leave_reason}。 {total_leave_days} 天，我收到了您 {leave_reason} 的请假申请 {leave_status}。</span><br></p><p segoe="" ui",="" arial;="" font-size:= "" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs -body-font-weight); text-align: var(--bs-body-text-align);">我们要求您完成所有未完成的工作或任何其他重要问题，以便公司不会面临任何您缺席期间的损失或问题。感谢您提前通知我们的周到。</span></p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style ="line-height: 28px;">如有任何疑问，请随时与我们联系。</p><p segoe="" ui",="" arial;="" font-size:="" 14px ;"="" style="line-height: 28px;">谢谢您，</p><p segoe="" ui",="" arial;="" font-size:="" 14px;" ="" style="line-height: 28px;">问候，</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">人力资源部</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style= "line-height: 28px;">{app_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line -高度：28px;">{app_url}</p><p></p>',
+                    'zh' => '<p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">主题 : "要发送的人力资源部门/公司{leave_status}休假或请假的批准函”。</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line -height: 28px;">﻿嗨，{leave_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="行高：28px;"><span style="font-family: var(--bs-body-font-family); 字体粗细：var(--bs-body-font-weight); 文本对齐: var(--bs-body-text-align);">            我有 {leave_status} 您从 {leave_start_date} 到 {leave_end_date} 提出的请假申请 {leave_reason}。 {total_leave_days} 天，我收到了您 {leave_reason} 的请假申请 {leave_status}。</span><br></p><p segoe="" ui",="" arial;="" font-size:= "" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs -body-font-weight); text-align: var(--bs-body-text-align);">我们要求您完成所有未完成的工作或任何其他重要问题，以便公司不会面临任何您缺席期间的损失或问题。感谢您提前通知我们的周到。</span></p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style ="line-height: 28px;">如有任何疑问，请随时与我们联系。</p><p segoe="" ui",="" arial;="" font-size:="" 14px ;"="" style="line-height: 28px;">谢谢您，</p><p segoe="" ui",="" arial;="" font-size:="" 14px;" ="" style="line-height: 28px;">问候，</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">人力资源部</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style= "line-height: 28px;">{app_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line -高度：28px;">{app_url}</p><p></p>',
                     'da' => '<p>Emne: " HR-afdeling / virksomhed, der skal sende godkendelsesbrev til { leave_status } en ferie eller orlov ".</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Hej, { leave_name }</span></p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Jeg har { leave_status } din orlov-anmodning for { leave_reason } fra { leave_start_date } til { leave_end_date }. { total_leave_days } dage Jeg har { leave_status } din anmodning om { leave_reason }.</p><p>Vi beder dig om at færdiggøre alt dit udestående arbejde eller et andet vigtigt spørgsmål, så virksomheden ikke står over for nogen tab eller problemer under dit fravær. Vi sætter pris på Deres betænksomhed, for at informere os godt på forhånd.</p><p>Du er velkommen til at række ud, hvis du har nogen spørgsmål.</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Tak.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Med venlig hilsen</span></p><p>HR-afdelingen,</p><p>{ app_name }</p><p>{ app_url }</p>',
                     'de' => '<p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Betreff: " Personalabteilung/Firma, um den Zulassungsbescheid an {leave_status} einen Urlaub oder Urlaub zu schicken ".</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Hi, {leave_name}</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Ich habe {leave_status} Ihre Urlaubsanforderung für {leave_reason} von {leave_start_date} bis {leave_end_date}. {total_leave_days} Tage Ich habe {leave_status} Ihre Urlaubs-Anfrage für {leave_reason}.</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Wir bitten Sie, Ihre gesamte anstehende Arbeit oder ein anderes wichtiges Thema abzuschließen, so dass das Unternehmen während Ihrer Abwesenheit keinerlei Verlust oder kein Problem zu bewältigen hat. Wir freuen uns über Ihre Nachdenklichkeit, um uns im Vorfeld gut zu informieren.</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Fühlen Sie sich frei, wenn Sie Fragen haben.</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Vielen Dank,</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Betrachtet,</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Personalabteilung,</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">{Anwendungsname}</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">{app_url}</font></p><p></p>',
                     'en' => '<p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">Subject : "HR department/company to send approval letter to {leave_status} a vacation or leave" .</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">﻿Hi ,{leave_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; I have {leave_status} your leave request for&nbsp; {leave_reason} from {leave_start_date} to {leave_end_date}. {total_leave_days} days I have&nbsp; {leave_status} your leave request for {leave_reason}.</span><br></p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">We request you to complete all your pending work or any other important issue so that the company does not face any any loss or problem during your absence. We appreciate your thoughtfulness to inform us well in advance.</span></p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">Feel free to reach out if you have any questions.</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">Thank You,</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">Regards,</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">HR Department,</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">{app_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">{app_url}</p><p></p>',
                     'es' => '<p>Asunto: " Departamento de RR.HH./compañía para enviar la carta de aprobación a {leave_status} unas vacaciones o vacaciones ".</p><p>Hi, {nombre_archivo}</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Tengo {leave_status} la solicitud de licencia para {leave_reason} de {leave_start_date} a {leave_end_date}. {total_leave_days} días tengo {leave_status} la solicitud de licencia para {leave_reason}.</p><p>Le solicitamos que complete todos sus trabajos pendientes o cualquier otro asunto importante para que la empresa no se enfrente a ninguna pérdida o problema durante su ausencia. Agradecemos su consideración para informarnos con mucha antelación.</p><p>Siéntase libre de llegar si usted tiene alguna pregunta.</p><p>Gracias,</p><p>Considerando,</p><p>Departamento de Recursos Humanos,</p><p>{app_name}</p><p>{app_url}</p>',
                     'fr' => '<p>Objet: " Service des ressources humaines /entreprise pour envoyer une lettre d approbation à { leave_status } un congé annuel ou un congé ".</p><p>Salut, { nom_onde }</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; J ai { leave_status } votre demande de permission pour { leave_reason } de { leave_start_date } à { leave_end_date }. { total_leave_days } jours, j ai { leave_status } votre demande de congé pour { leave_reason }.</span></p><p>Nous vous demandons de remplir tous vos travaux en cours ou toute autre question importante afin que l entreprise ne soit pas confrontée à une perte ou à un problème pendant votre absence. Nous apprécions votre attention pour nous informer longtemps à l avance.</p><p>N hésitez pas à nous contacter si vous avez des questions.</p><p>Merci,</p><p>Regards,</p><p>Département des RH,</p><p>{ nom_app }</p><p>{ adresse_url }</p>',
-                    'he' =>'<p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">נושא: "מחלקת משאבי אנוש/חברה לשלוח מכתב אישור ל-{leave_status} חופשה או חופשה" .</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line -הייט: 28px; "> היי, {liew_name} </p> <p segoe =" "ui", = "" arial; = "" font-size: = "" 14px; "=" "style =" line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align : var(--bs-body-text-align);">            יש לי {leave_status} את בקשת החופשה שלך עבור  {leave_reason} מ-{leave_start_date} עד {leave_end_date}. {total_leave_days} ימים יש לי  {leave_status} את בקשת החופשה שלך עבור {leave_reason}.</span><br></p><p segoe="" ui",="" arial;="" font-size:= "" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs -body-font-weight); text-align: var(--bs-body-text-align);">אנו מבקשים מכם להשלים את כל העבודה הממתינה או כל נושא חשוב אחר כך שהחברה לא תעמוד בפני כל אובדן או בעיה במהלך היעדרותך. אנו מעריכים את התחשבותך להודיע ​​לנו זמן רב מראש.</span></p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style ="line-height: 28px;">אל תהסס לפנות אם יש לך שאלות.</p><p segoe="" ui",="" arial;="" font-size:="" 14px ;"="" style="line-height: 28px;">תודה,</p><p segoe="" ui",="" arial;="" font-size:="" 14px;" ="" style="line-height: 28px;">בברכה,</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">מחלקת משאבי אנוש,</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style= "line-height: 28px;">{app_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line -height: 28px;">{app_url}</p><p></p>',
+                    'he' => '<p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">נושא: "מחלקת משאבי אנוש/חברה לשלוח מכתב אישור ל-{leave_status} חופשה או חופשה" .</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line -הייט: 28px; "> היי, {liew_name} </p> <p segoe =" "ui", = "" arial; = "" font-size: = "" 14px; "=" "style =" line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align : var(--bs-body-text-align);">            יש לי {leave_status} את בקשת החופשה שלך עבור  {leave_reason} מ-{leave_start_date} עד {leave_end_date}. {total_leave_days} ימים יש לי  {leave_status} את בקשת החופשה שלך עבור {leave_reason}.</span><br></p><p segoe="" ui",="" arial;="" font-size:= "" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs -body-font-weight); text-align: var(--bs-body-text-align);">אנו מבקשים מכם להשלים את כל העבודה הממתינה או כל נושא חשוב אחר כך שהחברה לא תעמוד בפני כל אובדן או בעיה במהלך היעדרותך. אנו מעריכים את התחשבותך להודיע ​​לנו זמן רב מראש.</span></p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style ="line-height: 28px;">אל תהסס לפנות אם יש לך שאלות.</p><p segoe="" ui",="" arial;="" font-size:="" 14px ;"="" style="line-height: 28px;">תודה,</p><p segoe="" ui",="" arial;="" font-size:="" 14px;" ="" style="line-height: 28px;">בברכה,</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">מחלקת משאבי אנוש,</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style= "line-height: 28px;">{app_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line -height: 28px;">{app_url}</p><p></p>',
                     'it' => '<p>Oggetto: " HR department /company per inviare lettera di approvazione a {leave_status} una vacanza o un congedo ".</p><p>Ciao, {leave_name}</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Ho {leave_status} la tua richiesta di permesso per {leave_ragione} da {leave_start_date} a {leave_end_date}. {total_leave_days} giorni I ho {leave_status} la tua richiesta di permesso per {leave_ragione}.</p><p>Ti richiediamo di completare tutte le tue lavorazioni in sospeso o qualsiasi altra questione importante in modo che lazienda non faccia alcuna perdita o problema durante la tua assenza. Apprezziamo la vostra premura per informarci bene in anticipo.</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Sentiti libero di raggiungere se hai domande.</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Grazie,</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Riguardo,</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">Dipartimento HR,</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_name}</span></p><p>{app_url}</p>',
                     'ja' => '<p>件名 : " 承認レターを { leave_status} に休暇または休暇に送信するための人事部門 / 企業。</p><p>こんにちは、 {leave_name}</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { leave_start_date} から {leave_end_date}までの { leave_reason} { leave_reason} { leave_status} { leave_status } { leave_status } { total_leave_status } { leave_reason } { leave_reason} に対するあなたの休暇リクエストをお願いします。</p><p>お客様は、お客様がお客様の不在中に損失や問題が発生しないように、保留中のすべての作業やその他の重要な問題を完了するよう要求します。 事前にお知らせするためには、あなたの思慮深さに感謝します。</p><p>質問がある場合は、自由に連絡してください。</p><p>ありがとうございます</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">よろしく</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">HR 部門</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_name}</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_url}</span><br></p>',
                     'nl' => '<p>Onderwerp: " HR-afdeling/bedrijf om een goedkeuringsbrief te sturen naar { leave_status } een vakantie of verlof ".</p><p>Hallo, { leave_name }</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Ik heb { leave_status } uw verzoek om verlof voor { leave_reason } van { leave_start_date } aan { leave_end_date }. { total_leave_days } dagen Ik heb { leave_status } uw verzoek om verlof voor { leave_reason }.</p><p>Wij vragen u om al uw lopende werk of een andere belangrijke kwestie, zodat het bedrijf geen verlies of probleem tijdens uw afwezigheid geconfronteerd. Wij waarderen uw bedachtzaamheid om ons van tevoren goed te informeren.</p><p>Voel je vrij om uit te reiken als je vragen hebt.</p><p>Dank U,</p><p>Betreft:</p><p>HR-afdeling,</p><p>{ app_name }</p><p>{ app_url }</p>',
@@ -1881,11 +1758,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
                 ],
             ],
-            'payslip_sent' =>[
+            'payslip_sent' => [
                 'subject' => 'Payslip Sent',
                 'lang' => [
                     'ar' => '<p>الموضوع : " إدارة الموارد البشرية / الشركة لإرسال شظية عن طريق البريد الإلكتروني في وقت تأكيد الدفع. "</p><p>عزيزي ، { paysp_name }</p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">&nbsp; &nbsp; &nbsp; &nbsp; أتمنى أن يجدك هذا البريد الإلكتروني جيدا برجاء الرجوع الى payalp المرفقة الى { payplip_salary_شهر }. اضغط ببساطة على الاختيار في أسفل : { payspp_url }</span><br></p><p><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">إشعر بالحرية للوصول إلى الخارج إذا عندك أي أسئلة.</span></p><p>Regards,</p><p>إدارة الموارد البشرية ،</p><p>{ app_name }</p><p>{ app_url }</p>',
-                    'zh' =>'<p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">主题 :  " 人力资源部门/公司发送确认工资单时通过电子邮件发送工资单。"</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-高度：28px;">﻿亲爱的，{payslip_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line -height: 28px;"><span style="font-family: var(--bs-body-font-family); 字体粗细: var(--bs-body-font-weight); 文本对齐: var(--bs-body-text-align);">    </span>    希望这封电子邮件能让您满意！请参阅随附的 {payslip_salary_month} 工资单。只需点击下面的按钮即可： <br>                                                            {payslip_url}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style=" line-height: 28px;">如果您有任何疑问，请随时与我们联系。</p><p segoe="" ui",="" arial;="" font-size:="" 14px;" ="" style="line-height: 28px;">问候，</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">人力资源部门，</span></p><p segoe="" ui",="" arial;="" font-size :="" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(- -bs-body-font-weight); 文本对齐: var(--bs-body-text-align);">{app_name}</span><br></p><p segoe="" ui ",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">{app_url}</p><p></p>',
+                    'zh' => '<p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">主题 :  " 人力资源部门/公司发送确认工资单时通过电子邮件发送工资单。"</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-高度：28px;">﻿亲爱的，{payslip_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line -height: 28px;"><span style="font-family: var(--bs-body-font-family); 字体粗细: var(--bs-body-font-weight); 文本对齐: var(--bs-body-text-align);">    </span>    希望这封电子邮件能让您满意！请参阅随附的 {payslip_salary_month} 工资单。只需点击下面的按钮即可： <br>                                                            {payslip_url}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style=" line-height: 28px;">如果您有任何疑问，请随时与我们联系。</p><p segoe="" ui",="" arial;="" font-size:="" 14px;" ="" style="line-height: 28px;">问候，</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">人力资源部门，</span></p><p segoe="" ui",="" arial;="" font-size :="" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(- -bs-body-font-weight); 文本对齐: var(--bs-body-text-align);">{app_name}</span><br></p><p segoe="" ui ",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">{app_url}</p><p></p>',
                     'da' => '<p>Emne: " HR-afdeling / Kompagni til at sende lønsedler via e-mail på tidspunktet for bekræftelsen af lønsedlerne. "</p><p>Kære, { payslip_name }</p><p>&nbsp; &nbsp; &nbsp; &nbsp; Håber denne e-mail finder dig godt! Se vedhæftet payseddel for { payslip_salary_month }. Klik på knappen nedenfor: { payslip_url }</p><p>Du er velkommen til at række ud, hvis du har nogen spørgsmål.</p><p>Med venlig hilsen</p><p>HR-afdelingen,</p><p>{ app_name }</p><p>{ app_url }</p>',
                     'de' => '<p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Betreff: " Personalabteilung/Firma, um payslips per E-Mail zum Zeitpunkt der Bestätigung des Auszahlungsscheins zu senden. "</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Sehr geehrte, {payslip_name}</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; Hoffe, diese E-Mail findet dich gut! Bitte sehen Sie den angehängten payslip für {payslip_salary_month}. Klicken Sie einfach auf die folgende Schaltfläche: {payslip_url}</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Fühlen Sie sich frei, wenn Sie Fragen haben.</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Betrachtet,</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">Personalabteilung,</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">{Anwendungsname}</font></p><p style="line-height: 28px; font-family: Nunito, " segoe="" ui",="" arial;="" font-size:="" 14px;"=""><font face="sans-serif">{app_url}</font></p><p></p>',
                     'en' => '<p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">Subject :&nbsp; " HR&nbsp; Department / Company to send&nbsp; payslips by email at time of confirmation of payslip. "</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">﻿Dear ,{payslip_name}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">&nbsp; &nbsp;&nbsp;</span>&nbsp; &nbsp; Hope this email finds you well! Please see attached payslip for {payslip_salary_month} . Simply click on the button below :&nbsp;<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {payslip_url}</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">Feel free to&nbsp; reach out if you have any questions.</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">Regards ,</p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">HR Department ,</span></p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;"><span style="font-family: var(--bs-body-font-family); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{app_name}</span><br></p><p segoe="" ui",="" arial;="" font-size:="" 14px;"="" style="line-height: 28px;">{app_url}</p><p></p>',
@@ -1987,7 +1864,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>D&eacute;partement des RH,</p>
                     <p>{ app_name }</p>',
-                    'he' =>'<p> </p>
+                    'he' => '<p> </p>
                     <p><strong>נושא:-מחלקת משאבי אנוש/חברה לשלוח מכתב ברכה לקידום בעבודה.</strong></p>
                     <p><strong>{employee_name} היקר,</strong></p>
                     <p>ברכות על הקידום שלך ל-{promotion_designation} {promotion_title} החל מ-{promotion_date}.</p>
@@ -2066,7 +1943,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p style="font-size: 14.4px;">Considera,</p>
                     <p style="font-size: 14.4px;">Departamento de RH,</p>
                     <p style="font-size: 14.4px;">{app_name}</p>',
-                    'tr' =>'<p> </p>
+                    'tr' => '<p> </p>
                     <p><strong>Konu:-İş promosyonu tebrik mektubu gönderilecek İK departmanı/Şirket.</strong></p>
                     <p><strong>Sayın {employee_name},</strong></p>
                     <p>Geçerli {promotion_date} olan {promotion_designation} {promotion_title} promosyonunuz için tebrikler.</p>
@@ -2105,7 +1982,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>إدارة الموارد البشرية ،</p>
                     <p>{ app_name }</p>',
-                    'zh' =>'<p ><b>主题：-人力资源部门/公司发送辞职信。</b></p>
+                    'zh' => '<p ><b>主题：-人力资源部门/公司发送辞职信。</b></p>
                     <p ><b>亲爱的{assign_user}，</b></p>
                     <p>我非常遗憾地正式确认在 {notice_date} 收到您的辞职通知，至 {resignation_date} 是您工作的最后一天。 </p>
                     <p>很高兴与您合作，我谨代表团队祝愿您在未来的工作中一切顺利。请在这封信中找到一个信息包，其中包含有关辞职流程的详细信息。 </p>
@@ -2165,7 +2042,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>D&eacute;partement des RH,</p>
                     <p>{ app_name }</p>',
-                    'he' =>'<p ><b>נושא:-מחלקת משאבי אנוש/חברה לשלוח מכתב התפטרות .</b></p>
+                    'he' => '<p ><b>נושא:-מחלקת משאבי אנוש/חברה לשלוח מכתב התפטרות .</b></p>
                     <p ><b>{assign_user} היקר,</b></p>
                     <p >בצער רב אני מאשר רשמית את קבלת הודעת ההתפטרות שלך בתאריך {notice_date} עד {resignation_date} הוא היום האחרון לעבודתך. </p>
                     <p > היה לי תענוג לעבוד איתך, ובשם הצוות, אני רוצה לאחל לך את הטוב ביותר בכל העשייה העתידית שלך. מצורף למכתב זה, נא למצוא חבילת מידע עם מידע מפורט על תהליך ההתפטרות. </p>
@@ -2235,7 +2112,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p style="font-size: 14.4px;"><span style="font-size: 14.4px;">Considera,</span></p>
                     <p style="font-size: 14.4px;"><span style="font-size: 14.4px;">Departamento de RH,</span></p>
                     <p style="font-size: 14.4px;"><span style="font-size: 14.4px;">{app_name}</span></p>',
-                    'tr' =>'<p ><b>Konu:-İstifa mektubu gönderilecek İK departmanı/Şirket .</b></p>
+                    'tr' => '<p ><b>Konu:-İstifa mektubu gönderilecek İK departmanı/Şirket .</b></p>
                     <p ><b>Sayın {assign_user},</b></p>
                     <p >İstifa bildiriminizi {notice_date} ile {resignation_date} arasında aldığımı, işinizin son günü olduğunu büyük bir üzüntüyle kabul ediyorum. </p>
                     <p >Sizinle çalışmak bir zevkti ve ekip adına, gelecekteki tüm çabalarınızda size en iyisini diliyorum. Bu mektuba ek olarak, lütfen istifa süreci hakkında ayrıntılı bilgi içeren bir bilgi paketi bulun. </p>
@@ -2261,7 +2138,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 'subject' => 'Termination Sent',
                 'lang' => [
                     'ar' => '<p style="text-align: left;"><span style="font-size: 12pt;"><span style="color: #222222;"><span style="white-space: pre-wrap;"><span style="font-size: 12pt; white-space: pre-wrap;">Subject :-ادارة / شركة HR لارسال رسالة انهاء. عزيزي { </span><span style="white-space: pre-wrap;">employee_termination_name</span><span style="font-size: 12pt; white-space: pre-wrap;"> } ، هذه الرسالة مكتوبة لإعلامك بأن عملك مع شركتنا قد تم إنهاؤه مزيد من التفاصيل عن الانهاء : تاريخ الاشعار : { </span><span style="white-space: pre-wrap;">notice_date</span><span style="font-size: 12pt; white-space: pre-wrap;"> } تاريخ الانهاء : { </span><span style="white-space: pre-wrap;">termination_date</span><span style="font-size: 12pt; white-space: pre-wrap;"> } نوع الانهاء : { termination_type } إشعر بالحرية للوصول إلى الخارج إذا عندك أي أسئلة. شكرا لك Regards, إدارة الموارد البشرية ، { app_name }</span></span></span></span></p>',
-                    'zh' =>'<p><strong>主题：-人力资源部门/公司发送终止信。</strong></p>
+                    'zh' => '<p><strong>主题：-人力资源部门/公司发送终止信。</strong></p>
                     <p><strong>亲爱的{employee_termination_name}，</strong></p>
                     <p>这封信旨在通知您，您与我们公司的雇佣关系已终止。</p>
                     <p>有关终止的更多详细信息：</p>
@@ -2335,7 +2212,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>D&eacute;partement des RH,</p>
                     <p>{ app_name }</p>',
-                    'he' =>'<p><strong>נושא:-מחלקת משאבי אנוש/חברה לשלוח מכתב סיום.</strong></p>
+                    'he' => '<p><strong>נושא:-מחלקת משאבי אנוש/חברה לשלוח מכתב סיום.</strong></p>
                     <p><strong>{employee_termination_name} היקר,</strong></p>
                     <p>מכתב זה נכתב כדי להודיע ​​לך שהעסקתך בחברה שלנו הופסקה.</p>
                     <p>פרטים נוספים על סיום:</p>
@@ -2460,7 +2337,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>إدارة الموارد البشرية ،</p>
                     <p>{ app_name }</p>',
-                    'zh' =>'<p ><b>主题：-人力资源部门/公司将向员工从一个地点发送到另一个地点的调动信。</b></p>
+                    'zh' => '<p ><b>主题：-人力资源部门/公司将向员工从一个地点发送到另一个地点的调动信。</b></p>
                     <p ><b>亲爱的{transfer_name}，</b></p>
                     <p >根据管理层指令，您的服务将于 {transfer_date} 转移。 </p>
                     <p >您的新邮寄地点是 {transfer_branch} 分行的 {transfer_department} 部门，转移日期为 {transfer_date}。 </p>
@@ -2520,7 +2397,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>D&eacute;partement des RH,</p>
                     <p>{ app_name }</p>',
-                    'he' =>'<p ><b>נושא:-מחלקת משאבי אנוש/חברה לשלוח מכתב העברה שיונפק לעובד ממקום אחד למשנהו.</b></p>
+                    'he' => '<p ><b>נושא:-מחלקת משאבי אנוש/חברה לשלוח מכתב העברה שיונפק לעובד ממקום אחד למשנהו.</b></p>
                     <p ><b>{transfer_name} היקר,</b></p>
                     <p >לפי הנחיות ההנהלה, השירותים שלך מועברים עם {transfer_date}. </p>
                     <p >מקום הפרסום החדש שלך הוא מחלקת {transfer_department} של סניף {transfer_branch} ותאריך ההעברה {transfer_date}. </p>
@@ -2590,7 +2467,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p style="font-size: 14.4px;"><span style="font-size: 14.4px;">Considera,</span></p>
                     <p style="font-size: 14.4px;"><span style="font-size: 14.4px;">Departamento de RH,</span></p>
                     <p style="font-size: 14.4px;"><span style="font-size: 14.4px;">{app_name}</span></p>',
-                    'tr' =>'<p ><b>Konu:-İK departmanının/Şirketin, bir çalışana bir yerden başka bir yere gönderilecek transfer mektubunu göndermesi.</b></p>
+                    'tr' => '<p ><b>Konu:-İK departmanının/Şirketin, bir çalışana bir yerden başka bir yere gönderilecek transfer mektubunu göndermesi.</b></p>
                     <p ><b>Sevgili {transfer_name},</b></p>
                     <p >Yönetim yönergeleri uyarınca, hizmetleriniz {transfer_date} tarihinde aktarılıyor. </p>
                     <p >Yeni görev yeriniz {transfer_branch} şubesinin {transfer_department} departmanı ve transfer tarihi {transfer_date}. </p>
@@ -2631,7 +2508,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>إدارة الموارد البشرية ،</p>
                     <p>{ app_name }</p>',
-                    'zh' =>'<p><strong>主题：-人力资源部门/公司发送出差信。</strong></p>
+                    'zh' => '<p><strong>主题：-人力资源部门/公司发送出差信。</strong></p>
                     <p><strong>亲爱的{employee_name}，</strong></p>
                     <p>祝你早上好！我写信给贵部门办公室，提出一个出国访问{ Purpose_of_visit} 的请求。</p>
                     <p>这将是年度领先的气候商业论坛，我们很幸运能够被提名在研讨会上代表我们公司和该地区。</p>
@@ -2721,7 +2598,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>D&eacute;partement des RH,</p>
                     <p>{ app_name }</p>',
-                    'he' =>'<p><strong>נושא:-מחלקת משאבי אנוש/חברה לשלוח מכתב טיול .</strong></p>
+                    'he' => '<p><strong>נושא:-מחלקת משאבי אנוש/חברה לשלוח מכתב טיול .</strong></p>
                     <p><strong>{employee_name} היקר,</strong></p>
                     <p>ראש הבוקר לך! אני כותב למשרד המחלקה שלך עם בקשה צנועה לנסוע ל{purpose_of_visit} לחו"ל.</p>
                     <p>זה יהיה פורום עסקי האקלים המוביל של השנה והיה לנו המזל להיות מועמד לייצג את החברה שלנו ואת האזור במהלך הסמינר.</p>
@@ -2872,7 +2749,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>Regards,</p>
                     <p>{ company_name }</p>
                     <p>{ app_url }</p>',
-                    'zh'=> '<p style="line-height: 28px; font-family: Nunito,;"><span style="font-family: sans-serif;">嗨，{bill_name}</span></p>
+                    'zh' => '<p style="line-height: 28px; font-family: Nunito,;"><span style="font-family: sans-serif;">嗨，{bill_name}</span></p>
                     <p style="line-height: 28px; font-family: Nunito,;"><span style="font-family: sans-serif;">欢迎使用 {app_name}</span></p>
                     <p style="line-height: 28px; font-family: Nunito,;"><span style="font-family: sans-serif;">希望这封电子邮件能让您满意！！请参阅随附的产品/服务帐单编号 {bill_number}。</span></p>
                     <p style="line-height: 28px; font-family: Nunito,;"><span style="font-family: sans-serif;">只需点击下面的按钮即可。</span></p>
@@ -3039,7 +2916,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 'subject' => 'Warning Sent',
                 'lang' => [
                     'ar' => '<p style="text-align: left;"><span style="font-size: 12pt;"><span style="color: #222222;"><span style="white-space: pre-wrap;">Subject : -HR ادارة / شركة لارسال رسالة تحذير. عزيزي { employe_warning_name }, { warning_subject } { warning_description } إشعر بالحرية للوصول إلى الخارج إذا عندك أي أسئلة. شكرا لك Regards, إدارة الموارد البشرية ، { app_name }</span></span></span></p>',
-                    'zh' =>'<p><strong>主题：-人力资源部门/公司发送警告信。</strong></p>
+                    'zh' => '<p><strong>主题：-人力资源部门/公司发送警告信。</strong></p>
                     <p><strong>亲爱的{employee_warning_name}，</strong></p>
                     <p>{warning_subject}</p>
                     <p>{warning_description}</p>
@@ -3148,7 +3025,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p style="font-size: 14.4px;"><span style="font-size: 14.4px;">Considera,</span></p>
                     <p style="font-size: 14.4px;"><span style="font-size: 14.4px;">Departamento de RH,</span></p>
                     <p style="font-size: 14.4px;"><span style="font-size: 14.4px;">{app_name}</span></p>',
-                    'tr'=>'<p><strong>Konu:-İK departmanı/Şirket uyarı mektubu gönderecek.</strong></p>
+                    'tr' => '<p><strong>Konu:-İK departmanı/Şirket uyarı mektubu gönderecek.</strong></p>
                     <p><strong>Sayın {employee_warning_name},</strong></p>
                     <p>{warning_subject}</p>
                     <p>{warning_description}</p>
@@ -3221,7 +3098,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p><b>Objet du contrat :</b> { contract_subject } </p><p><span style="text-align: var(--bs-body-text-align);"><b>contrat projet :</b></span>&nbsp;{ contract_project } </p><p><b>Date de début&nbsp;</b>: { contract_start_date } </p><p><b>Date de fin&nbsp;</b>: { contract_end_date } </p><p>Regard sur lavenir.</p>
                     <p><b>Sincères amitiés,</b></p>
                     <p>{ nom_entreprise }</p>',
-                    'he' =>'<p> </p>
+                    'he' => '<p> </p>
                     <p><strong>היי</strong> {contract_client}</p>
                     <p><b>נושא החוזה</b> : {contract_subject}</p>
                     <p><b>פרויקט חוזה</b> : {contract_project}</p>
@@ -3289,13 +3166,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $email = EmailTemplate::all();
 
-        foreach($email as $e)
-        {
-            foreach($defaultTemplate[$e->slug]['lang'] as $lang => $content)
-            {
+        foreach ($email as $e) {
+            foreach ($defaultTemplate[$e->slug]['lang'] as $lang => $content) {
                 $emailNoti = EmailTemplateLang::where('parent_id', $e->id)->where('lang', $lang)->count();
-                if($emailNoti==0)
-                {
+                if ($emailNoti == 0) {
                     EmailTemplateLang::create(
                         [
                             'parent_id' => $e->id,
@@ -3305,7 +3179,6 @@ class User extends Authenticatable implements MustVerifyEmail
                         ]
                     );
                 }
-
             }
         }
     }
@@ -3315,8 +3188,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         // Make Entry In User_Email_Template
         $allEmail = EmailTemplate::all();
-        foreach($allEmail as $email)
-        {
+        foreach ($allEmail as $email) {
             UserEmailTemplate::create(
                 [
                     'template_id' => $email->id,
@@ -3333,8 +3205,7 @@ class User extends Authenticatable implements MustVerifyEmail
         // Make Entry In User_Email_Template
         $allEmail = EmailTemplate::all();
 
-        foreach($allEmail as $email)
-        {
+        foreach ($allEmail as $email) {
             UserEmailTemplate::create(
                 [
                     'template_id' => $email->id,
@@ -3345,7 +3216,8 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
-    public static function userDefaultWarehouse(){
+    public static function userDefaultWarehouse()
+    {
         warehouse::create(
             [
                 'name' => 'North Warehouse',
@@ -3355,10 +3227,10 @@ class User extends Authenticatable implements MustVerifyEmail
                 'created_by' => 2,
             ]
         );
-
     }
 
-    public function userWarehouseRegister($user_id){
+    public function userWarehouseRegister($user_id)
+    {
         warehouse::create(
             [
                 'name' => 'North Warehouse',
@@ -3368,11 +3240,11 @@ class User extends Authenticatable implements MustVerifyEmail
                 'created_by' => $user_id,
             ]
         );
-
     }
 
     //default bank account for new company
-    public function userDefaultBankAccount($user_id){
+    public function userDefaultBankAccount($user_id)
+    {
         BankAccount::create(
             [
                 'holder_name' => 'cash',
@@ -3384,13 +3256,13 @@ class User extends Authenticatable implements MustVerifyEmail
                 'created_by' => $user_id,
             ]
         );
-
     }
 
 
 
-    public function extraKeyword(){
-        $keyArr=[
+    public function extraKeyword()
+    {
+        $keyArr = [
             __('Sun'),
             __('Mon'),
             __('Tue'),
@@ -3436,13 +3308,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function barcodeFormat()
     {
         $settings = Utility::settings();
-        return isset($settings['barcode_format'])?$settings['barcode_format']:'code128';
+        return isset($settings['barcode_format']) ? $settings['barcode_format'] : 'code128';
     }
 
     public function barcodeType()
     {
         $settings = Utility::settings();
-        return isset($settings['barcode_type'])?$settings['barcode_type']:'css';
+        return isset($settings['barcode_type']) ? $settings['barcode_type'] : 'css';
     }
 
     public static function employeeIdFormat($number)
@@ -3465,11 +3337,9 @@ class User extends Authenticatable implements MustVerifyEmail
             } else {
                 return 0;
             }
-
         } elseif (Auth::user()->user_type != 'company'  &&  Auth::user()->user_type != 'super admin') {
 
-            if(Auth::user()->current_location == 0)
-            {
+            if (Auth::user()->current_location == 0) {
                 Auth::user()->current_location = Auth::user()->location_id;
             }
 
@@ -3477,5 +3347,4 @@ class User extends Authenticatable implements MustVerifyEmail
             return $location->id;
         }
     }
-
 }

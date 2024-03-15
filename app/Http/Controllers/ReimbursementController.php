@@ -58,16 +58,19 @@ class ReimbursementController extends Controller
     {
         if (\Auth::user()->can('create reimbursement')) {
 
+            $rules = [
+                'date' => 'required|date',
+                'description' => 'required',
+                'file' => 'required',
+            ];
+
+            if (\Auth::user()->isStaff()) {
+                $rules['employee_id'] = 'required';
+            }
+
             $validator = \Validator::make(
                 $request->all(),
-                [
-                    // 'department_id' => 'required',
-                    // 'branch_id' => 'required',
-                    'employee_id' => 'required',
-                    'date' => 'required|date',
-                    'description' => 'required',
-                    'file' => 'required',
-                ]
+                $rules,
             );
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
@@ -83,7 +86,7 @@ class ReimbursementController extends Controller
             $reimbursement             = new Reimbursement();
             // $reimbursement->department_id  = $request->department_id;
             // $reimbursement->branch_id  = $request->branch_id;
-            $reimbursement->employee_id  = $request->employee_id;
+            $reimbursement->employee_id  = \Auth::user()->type == 'staf' ? \Auth::user()->creatorId() : $request->employee_id;
             $reimbursement->date  = $request->date;
             $reimbursement->description  = $request->description;
             $reimbursement->file  = $fileName;
