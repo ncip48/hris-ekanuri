@@ -86,7 +86,7 @@ class ReimbursementController extends Controller
             $reimbursement             = new Reimbursement();
             // $reimbursement->department_id  = $request->department_id;
             // $reimbursement->branch_id  = $request->branch_id;
-            $reimbursement->employee_id  = \Auth::user()->type == 'staf' ? Employee::where('user_id', \Auth::user()->id)->id : $request->employee_id;
+            $reimbursement->employee_id  = \Auth::user()->type == 'staf' ? Employee::where('user_id', \Auth::user()->id)->first()->id : $request->employee_id;
             $reimbursement->date  = $request->date;
             $reimbursement->description  = $request->description;
             $reimbursement->file  = $fileName;
