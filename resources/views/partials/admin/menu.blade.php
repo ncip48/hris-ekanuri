@@ -1525,14 +1525,14 @@
                     </li>
                 @endcan
 
-                @if (Gate::check('manage plan'))
+                {{-- @if (Gate::check('manage plan'))
                     <li class="dash-item dash-hasmenu  {{ Request::segment(1) == 'plans' ? 'active' : '' }}">
                         <a href="{{ route('plans.index') }}" class="dash-link">
                             <span class="dash-micon"><i class="ti ti-trophy"></i></span><span
                                 class="dash-mtext">{{ __('Plan') }}</span>
                         </a>
                     </li>
-                @endif
+                @endif --}}
                 @if (\Auth::user()->type == 'super admin')
                     <li class="dash-item dash-hasmenu {{ request()->is('plan_request*') ? 'active' : '' }}">
                         <a href="{{ route('plan_request.index') }}" class="dash-link">
@@ -1541,7 +1541,7 @@
                         </a>
                     </li>
                 @endif
-                @if (Gate::check('manage coupon'))
+                {{-- @if (Gate::check('manage coupon'))
                     <li class="dash-item dash-hasmenu {{ Request::segment(1) == 'coupons' ? 'active' : '' }}">
                         <a href="{{ route('coupons.index') }}" class="dash-link">
                             <span class="dash-micon"><i class="ti ti-gift"></i></span><span
@@ -1556,7 +1556,7 @@
                                 class="dash-mtext">{{ __('Order') }}</span>
                         </a>
                     </li>
-                @endif
+                @endif --}}
                 <li
                     class="dash-item dash-hasmenu {{ Request::segment(1) == 'email_template' || Request::route()->getName() == 'manage.email.language' ? ' active dash-trigger' : 'collapsed' }}">
                     <a href="{{ route('manage.email.language', [$emailTemplate->id, \Auth::user()->lang]) }}"
