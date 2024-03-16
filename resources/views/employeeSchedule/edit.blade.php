@@ -32,7 +32,7 @@
                 @enderror
             </div>
 
-            <div class="form-group">
+            {{-- <div class="form-group">
                 {{Form::label('shift_id',__('Shift'),['class'=>'form-label'])}}
                 {{Form::select('shift_id',$shift,null,array('class'=>'form-control selectric','placeholder'=>__('Select Shift')))}}
                 @error('shift_id')
@@ -40,7 +40,7 @@
                     <strong class="text-danger">{{ $message }}</strong>
                 </small>
                 @enderror
-            </div>
+            </div> --}}
 
             <div class="form-group">
                 {{Form::label('date',__('Date'),['class'=>'form-label'])}}

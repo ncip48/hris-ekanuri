@@ -67,7 +67,6 @@ class EmployeeScheduleController extends Controller
                     'date' => 'required',
                     'branch_id' => 'required',
                     'department_id' => 'required',
-                    'shift_id' => 'required',
                 ]
             );
 
@@ -144,6 +143,8 @@ class EmployeeScheduleController extends Controller
                         'date' => 'required',
                         'branch_id' => 'required',
                         'department_id' => 'required',
+                        
+                    // 'shift_id' => 'required',
                     ]
                 );
 
